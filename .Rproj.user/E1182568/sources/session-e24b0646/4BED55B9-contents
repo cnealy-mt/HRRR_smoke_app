@@ -1,0 +1,222 @@
+library(terra)
+library(sf)
+library(dplyr)
+library(tidyr)
+library(tigris)
+library(sf)  # tigris returns sf objects
+
+
+
+#--------------------------Load AirNow data-------------------------
+
+AirNow <- readRDS(paste0("data/AirNow/", update_date, "_AirNow.rds"))
+site_coords <- AirNow %>%
+  dplyr::select(site_name, latitude, longitude) %>%
+  dplyr::distinct()
+
+#--------------------------Get Monitoring Site Coords-------------------------
+
+site_vect <- vect(site_coords, geom = c("longitude", "latitude"), crs = "EPSG:4326")
+
+#--------------------------Load and Get Smoke Values-------------------------
+
+smoke_stack <- rast(here(paste0("data/MASSDEN/MASSDEN_", compare_date, ".tif"))) #load smoke raster stack
+
+smoke_values <- terra::extract(smoke_stack, site_vect)
+
+# Add site names back
+smoke_values <- cbind(site_coords, smoke_values)
+
+#--------------------------Reformat and Filter for Forecast Day-------------------------
+# This logic discards all forecast hours except for those from the 2nd day (i.e., the forecast day)
+
+run_time <- as.POSIXct(paste0(compare_date, " 06:00:00"))
+
+# Convert to long format and ensure correct timezone handling
+smoke_long <- smoke_values %>%
+  pivot_longer(
+    cols = -c(site_name, latitude, longitude, ID),  
+    names_to = "timestamp_MDT",
+    values_to = "smoke_ug_m3"
+  ) %>%
+  mutate(
+    date_mdt = as.POSIXct(timestamp_MDT),
+    date_gmt = with_tz(timestamp_MDT, tzone = "UTC"),
+    fcst_date = compare_date,
+    fcst_hour = as.numeric(difftime(timestamp_MDT, run_time, units = "hours"))  # << add this line
+  ) %>%
+  select(-ID)
+
+# Extract date in MDT and ensure it's in MDT timezone
+smoke_long <- smoke_long %>%
+  mutate(
+    date_only = as.Date(format(date_mdt))  # Extract date in MDT timezone
+  )
+
+# Get the second unique date
+second_date <- unique(smoke_long$date_only)[2]
+
+# Filter data for the second date
+filtered_data <- smoke_long %>%
+  filter(date_only == second_date) %>%
+  select(site_name, latitude, longitude, date_mdt, smoke_ug_m3)
+
+# Check the filtered data
+head(filtered_data)
+
+#--------------------------Merge Site Point Fcst with Obs-------------------------
+
+AirNow_merge <- AirNow %>%
+  select(site_name, date_gmt, sample_measurement) %>%
+  mutate(
+    date_mdt = as.POSIXct(date_gmt, tz = "Etc/GMT+6")
+  ) %>%
+  select(-date_gmt)
+
+head(AirNow_merge)
+
+monitor_point_data <- inner_join(
+  filtered_data,
+  AirNow_merge,
+  by = c("site_name", "date_mdt")
+)
+
+
+# library(ggplot2)
+# 
+# ggplot(monitor_point_data, aes(x = smoke_ug_m3, y = sample_measurement)) +
+#   geom_point(color = "blue", size = 2, alpha = 0.7) +
+#   labs(
+#     title = "Sample Measurement vs Smoke Forecast",
+#     x = "Forecasted Smoke (ug/m3)",
+#     y = "Observed Sample Measurement (ug/m3)"
+#   ) +
+#   theme_minimal()
+
+#--------------------------Load Archive Data-------------------------
+
+hourly <- readRDS("data/archive/county_hourly_archive.rds")
+daily <- readRDS("data/archive/county_24hr_archive.rds")
+
+#--------------------------Filter for Counties with Sites-------------------------
+counties_with_sites <- terra::extract(mt_v, site_vect)
+sites_and_counties <- cbind(site_coords, counties_with_sites[,-1]) %>%
+  rename(county = NAME) %>%
+  select(site_name, county)
+
+#Filter to only include most recent date (will append later to running model performance data)
+hourly <- hourly %>%
+  filter(county %in% c(sites_and_counties$county)) %>%
+  mutate(date_mdt = as.POSIXct(date_mdt, format = "%Y-%m-%d %H:%M", tz = "Etc/GMT+6")) %>%
+  filter(date == as.Date(update_date)-1)
+
+daily <- daily %>%
+  filter(county %in% c(sites_and_counties$county)) %>%
+  filter(date == as.Date(update_date)-1)
+
+
+#--------------------------Combine Site Point Data and County Averages-------------------------
+
+#hourly
+monitor_point_data_hourly <- monitor_point_data %>%
+  left_join(sites_and_counties, by = "site_name")
+
+hourly_model_performance <- monitor_point_data_hourly %>%
+  left_join(hourly, by = c("county", "date_mdt"))
+
+#daily 
+monitor_point_data_daily <- monitor_point_data %>%
+  group_by(site_name) %>%
+  summarise(
+    avg_HRRR_ug_m3 = mean(smoke_ug_m3, na.rm = TRUE),
+    avg_sample_measurement = mean(sample_measurement, na.rm = TRUE)
+  ) %>%
+  left_join(sites_and_counties, by = "site_name")
+
+daily_model_performance <- monitor_point_data_daily %>%
+  left_join(daily, by = c("county"))
+
+#--------------------------Add AQI Category Accuracy (daily only)-------------------------
+
+breaks <- c(0, 9, 35.4, 55.4, 125.4, 225.4, Inf)
+
+daily_model_performance <- daily_model_performance %>%
+  mutate(
+    AQI_HRRR = cut(avg_HRRR_ug_m3, breaks = breaks, labels = FALSE, right = TRUE),
+    obs_AQI = cut(avg_sample_measurement, breaks = breaks, labels = FALSE, right = TRUE),
+    accuracy = AQI_HRRR - obs_AQI
+  )
+
+#--------------------------Save Model Performance-------------------------
+# Define date window
+start_date <- as.Date(update_date) - lubridate::years(2)
+end_date <- as.Date(update_date)
+
+# Function to append and save RDS
+append_and_save <- function(new_data, path) {
+  if (file.exists(path)) {
+    existing_data <- readRDS(path)
+    combined_data <- bind_rows(existing_data, new_data) %>% 
+      distinct() %>%
+      filter(date >= start_date & date <= end_date)
+  } else {
+    combined_data <- new_data
+  }
+  saveRDS(combined_data, path)
+}
+
+# Save hourly data
+append_and_save(hourly_model_performance, "data/model_performance/hourly_model_performance.rds")
+
+# Save daily data
+append_and_save(daily_model_performance, "data/model_performance/daily_model_performance.rds")
+
+#-----------------------Calculate Running 24hr Avg-------------------
+hourly_model_performance <- readRDS("data/model_performance/hourly_model_performance.rds")
+
+model_performance_2_days <- hourly_model_performance %>%
+  filter(date >= compare_date)
+
+library(slider)
+
+model_performance_24hr_update <- model_performance_2_days %>%
+  arrange(site_name, date_mdt) %>%
+  group_by(site_name) %>%
+  mutate(
+    HRRR_24hr_county = slide_dbl(MASSDEN, mean, .before = 23, .complete = FALSE),
+    HRRR_24hr_point = slide_dbl(smoke_ug_m3, mean, .before = 23, .complete = FALSE),
+    AirNow_24hr = slide_dbl(sample_measurement, mean, .before = 23, .complete = FALSE)
+  ) %>%
+  ungroup()
+
+hourly_model_performance <- bind_rows(hourly_model_performance, model_performance_24hr_update) %>%
+  arrange(site_name, date_mdt, desc(HRRR_24hr_county), desc(HRRR_24hr_point), desc(AirNow_24hr)) %>%  # optional prioritization
+  distinct(site_name, date_mdt, .keep_all = TRUE)
+
+saveRDS(hourly_model_performance, "data/model_performance/hourly_model_performance.rds")
+
+# library(ggplot2)
+# # Filter for Billings site
+# test_data <- hourly_model_performance %>%
+#   filter(site_name == "Billings")
+# 
+# # Pivot longer for easy plotting
+# billings_long <- test_data %>%
+#   select(date_mdt, smoke_ug_m3, MASSDEN, sample_measurement, HRRR_24hr_county, HRRR_24hr_point, AirNow_24hr) %>%
+#   pivot_longer(cols = c(smoke_ug_m3, MASSDEN, sample_measurement, HRRR_24hr_county, HRRR_24hr_point, AirNow_24hr),
+#                names_to = "variable", values_to = "value")
+# 
+# # Plot
+# ggplot(billings_long, aes(x = date_mdt, y = value, color = variable)) +
+#   geom_line() +
+#   labs(
+#     title = "Smoke Concentration and 24hr Averages — Billings Site",
+#     x = "Date/Time",
+#     y = "Concentration (µg/m³)",
+#     color = "Variable"
+#   ) +
+#   theme_minimal()
+
+
+
+

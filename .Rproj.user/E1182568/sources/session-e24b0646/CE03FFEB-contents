@@ -1,0 +1,36 @@
+#variable utilities
+
+var_inp <- c("MASSDEN", "WIND_1hr_max_fcst", "TMP", "RH", "GUST", "HPBL", "VENT_RATE")
+
+# Labels lookup
+get_label <- function(var_inp) {
+  labels <- c(
+    MASSDEN = "Smoke",
+    WIND_1hr_max_fcst = "Wind Speed",
+    TMP = "Temperature",
+    RH = "Relative Humidity",
+    GUST = "Wind Gust",
+    HPBL = "Boundary Layer Height",
+    VENT_RATE = "Ventilation Rate (10 m)"
+  )
+  
+  labels[[var_inp]] %||% var_inp  # fallback to var_inp if no label found
+}
+
+get_unit <- function(var_inp) {
+  units <- c(
+    MASSDEN = "µg/m³",
+    WIND_1hr_max_fcst = "m/s",
+    TMP = "°F",
+    RH = "%",
+    GUST = "m/s",
+    HPBL = "m",
+    VENT_RATE = "m²/s"
+  )
+  
+  # Return unit or blank if var not found
+  units[[var_inp]] %||% ""
+}
+
+# Safe operator in case var isn't matched (optional)
+`%||%` <- function(a, b) if (!is.null(a)) a else b

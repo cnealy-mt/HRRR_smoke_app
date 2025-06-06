@@ -1,0 +1,121 @@
+#Module 1 (24-hr)
+#inputs
+var_inp <- "VENT_RATE" #in variable_utils
+trend_duration <- "2day" #in variable_utils
+today #in app top level (app.R)
+transparency <- 0.8
+
+#------------------------------------Load Data-------------------------------------------
+county_24hr_avg <- readRDS(paste0("data/county_24hr_avg/", today,"_county_24hr_avg.rds")) #for county polygon mapping
+county_trend_1day <- readRDS(paste0("data/trend/county_trend_1day.rds"))
+county_trend_2day <- readRDS(paste0("data/trend/county_trend_2day.rds"))
+
+trend_rast <- rast(paste0("data/trend/", var_inp,"_",duration,"_trend.tif"))
+
+#------------------------------------AQI 24hr-------------------------------------------
+forecast_date <- today+1
+
+# Join smoke data to mt_counties by county name
+mt_counties_AQI <- mt_counties %>%
+  left_join(county_24hr_avg, by = c("NAME" = "county"))
+
+# Create the palette
+smoke_pal <- colorBin(
+  palette = aqi_colors,
+  domain = mt_counties_AQI$MASSDEN,
+  bins = breaks,
+  na.color = "transparent",
+  right = FALSE  # include left side of bin
+)
+
+leaflet(mt_counties_AQI) %>%
+  addTiles() %>%
+  addPolygons(
+    fillColor = ~smoke_pal(MASSDEN),
+    fillOpacity = transparency,
+    color = "black",
+    weight = .5,
+    popup = ~paste0(
+      "<strong>", NAME, " County</strong><br>",
+      "Smoke Concentration (24hr): ", round(MASSDEN, 1), " µg/m³<br>",
+      "AQI (24hr): ", AQI_category
+    )
+  ) %>%
+  addControl(html = paste0("<div style='background: rgba(255,255,255,0.8);
+                                   padding: 4px 8px; border-radius: 4px;
+                                   font-size: 14px;'><strong>Forecast Date:</strong> ",
+                           forecast_date, "</div>"),
+             position = "topright") %>%
+  addLegend(
+    pal = smoke_pal,
+    values = mt_counties_smoke$MASSDEN,
+    bins = breaks,
+    title = "24-Hr PM₂.₅ (µg/m³)",
+    position = "bottomright"
+  )
+
+#------------------------------------AQI Trend-------------------------------------------
+
+# Join smoke data to mt_counties by county name
+mt_counties_AQI_trend <- mt_counties %>%
+  left_join(get(paste0("county_trend_", trend_duration)), by = c("NAME" = "county"))
+
+leaflet() %>%
+  addTiles() %>%
+  addPolygons(
+    data = mt_counties_AQI_trend,
+    fillColor = ~aqi_trend_palette(AQI_HRRR_trend),
+    fillOpacity = transparency,
+    color = "black",
+    weight = 0.5,
+    popup = ~paste0("<strong>", NAME, " County</strong><br>",
+                    "AQI Category Change: ", AQI_HRRR_trend)
+  ) %>%
+  addLegend(
+    pal = aqi_trend_palette,
+    values = aqi_trend_values,  # Important: this ensures legend shows exact -5 to 5
+    title = HTML("<div style='width: 70px; word-wrap: break-word;'>AQI Category Change</div>"),
+    position = "bottomright"
+  )
+
+#------------------------------------Variable Trend-------------------------------------------
+# Find the max absolute value in your data
+max_abs <- max(abs(values(trend_rast)), na.rm = TRUE)
+
+
+# Define palette with 0 as center using Brewer RdBu (reversed)
+trend_palette <- colorNumeric(
+  palette = rev(brewer.pal(11, "RdBu")),  # reverse so red is high
+  domain = c(-max_abs, max_abs),  # symmetric around 0
+  na.color = "transparent"
+)
+
+leaflet() %>%
+  addTiles() %>%
+  addRasterImage(trend_rast, colors = trend_palette, opacity = transparency) %>%
+  # Add county polygons
+  addPolygons(
+    data = mt_counties,
+    fill = TRUE,  # just borders
+    fillOpacity = 0,
+    color = "black",
+    weight = .5,
+    opacity = 1,
+    popup = ~paste0(
+      "<strong>", NAME, " County</strong><br>"
+  )) %>%
+  addControl(html = paste0("<div style='background: rgba(255,255,255,0.8);
+                                   padding: 4px 8px; border-radius: 4px;
+                                   font-size: 14px;'><strong>Trend:</strong> ",
+                           get_trend_label(trend_duration, today), "</div>"),
+             position = "topright") %>%
+  addLegend(
+    pal = trend_palette,
+    values = values(trend_rast),
+    title = HTML(paste0(get_label(var_inp), "<br><small>Trend</small>")),
+    position = "bottomright"
+  )
+
+
+
+

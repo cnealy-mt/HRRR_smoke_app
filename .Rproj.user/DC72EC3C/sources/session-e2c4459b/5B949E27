@@ -1,0 +1,26 @@
+{
+    "id": "5B949E27",
+    "path": "C:/R Projects (dev)/HRRR_tools - Copy/update_scripts/calculate_VENT_RATE.R",
+    "project_path": "update_scripts/calculate_VENT_RATE.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1749163057269.0,
+    "source_on_save": false,
+    "relative_order": 6,
+    "properties": {
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "2,6",
+        "scrollLine": "0"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1747085194,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1747085194,
+    "read_only": false,
+    "read_only_alternatives": []
+}

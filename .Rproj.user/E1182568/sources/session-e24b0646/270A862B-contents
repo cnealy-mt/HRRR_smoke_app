@@ -1,0 +1,62 @@
+library(terra)
+library(leaflet)
+library(viridis)
+library(lubridate)
+#------------------------------------AQI Scale-------------------------------------------
+
+# AQI
+breaks <- c(0, 9, 35.4, 55.4, 125.4, 225.4, 500)
+aqi_colors <- c(
+  rgb(0, 228, 0, maxColorValue = 255),       # "Good"
+  rgb(255, 255, 0, maxColorValue = 255),     # "Moderate"
+  rgb(255, 126, 0, maxColorValue = 255),     # USG
+  rgb(255, 0, 0, maxColorValue = 255),       # Unhealthy
+  rgb(143, 63, 151, maxColorValue = 255),    # Very Unhealthy
+  rgb(126, 0, 35, maxColorValue = 255)       # Hazardous
+)
+
+#------------------------------------Trend Scale-------------------------------------------
+
+# # Find the max absolute value in your data
+# max_abs <- max(abs(values(trend_rast)), na.rm = TRUE)
+# 
+# library(RColorBrewer)
+# 
+# # Define palette with 0 as center using Brewer RdBu (reversed)
+# trend_palette <- colorNumeric(
+#   palette = rev(brewer.pal(11, "RdBu")),  # reverse so red is high
+#   domain = c(-max_abs, max_abs),  # symmetric around 0
+#   na.color = "transparent"
+# )
+
+#------------------------------------Variable Scales-------------------------------------------
+
+# MASSDEN
+MASSDEN_breaks <- c(0, 1, 2, 4, 6, 8, 12, 16, 20, 25, 30, 40, 60, 100, 200, Inf)
+MASSDEN_colors <- c("white", "#D6EAF8", "#AED6F1", "#5DADE2", "#2874A6", "#117A65", "#27AE60", "#A0E424", "#FFF284", "#FFAD41", "#FF950A", "#FF6A00", "#C60000", "#970000", "#9A00FF")
+# Create color function
+MASSDEN_color_fun <- colorBin(palette = MASSDEN_colors, bins = MASSDEN_breaks, na.color = "transparent")
+
+# TMP
+TMP_breaks <- c(0, 1, 2, 4, 6, 8, 12, 16, 20, 25, 30, 40, 60, 100, 200, Inf)
+TMP_colors <- c("white", "#D6EAF8", "#AED6F1", "#5DADE2", "#2874A6", "#117A65", "#27AE60", "#A0E424", "#FFF284", "#FFAD41", "#FF950A", "#FF6A00", "#C60000", "#970000", "#9A00FF")
+# Create color function
+TMP_color_fun <- colorBin(palette = TMP_colors, bins = TMP_breaks, na.color = "transparent")
+
+#etc.
+
+
+#------------------------------------Load State Boundary-------------------------------------------
+
+# Download the state boundaries and filter for Montana (state FIPS = "30")
+mt_state_boundary <- states(cb = TRUE, year = 2022) %>%
+  filter(STUSPS == "MT")
+
+# Transform the CRS to match with your map (e.g., EPSG:4326)
+mt_state_boundary <- st_transform(mt_state_boundary, crs = "EPSG:4326")
+
+#------------------------------------Load County Boundaries-------------------------------------------
+
+# Download all U.S. counties, then filter for Montana (state FIPS = "30")
+mt_counties <- counties(state = "MT", cb = TRUE, year = 2022)
+mt_counties <- st_transform(mt_counties, crs = "EPSG:4326")

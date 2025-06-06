@@ -1,0 +1,117 @@
+# trend data
+tomorrow_run <- as.Date(update_date)
+today_run <- as.Date(update_date)-1
+yesterday_run <- as.Date(compare_date)
+
+#------------------------24-hr County Avg Trends (tomorrow vs. yesterday and today)---------------------
+breaks <- c(0, 9, 35.4, 55.4, 125.4, 225.4, Inf) #need to add AQI categories to calculate difference
+
+tomorrow_avg <- readRDS(paste0("data/county_24hr_avg/", tomorrow_run, "_county_24hr_avg.rds")) %>%
+  select(county, MASSDEN, WIND_1hr_max_fcst, TMP, RH, CFNSF, GUST, HPBL, VENT_RATE) %>%
+  mutate(AQI_HRRR = cut(MASSDEN, breaks = breaks, labels = FALSE, right = TRUE))
+today_avg <- readRDS(paste0("data/county_24hr_avg/", today_run, "_county_24hr_avg.rds")) %>%
+  select(county, MASSDEN, WIND_1hr_max_fcst, TMP, RH, CFNSF, GUST, HPBL, VENT_RATE) %>%
+  mutate(AQI_HRRR = cut(MASSDEN, breaks = breaks, labels = FALSE, right = TRUE))
+yesterday_avg <- readRDS(paste0("data/county_24hr_avg/", yesterday_run, "_county_24hr_avg.rds")) %>%
+  select(county, MASSDEN, WIND_1hr_max_fcst, TMP, RH, CFNSF, GUST, HPBL, VENT_RATE) %>%
+  mutate(AQI_HRRR = cut(MASSDEN, breaks = breaks, labels = FALSE, right = TRUE))
+    
+trend_1day <- left_join(today_avg, tomorrow_avg, by = "county", suffix = c("_today", "_tomorrow")) %>%
+  mutate(
+    MASSDEN_trend = ((MASSDEN_tomorrow - MASSDEN_today) / MASSDEN_today) * 100,
+    WIND_1hr_max_fcst_trend = ((WIND_1hr_max_fcst_tomorrow - WIND_1hr_max_fcst_today) / WIND_1hr_max_fcst_today) * 100,
+    TMP_trend = ((TMP_tomorrow - TMP_today) / TMP_today) * 100,
+    RH_trend = ((RH_tomorrow - RH_today) / RH_today) * 100,
+    CFNSF_trend = ((CFNSF_tomorrow - CFNSF_today) / CFNSF_today) * 100,
+    GUST_trend = ((GUST_tomorrow - GUST_today) / GUST_today) * 100,
+    HPBL_trend = ((HPBL_tomorrow - HPBL_today) / HPBL_today) * 100,
+    VENT_RATE_trend = ((VENT_RATE_tomorrow - VENT_RATE_today) / VENT_RATE_today) * 100,
+    AQI_HRRR_trend = AQI_HRRR_tomorrow - AQI_HRRR_today
+  ) %>%
+  select(county,
+         MASSDEN_trend, 
+         WIND_1hr_max_fcst_trend,
+         TMP_trend,
+         RH_trend,
+         CFNSF_trend,
+         GUST_trend,
+         HPBL_trend,
+         VENT_RATE_trend,
+         AQI_HRRR_trend)
+
+# View the resulting data
+head(trend_1day)
+
+
+trend_2day <- left_join(yesterday_avg, tomorrow_avg, by = "county", suffix = c("_yesterday", "_tomorrow")) %>%
+  mutate(
+    MASSDEN_trend = ((MASSDEN_tomorrow - MASSDEN_yesterday) / MASSDEN_yesterday) * 100,
+    WIND_1hr_max_fcst_trend = ((WIND_1hr_max_fcst_tomorrow - WIND_1hr_max_fcst_yesterday) / WIND_1hr_max_fcst_yesterday) * 100,
+    TMP_trend = ((TMP_tomorrow - TMP_yesterday) / TMP_yesterday) * 100,
+    RH_trend = ((RH_tomorrow - RH_yesterday) / RH_yesterday) * 100,
+    CFNSF_trend = ((CFNSF_tomorrow - CFNSF_yesterday) / CFNSF_yesterday) * 100,
+    GUST_trend = ((GUST_tomorrow - GUST_yesterday) / GUST_yesterday) * 100,
+    HPBL_trend = ((HPBL_tomorrow - HPBL_yesterday) / HPBL_yesterday) * 100,
+    VENT_RATE_trend = ((VENT_RATE_tomorrow - VENT_RATE_yesterday) / VENT_RATE_yesterday) * 100,
+    AQI_HRRR_trend = AQI_HRRR_tomorrow - AQI_HRRR_yesterday
+  ) %>%
+  select(county,
+         MASSDEN_trend, 
+         WIND_1hr_max_fcst_trend,
+         TMP_trend,
+         RH_trend,
+         CFNSF_trend,
+         GUST_trend,
+         HPBL_trend,
+         VENT_RATE_trend,
+         AQI_HRRR_trend)
+head(trend_2day)
+
+saveRDS(trend_1day, "data/trend/county_trend_1day.rds")
+saveRDS(trend_2day, "data/trend/county_trend_2day.rds")
+
+#------------------------Raster Trends (tomorrow vs. yesterday and today)---------------------
+tomorrow_filter <- format(as.Date(tomorrow_run) + 1, "%Y-%m-%d")
+today_filter <- format(as.Date(today_run) + 1, "%Y-%m-%d")
+yesterday_filter <- format(as.Date(yesterday_run) + 1, "%Y-%m-%d")
+
+# Loop over each variable plus VENT_RATE
+for (this_var_name in c(vars$var_name, "VENT_RATE")) {
+  
+  folder_path <- paste0("data/", this_var_name) 
+  print(folder_path)
+  
+  # Load Rasters
+  tomorrow_rast <- rast(paste0(folder_path, "/", this_var_name,"_",tomorrow_run, ".tif"))
+  today_rast <- rast(paste0(folder_path, "/", this_var_name,"_",today_run, ".tif"))
+  yesterday_rast <- rast(paste0(folder_path, "/", this_var_name,"_",yesterday_run, ".tif"))
+  
+  # Filter just for forecast day layers
+  layer_names <- names(tomorrow_rast)
+  layers_to_keep <- grepl(tomorrow_filter, layer_names)
+  tomorrow_rast <- tomorrow_rast[[layers_to_keep]]
+  
+  layer_names <- names(today_rast)
+  layers_to_keep <- grepl(today_filter, layer_names)
+  today_rast <- today_rast[[layers_to_keep]]
+  
+  layer_names <- names(yesterday_rast)
+  layers_to_keep <- grepl(yesterday_filter, layer_names)
+  yesterday_rast <- yesterday_rast[[layers_to_keep]]
+  
+  # Optional: check the layer names in the subset
+  names(tomorrow_rast)
+  
+  #Calculate Averages
+  tomorrow_avg_rast <- mean(tomorrow_rast, na.rm = TRUE)
+  today_avg_rast <- mean(today_rast, na.rm = TRUE)
+  yesterday_avg_rast <- mean(yesterday_rast, na.rm = TRUE)
+  
+  trend_1day_rast <- tomorrow_avg_rast - today_avg_rast
+  trend_2day_rast <- tomorrow_avg_rast - yesterday_avg_rast
+  
+  writeRaster(trend_1day_rast, paste0("data/trend/",this_var_name,"_1day_trend.tif"), overwrite=TRUE)
+  writeRaster(trend_2day_rast, paste0("data/trend/",this_var_name,"_2day_trend.tif"), overwrite=TRUE)
+  
+}
+

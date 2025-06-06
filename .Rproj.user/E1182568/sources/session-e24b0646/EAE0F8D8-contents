@@ -1,0 +1,104 @@
+mapModuleUI <- function(id) {
+  ns <- NS(id)
+  tagList(
+    selectInput(ns("map_view"), "Select Map View",
+                choices = c("Forecast Hour Raster" = "view1",
+                            "24-Hour County Average" = "view2",
+                            "Hourly County Average" = "view3")),
+    conditionalPanel(
+      condition = sprintf("input['%s'] == 'view1' || input['%s'] == 'view3'", ns("map_view"), ns("map_view")),
+      sliderInput(ns("hour"), "Forecast Hour", min = 1, max = 48, value = 1)
+    ),
+    leafletOutput(ns("map"), height = "600px")
+  )
+}
+
+mapModuleServer <- function(id, smoke_raster_stack, county_24hr_avg, county_hrly_avg, mt_counties, mt_state_boundary) {
+  moduleServer(id, function(input, output, session) {
+    ns <- session$ns
+    
+    output$map <- renderLeaflet({
+      req(input$map_view)
+      
+      if (input$map_view == "view1") {
+        # View 1: Raster image by hour
+        layer_index <- input$hour
+        layer_label <- names(smoke_raster_stack)[layer_index]
+        
+        leaflet() %>%
+          addTiles() %>%
+          addRasterImage(smoke_raster_stack[[layer_index]], colors = color_fun, opacity = 0.5) %>%
+          addLegend(pal = color_fun,
+                    values = values(smoke_raster_stack[[layer_index]]),
+                    title = "Concentration (µg/m³)",
+                    position = "bottomright") %>%
+          addControl(html = paste0("<div style='background: rgba(255,255,255,0.8);
+                                   padding: 4px 8px; border-radius: 4px;
+                                   font-size: 14px;'><strong>Forecast Time:</strong> ",
+                                   layer_label, "</div>"),
+                     position = "topright") %>%
+          addPolygons(data = mt_state_boundary, fill = FALSE, color = "#004A98", weight = 2, opacity = 1)
+        
+      } else if (input$map_view == "view2") {
+        # View 2: 24-hour county average
+        data_joined <- mt_counties %>%
+          left_join(county_24hr_avg, by = c("NAME" = "county"))
+        
+        pal <- colorBin(
+          palette = aqi_colors,
+          domain = data_joined$mean_24hr_smoke_ug_m3,
+          bins = breaks,
+          na.color = "transparent",
+          right = FALSE
+        )
+        
+        leaflet(data_joined) %>%
+          addTiles() %>%
+          addPolygons(
+            fillColor = ~pal(mean_24hr_smoke_ug_m3),
+            fillOpacity = 0.7,
+            color = "black",
+            weight = 0.5,
+            popup = ~paste0("<strong>", NAME, " County</strong><br>",
+                            "Concentration: ", round(mean_24hr_smoke_ug_m3, 1), " µg/m³<br>",
+                            "AQI: ", AQI_category)
+          ) %>%
+          addLegend(pal = pal,
+                    values = data_joined$mean_24hr_smoke_ug_m3,
+                    bins = breaks,
+                    title = "24-Hr PM₂.₅ (µg/m³)",
+                    position = "bottomright")
+        
+      } else if (input$map_view == "view3") {
+        # View 3: Hourly county average
+        data_joined <- mt_counties %>%
+          left_join(filter(county_hrly_avg, fcst_hour == input$hour), by = c("NAME" = "county"))
+        
+        pal <- colorBin(
+          palette = aqi_colors,
+          domain = data_joined$mean_smoke_ug_m3,
+          bins = breaks,
+          na.color = "transparent",
+          right = FALSE
+        )
+        
+        leaflet(data_joined) %>%
+          addTiles() %>%
+          addPolygons(
+            fillColor = ~pal(mean_smoke_ug_m3),
+            fillOpacity = 0.7,
+            color = "black",
+            weight = 0.5,
+            popup = ~paste0("<strong>", NAME, " County</strong><br>",
+                            "Concentration: ", round(mean_smoke_ug_m3, 1), " µg/m³<br>",
+                            "AQI: ", AQI_category)
+          ) %>%
+          addLegend(pal = pal,
+                    values = data_joined$mean_smoke_ug_m3,
+                    bins = breaks,
+                    title = "Hourly Avg. PM₂.₅ (µg/m³)",
+                    position = "bottomright")
+      }
+    })
+  })
+}

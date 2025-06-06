@@ -1,0 +1,10 @@
+# Ignore everything inside data/
+data/**
+
+# Keep all subfolders (but still ignore their contents)
+!data/
+!data/*/
+
+# EXCEPTION: Keep initial contents of archive and model_performance
+!data/archive/**
+!data/model_performance/**

@@ -1,0 +1,32 @@
+#------------------------Calculate Vent Rate WINDOW---------------------
+tomorrow_run <- as.Date(update_date)
+
+tomorrow_filter <- format(as.Date(tomorrow_run) + 1, "%Y-%m-%d")
+
+folder_path <- paste0("data/VENT_RATE") 
+print(folder_path)
+  
+# Load Rasters
+tomorrow_rast <- rast(paste0(folder_path, "/VENT_RATE_",tomorrow_run, ".tif"))
+
+# Filter just for forecast day layers
+layer_names <- names(tomorrow_rast)
+layers_to_keep <- grepl(tomorrow_filter, layer_names)
+tomorrow_rast <- tomorrow_rast[[layers_to_keep]]
+
+# Optional: check the layer names in the subset
+names(tomorrow_rast)
+
+#Calculate Averages
+marginal_rast <- app(tomorrow_rast, fun = function(x) sum(x > 2350, na.rm = TRUE))
+good_rast <- app(tomorrow_rast, fun = function(x) sum(x > 4700, na.rm = TRUE))
+
+# Optional: check result
+plot(marginal_rast)
+plot(good_rast)
+
+writeRaster(marginal_rast, paste0("data/VENT_WINDOW/marginal_rast.tif"), overwrite=TRUE)  
+writeRaster(good_rast, paste0("data/VENT_WINDOW/good_rast.tif"), overwrite=TRUE)  
+
+
+

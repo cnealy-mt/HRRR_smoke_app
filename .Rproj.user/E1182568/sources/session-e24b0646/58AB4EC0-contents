@@ -1,0 +1,102 @@
+library(terra)
+library(shiny)
+
+#today <- format(Sys.Date(), "%Y-%m-%d")
+today <- as.Date("2025-04-30")
+
+#modules
+source(paste0("modules/utils/variable_utils.R"))
+source(paste0("modules/utils/map_module_utils.R"))
+
+source(paste0("modules/map_module.R"))
+
+
+ui <- page_sidebar(
+  tags$head(
+    tags$style(HTML("
+      .header-bar {
+      background-color: #004A98;
+      color: white;
+      padding: 0 20px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .header-bar img {
+      height: 45px;
+      width: auto;
+      margin-top: 10px;
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    .header-bar h1 {
+      margin: 0;
+      font-size: 24px;
+    }
+    "))
+  ),
+  
+  div(class = "header-bar",
+      img(src = "logo_blue.png", alt = "Logo"),
+      h1("AQB Smoke Forecasting Dashboard")
+  ),
+  
+  sidebar = sidebar(
+    width = "20%",
+    position = "right",
+    open = "always",
+    
+    # 👇 Inputs now directly in sidebar (not inside module)
+    selectInput("var_inp", "Variable:",
+                choices = c(
+                  "AQI Category (24-hr Average)" = "AQI_24hr",
+                  "AQI Category (trend)" = "AQI_trend",
+                  "PM2.5 (trend)" = "MASSDEN",
+                  "Temperature (trend)" = "TMP",
+                  "Relative Humidity (trend)" = "RH",
+                  "Wind Gust (trend)" = "GUST",
+                  "Wind Speed (trend)" = "WIND_1hr_max_fcst",
+                  "Boundary Layer Height (trend)" = "HPBL",
+                  "Ventilation Rate (trend)" = "VENT_RATE"
+                )
+    ),
+    
+    conditionalPanel(
+      condition = "input.var_inp != 'AQI_24hr'",
+      selectInput("trend_duration", "Trend Duration:",
+                  choices = c("One Day" = "1day", "Two Day" = "2day"))
+    ),
+    
+    selectInput("transparency", "Opacity:",
+                choices = c("0%" = 0, "25%" = 0.25, "50%" = 0.5, "75%" = 0.75, "100%" = 1),
+                selected = 0.75),
+    
+    conditionalPanel(
+      condition = "input.main_tabs == 'AQI Outlook'",
+      h4("About"),
+      p("Choose pollutant, averaging period, DV year, and monitoring site to see a list of wildfire-flagged data...")
+    )
+  ),
+  
+  tabsetPanel(
+    id = "main_tabs",
+    tabPanel("AQI Outlook",
+             # Map module output
+             outlook_map_ModuleUI("outlook_map")
+    )
+  )
+)
+
+server <- function(input, output, session) {
+  outlook_map_ModuleServer(
+    id = "outlook_map",
+    today = today,
+    var_inp = reactive(input$var_inp),
+    trend_duration = reactive(input$trend_duration),
+    transparency = reactive(input$transparency)
+  )
+}
+
+shinyApp(ui, server)

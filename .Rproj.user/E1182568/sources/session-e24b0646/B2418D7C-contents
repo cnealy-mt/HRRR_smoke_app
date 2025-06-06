@@ -1,0 +1,153 @@
+mapModuleUI <- function(id) {
+  ns <- NS(id)
+  
+  tagList(
+    selectInput(ns("var_inp"), "Variable:",
+                choices = c("AQI_24hr", "AQI_trend", "MASSDEN", "WIND_1hr_max_fcst", "TMP", "RH", "GUST", "HPBL", "VENT_RATE")),
+    
+    # Conditionally show trend_duration input
+    conditionalPanel(
+      condition = sprintf("input['%s'] != 'AQI_24hr'", ns("var_inp")),
+      selectInput(ns("trend_duration"), "Trend Duration:",
+                  choices = c("1day", "2day"))
+    ),
+    
+    sliderInput(ns("transparency"), "Transparency:",
+                min = 0, max = 1, value = 0.7, step = 0.1),
+    
+    leafletOutput(ns("map"), height = 600)
+  )
+}
+
+
+mapModuleServer <- function(id, today) {
+  moduleServer(id, function(input, output, session) {
+    
+    forecast_date <- today + 1
+    
+    # 1️⃣ Render empty base map once
+    output$map <- renderLeaflet({
+      leaflet() %>% addTiles()
+    })
+    
+    # 2️⃣ Observe input changes and update map layers
+    observe({
+      req(input$var_inp)
+      
+      map_proxy <- leafletProxy("map", session)
+      
+      # Clear old layers
+      map_proxy %>% clearShapes() %>% clearImages() %>% clearControls()
+      
+      # AQI 24hr
+      if (input$var_inp == "AQI_24hr") {
+        county_24hr_avg <- readRDS(paste0("data/county_24hr_avg/", today, "_county_24hr_avg.rds"))
+        
+        mt_counties_AQI <- mt_counties %>%
+          left_join(county_24hr_avg, by = c("NAME" = "county"))
+        
+        smoke_pal <- colorBin(
+          palette = aqi_colors,
+          domain = mt_counties_AQI$MASSDEN,
+          bins = breaks,
+          na.color = "transparent",
+          right = FALSE
+        )
+        
+        map_proxy %>%
+          addPolygons(
+            data = mt_counties_AQI,
+            fillColor = ~smoke_pal(MASSDEN),
+            fillOpacity = input$transparency,
+            color = "black",
+            weight = .5,
+            popup = ~paste0(
+              "<strong>", NAME, " County</strong><br>",
+              "Smoke Concentration (24hr): ", round(MASSDEN, 1), " µg/m³<br>",
+              "AQI (24hr): ", AQI_category
+            )
+          ) %>%
+          addControl(html = paste0("<div style='background: rgba(255,255,255,0.8);
+                                   padding: 4px 8px; border-radius: 4px;
+                                   font-size: 14px;'><strong>Forecast Date:</strong> ",
+                                   forecast_date, "</div>"),
+                     position = "topright") %>%
+          addLegend(
+            pal = smoke_pal,
+            values = mt_counties_AQI$MASSDEN,
+            bins = breaks,
+            title = "24-Hr PM₂.₅ (µg/m³)",
+            position = "bottomright"
+          )
+        
+      }
+      
+      # AQI Trend
+      else if (input$var_inp == "AQI_trend") {
+        # Dynamically load correct trend
+        trend_file <- paste0("data/trend/county_trend_", input$trend_duration, ".rds")
+        county_trend <- readRDS(trend_file)
+        
+        mt_counties_AQI_trend <- mt_counties %>%
+          left_join(county_trend, by = c("NAME" = "county"))
+        
+        map_proxy %>%
+          addPolygons(
+            data = mt_counties_AQI_trend,
+            fillColor = ~aqi_trend_palette(AQI_HRRR_trend),
+            fillOpacity = input$transparency,
+            color = "black",
+            weight = 0.5,
+            popup = ~paste0("<strong>", NAME, " County</strong><br>",
+                            "AQI Category Change: ", AQI_HRRR_trend)
+          ) %>%
+          addControl(html = paste0("<div style='background: rgba(255,255,255,0.8);
+                                   padding: 4px 8px; border-radius: 4px;
+                                   font-size: 14px;'><strong>Forecast Date:</strong> ",
+                                   forecast_date, "</div>"),
+                     position = "topright") %>%
+          addLegend(
+            pal = aqi_trend_palette,
+            values = aqi_trend_values,
+            title = HTML("<div style='width: 70px; word-wrap: break-word;'>AQI Category Change</div>"),
+            position = "bottomright"
+          )
+      }
+      
+      # Other Variable Trends
+      else {
+        trend_rast <- rast(paste0("data/trend/", input$var_inp, "_", input$trend_duration, "_trend.tif"))
+        max_abs <- max(abs(values(trend_rast)), na.rm = TRUE)
+        
+        trend_palette <- colorNumeric(
+          palette = rev(brewer.pal(11, "RdBu")),
+          domain = c(-max_abs, max_abs),
+          na.color = "transparent"
+        )
+        
+        map_proxy %>%
+          addRasterImage(trend_rast, colors = trend_palette, opacity = input$transparency) %>%
+          addPolygons(
+            data = mt_counties,
+            fill = TRUE,
+            fillOpacity = 0,
+            color = "black",
+            weight = .5,
+            opacity = 1,
+            popup = ~paste0("<strong>", NAME, " County</strong><br>")
+          ) %>%
+          addControl(html = paste0("<div style='background: rgba(255,255,255,0.8);
+                                   padding: 4px 8px; border-radius: 4px;
+                                   font-size: 14px;'><strong>Trend:</strong> ",
+                                   get_trend_label(input$trend_duration, today), "</div>"),
+                     position = "topright") %>%
+          addLegend(
+            pal = trend_palette,
+            values = values(trend_rast),
+            title = HTML(paste0(get_label(input$var_inp), "<br><small>Trend</small>")),
+            position = "bottomright"
+          )
+      }
+    })
+  })
+}

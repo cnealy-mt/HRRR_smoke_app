@@ -1,0 +1,89 @@
+#Update Data
+
+# Get today's date in YYYY-MM-DD format
+update_date <- format(Sys.Date(), "%Y-%m-%d")
+compare_date <- format(Sys.Date() - 2, "%Y-%m-%d")
+# update_date <- "2025-05-03"
+# compare_date <- "2025-05-01"
+
+
+# Start timing
+start_time <- Sys.time()
+cat("✅ Update started at:", format(start_time, "%Y-%m-%d %H:%M:%S"), "\n")
+
+# Run update scripts
+source("update_scripts/HRRR_download.R")
+source("update_scripts/calculate_VENT_RATE.R")
+source("update_scripts/calculate_county_hourly_avg.R")
+source("update_scripts/calculate_VENT_window.R") # uses counties from calculate_county_hourly_avg
+source("update_scripts/archive_data.R")
+source("update_scripts/get_AirNow_data.R")
+source("update_scripts/model_performance.R") # only run after initializing 3 days of data
+source("update_scripts/calculate_trends.R")
+
+# End timing
+end_time <- Sys.time()
+cat("✅ Update finished at:", format(end_time, "%Y-%m-%d %H:%M:%S"), "\n")
+
+# Time difference
+time_diff <- end_time - start_time
+cat("⏱️ Total time elapsed:", round(as.numeric(time_diff, units = "mins"), 2), "minutes\n")
+
+
+
+
+
+
+# Folder clean-up (only keeping 3 days)
+
+# Define the folder paths
+folder_paths <- c("data/county_hrly_avg", "data/county_24hr_avg", "data/AirNow")
+
+#----------------- Delete old .rds files -----------------
+
+for (folder_path in folder_paths) {
+  files <- list.files(folder_path, pattern = "\\.rds$", full.names = TRUE)
+  
+  for (file in files) {
+    file_name <- basename(file)
+    
+    # Extract the date from the filename (assumes date is first part before '_')
+    file_date_str <- strsplit(file_name, "_")[[1]][1]
+    file_date <- as.Date(file_date_str)
+    
+    # Check if outside date range
+    if (!is.na(file_date) && (file_date < compare_date | file_date > update_date)) {
+      file.remove(file)
+      cat("Deleted .rds file:", file, "\n")
+    }
+  }
+}
+
+#----------------- Delete old .tif files -----------------
+var_list <- vars$var_name
+
+extra_folders <- c("VENT_RATE")
+
+all_folders <- c(var_list, extra_folders)
+
+# Assume you have a data frame `vars` with a column 'var_name'
+for (folder in all_folders) {
+  folder_path <- file.path("data", folder)
+  files <- list.files(folder_path, pattern = "\\.tif$", full.names = TRUE)
+  
+  for (file in files) {
+    file_name <- basename(file)
+    
+    # Remove var_name and underscore from beginning, e.g., TMP_2024-09-12.tif
+    pattern <- paste0("^", folder, "_")
+    file_date_str <- sub(pattern, "", file_name)  # remove the TMP_ part
+    file_date_str <- sub("\\.tif$", "", file_date_str)  # remove .tif extension
+    file_date <- as.Date(file_date_str)
+    
+    # Check if outside date range
+    if (!is.na(file_date) && (file_date < compare_date | file_date > update_date)) {
+      file.remove(file)
+      cat("Deleted .tif file:", file, "\n")
+    }
+  }
+}

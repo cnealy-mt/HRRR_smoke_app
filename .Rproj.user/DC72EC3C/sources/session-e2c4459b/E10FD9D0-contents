@@ -1,0 +1,159 @@
+hourly_map_ModuleServer <- function(id, today, var_inp, fcst_hour, transparency, active_tab, play_btn, fps) {
+  moduleServer(id, function(input, output, session) {
+    today <- as.Date(today)
+    
+    # Cache for forecast data
+    cached_data <- reactiveValues(aqi = NULL, rasters = list())
+    
+    # Load forecast data when 'today' changes
+    observeEvent(today, {
+      file_path <- paste0("data/county_hrly_avg/", today, "_county_hrly_avg.rds")
+      if (file.exists(file_path)) {
+        cached_data$aqi <- readRDS(file_path)
+      }
+      
+      # Preload raster variables (extend list as needed)
+      raster_vars <- c("AQI_hourly", 
+                       "MASSDEN", 
+                       "TMP",
+                       "PRATE",
+                       "RH",
+                       "GUST",
+                       "WIND_1hr_max_fcst",
+                       "HPBL",
+                       "VENT_RATE"
+      )
+      for (v in raster_vars) {
+        raster_path <- paste0("data/", v, "/", v, "_", today, ".tif")
+        if (file.exists(raster_path)) {
+          cached_data$rasters[[v]] <- terra::rast(raster_path)
+        }
+      }
+    })
+    
+    # Render empty base map when tab becomes active
+    observeEvent(active_tab(), {
+      if (active_tab() == "Hourly Forecast") {
+        invalidateLater(300, session)
+        output$hourly_map <- renderLeaflet({
+          leaflet() %>%
+            addTiles() %>%
+            setView(lng = -110.0, lat = 47.0, zoom = 7)
+        })
+      }
+    })
+    
+    # Play/Pause animation logic
+    playing <- reactiveVal(FALSE)
+    
+    observeEvent(play_btn(), {
+      playing(!playing())
+    })
+    
+    observe({
+      req(playing())
+      invalidateLater(1000 / fps(), session)
+      new_val <- ifelse(fcst_hour() < 47, fcst_hour() + 1, 0)
+      updateSliderInput(session, "fcst_hour", value = new_val)
+    })
+    
+    # Update map layers when inputs change
+    observe({
+      req(active_tab() == "Hourly Forecast")
+      req(var_inp(), transparency(), fcst_hour())
+      
+      forecast_label <- get_hourly_label(today, fcst_hour())
+      map_proxy <- leafletProxy("hourly_map", session)
+      map_proxy %>% clearShapes() %>% clearImages() %>% clearControls()
+      
+      # POLYGON (AQI Hourly)
+      if (var_inp() == "AQI_hourly") {
+        if (is.null(cached_data$aqi)) {
+          add_no_data_message(map_proxy, paste("Hourly data not available for", today, "model run"))
+          return()
+        }
+        
+        county_hourly_avg_filtered <- cached_data$aqi %>%
+          filter(fcst_hour == fcst_hour())
+        
+        mt_counties_AQI <- mt_counties %>%
+          left_join(county_hourly_avg_filtered, by = c("NAME" = "county"))
+        
+        smoke_pal <- colorBin(
+          palette = aqi_colors,
+          domain = mt_counties_AQI$MASSDEN,
+          bins = aqi_breaks,
+          na.color = "transparent",
+          right = FALSE
+        )
+        
+        map_proxy %>%
+          addPolygons(
+            data = mt_counties_AQI,
+            fillColor = ~smoke_pal(MASSDEN),
+            fillOpacity = as.numeric(transparency()),
+            color = "black",
+            weight = .5,
+            popup = ~paste0(
+              "<strong>", NAME, " County</strong><br>",
+              "Smoke Concentration: ", round(MASSDEN, 1), " µg/m³<br>",
+              "AQI (1-hr): ", AQI_category
+            )
+          ) %>%
+          add_fire_layers(perim_data_sf, point_data_sf) %>%
+          addControl(
+            html = paste0("<div style='background: rgba(255,255,255,0.8);
+                           padding: 4px 8px; border-radius: 4px;
+                           font-size: 14px;'><strong>Forecast Date:</strong> ",
+                          forecast_label, "</div>"),
+            position = "topright"
+          ) %>%
+          addLegend(
+            pal = smoke_pal,
+            values = mt_counties_AQI$MASSDEN,
+            bins = aqi_breaks,
+            title = "Hourly PM₂.₅ (µg/m³)",
+            position = "bottomright"
+          )
+      }
+
+      # RASTER VARIABLES (e.g. VENT_RATE, TMP, PRATE)
+      else {
+        rast_obj <- cached_data$rasters[[var_inp()]]
+        if (is.null(rast_obj)) {
+          add_no_data_message(map_proxy, paste("Hourly raster not available for", var_inp(), "on", today))
+          return()
+        }
+        
+        rast_layer <- rast_obj[[fcst_hour() + 1]]
+        palette <- get(paste0(var_inp(), "_palette"))
+        
+        map_proxy %>%
+          addRasterImage(rast_layer, colors = palette, opacity = as.numeric(transparency())) %>%
+          addPolygons(
+            data = mt_counties,
+            fill = TRUE,
+            fillOpacity = 0,
+            color = "black",
+            weight = .5,
+            opacity = 1,
+            popup = ~paste0("<strong>", NAME, " County</strong><br>")
+          ) %>%
+          add_fire_layers(perim_data_sf, point_data_sf) %>%
+          addControl(
+            html = paste0("<div style='background: rgba(255,255,255,0.8);
+                           padding: 4px 8px; border-radius: 4px;
+                           font-size: 14px;'><strong>Forecast Time:</strong> ",
+                          forecast_label, "</div>"),
+            position = "topright"
+          ) %>%
+          addLegend(
+            pal = palette,
+            values = terra::values(rast_layer),
+            title = HTML(paste0(get_label(var_inp()))),
+            position = "bottomright"
+          )
+      }
+    })
+  })
+}

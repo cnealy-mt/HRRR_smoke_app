@@ -1,0 +1,27 @@
+{
+    "id": "09E7FDE7",
+    "path": "~/Documents/Desktop/Bchron:Rstudio/Air_Quality/HRRR_tools/Update_HRRR_data.R",
+    "project_path": "Update_HRRR_data.R",
+    "type": "r_source",
+    "hash": "0",
+    "contents": "",
+    "dirty": false,
+    "created": 1746212115367.0,
+    "source_on_save": false,
+    "relative_order": 2,
+    "properties": {
+        "tempName": "Untitled2",
+        "source_window_id": "",
+        "Source": "Source",
+        "cursorPosition": "31,0",
+        "scrollLine": "16"
+    },
+    "folds": "",
+    "lastKnownWriteTime": 1746368532,
+    "encoding": "UTF-8",
+    "collab_server": "",
+    "source_window": "",
+    "last_content_update": 1746368532217,
+    "read_only": false,
+    "read_only_alternatives": []
+}
