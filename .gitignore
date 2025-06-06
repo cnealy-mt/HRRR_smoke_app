@@ -8,3 +8,6 @@ data/**
 # EXCEPTION: Keep initial contents of archive and model_performance
 !data/archive/**
 !data/model_performance/**
+
+# Ignore RStudio user settings
+.Rproj.user
