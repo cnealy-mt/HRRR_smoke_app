@@ -1,9 +1,0 @@
-#Produce VENT RATE
-
-wind_file <- rast(paste0("data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_", update_date, ".tif"))
-mix_height_file <- rast(paste0("data/HPBL/HPBL_", update_date, ".tif"))
-                        
-VENT_RATE <- wind_file * mix_height_file
-
-# Optional: Save VENT_RATE raster
-writeRaster(VENT_RATE, paste0("data/VENT_RATE/VENT_RATE_", update_date, ".tif"), overwrite = TRUE)
