@@ -4,9 +4,9 @@ library(fs)
 library(readr)
 library(dplyr)
 
-flags <- readRDS("C:/R Projects (dev)/HRRR_tools/misc/wf_flags/wf_flags_PM25_all_MT.rds")
+#flags <- readRDS("C:/R Projects (dev)/HRRR_tools/misc/wf_flags/wf_flags_PM25_all_MT.rds")
 # Filter the data
-target_dates <- as.Date("2025-06-03")
+target_dates <- as.Date("2025-06-06")
 #target_dates <- seq.Date(from = as.Date("2025-05-31"), to = as.Date("2025-06-01"), by = "day")
 # target_dates <- flags %>%
 #   filter(

@@ -14,7 +14,6 @@ library(tidyr)
 library(tigris)
 library(viridis)
 
-
 if (!pingr::is_online()) stop("No internet connection.")
 
 #----------------------Counties for calculate_county_hourly_avg & get_AirNow_data--------------------------
@@ -25,9 +24,6 @@ mt_v <- vect(mt_counties)
 
 
 #------------------------UPDATE SCRIPT-------------------------------
-update_date <- format(Sys.Date(), "%Y-%m-%d")
-compare_date <- format(Sys.Date() - 2, "%Y-%m-%d")
-
 # Function to get the latest update date from the folder
 get_latest_update_date <- function(dir_path = "data/county_24hr_avg") {
   files <- list.files(path = dir_path, pattern = "^\\d{4}-\\d{2}-\\d{2}_.+\\.rds$", full.names = FALSE)
@@ -36,9 +32,12 @@ get_latest_update_date <- function(dir_path = "data/county_24hr_avg") {
   max(dates, na.rm = TRUE)
 }
 
-#------REMEMBER, INITIALIZE FIRST------
-# Function to run scheduled update
+
+
+# Main scheduled update function
 run_scheduled_update <- function() {
+  update_date <- Sys.Date()
+  
   # Current time in UTC
   current_utc <- as.POSIXct(Sys.time(), tz = "UTC")
   current_hour <- as.numeric(format(current_utc, "%H"))
@@ -49,69 +48,128 @@ run_scheduled_update <- function() {
   
   cat("⏰ UTC Time:", format(current_utc, "%Y-%m-%d %H:%M:%S"), "\n")
   cat("📂 Latest file date in county_24hr_avg:", format(latest_file_date, "%Y-%m-%d"), "\n")
-  cat("📅 Today's update_date:", update_date, "\n")
+  cat("📅 Today's update_date:", format(update_date, "%Y-%m-%d"), "\n")
   
-  # Run full update if it's after 14:05 UTC and the latest update is not today
+  # Check condition: after 14:05 UTC and latest data < today
   if ((current_hour > 14 || (current_hour == 14 && current_min >= 5)) &&
-      latest_file_date < as.Date(update_date)) {
+      latest_file_date < update_date) {
     
-    start_time <- Sys.time()
-    cat("🚀 Starting FULL update...\n")
+    target_dates <- update_date
     
-    source("update_scripts/HRRR_download.R")
-    source("update_scripts/calculate_VENT_RATE.R")
-    source("update_scripts/calculate_county_hourly_avg.R")
-    source("update_scripts/calculate_VENT_window.R")
-    source("update_scripts/archive_data.R")
-    source("update_scripts/get_AirNow_data.R")
-    source("update_scripts/model_performance.R")
-    source("update_scripts/calculate_trends.R")
-    source("update_scripts/get_fire_data.R")
+    # Step 2: Add 2-day lookback for each date
+    all_dates <- unique(sort(c(
+      target_dates,
+      target_dates - days(1),
+      target_dates - days(2)
+    )))
     
-    end_time <- Sys.time()
-    cat("✅ Full update finished at:", format(end_time, "%Y-%m-%d %H:%M:%S"), "\n")
-    cat("⏱️ Total time:", round(as.numeric(end_time - start_time, units = "mins"), 2), "minutes\n")
+    # Step 3: Create groups for contiguous date "islands"
+    group_id <- cumsum(c(1, diff(all_dates) > 1))
+    
+    # Step 4: Create the update_dates_df
+    update_dates_df <- data.frame(update_date = all_dates) %>%
+      mutate(group = group_id) %>%
+      group_by(group) %>%
+      mutate(index = row_number()) %>%
+      ungroup()
+    
+    print(update_dates_df)
+    
+    # Define script groups
+    early_scripts <- c(
+      "update_scripts/HRRR_download.R",
+      "update_scripts/calculate_VENT_RATE.R",
+      "update_scripts/calculate_county_hourly_avg.R",
+      "update_scripts/calculate_VENT_window.R"
+    )
+    
+    later_scripts <- c(
+      "update_scripts/archive_data.R",
+      "update_scripts/get_AirNow_data.R",
+      "update_scripts/model_performance.R",
+      "update_scripts/calculate_trends.R"
+    )
+    
+    # Iterate through each index and associated date
+    for (i in seq_len(nrow(update_dates_df))) {
+      assign("update_date", update_dates_df$update_date[i], envir = .GlobalEnv) #makes dynamic "update_date" available in Global Environment during iteration
+      index <- update_dates_df$index[i]
+      
+      cat("🔁 Processing iteration index:", index, " — Update date:", update_date, "\n")
+      
+      compare_date <- update_date - days(2)
+      assign("compare_date", compare_date, envir = .GlobalEnv)
+      
+      # Timing
+      start_time <- Sys.time()
+      cat("✅ Update started at:", format(start_time, "%Y-%m-%d %H:%M:%S"), "\n")
+      
+      # Run early scripts
+      for (script in early_scripts) {
+        cat("▶ Running:", script, "\n")
+        source(script)
+      }
+      
+      # Only run later scripts if index ≥ 3 within the contiguous group
+      if (index >= 3) {
+        cat("▶ Running later scripts (since it's the 3rd day or later in group)\n")
+        for (script in later_scripts) {
+          cat("▶ Running:", script, "\n")
+          source(script)
+        }
+      }
+      
+      # Delete old files in data/ folders
+      subdirs <- dir("data", full.names = TRUE, recursive = FALSE)
+      
+      for (subdir in subdirs) {
+        # Skip if it's the 'data/trend' directory
+        if (basename(subdir) == "trend") next
+        
+        if (!dir_exists(subdir)) next  # Skip if not a directory
+        
+        # Get all files (not folders) in this subdirectory
+        files <- dir(subdir, full.names = TRUE, recursive = FALSE)
+        files <- files[file.info(files)$isdir == FALSE]
+        
+        if (length(files) > 8) {
+          # Sort by modification time (newest first)
+          files_to_keep <- files %>%
+            tibble::tibble(path = ., mtime = file.info(.)$mtime) %>%
+            arrange(desc(mtime)) %>%
+            slice_head(n = 8) %>%
+            pull(path)
+          
+          # Files to delete = all files not in the 8 most recent
+          files_to_delete <- setdiff(files, files_to_keep)
+          
+          for (file_path in files_to_delete) {
+            cat("🗑️ Deleting old file:", file_path, "\n")
+            file.remove(file_path)
+          }
+        }
+      }
+      
+      # End timing
+      end_time <- Sys.time()
+      cat("✅ Update finished at:", format(end_time, "%Y-%m-%d %H:%M:%S"), "\n")
+      
+      # Time difference
+      time_diff <- end_time - start_time
+      cat("⏱️ Total time elapsed:", round(as.numeric(time_diff, units = "mins"), 2), "minutes\n\n")
+    }
     
   } else {
+    # If conditions not met, run AirNow-only update
     cat("🔄 Running AirNow-only update...\n")
+    update_date <- Sys.Date()
     source("update_scripts/get_AirNow_data.R")
     cat("✅ AirNow-only update complete at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n")
   }
 }
 
-# Run the update logic
+# Run the scheduled update
 run_scheduled_update()
 
 
-
-# Delete old files in data/ folders
-subdirs <- dir("data", full.names = TRUE, recursive = FALSE)
-
-for (subdir in subdirs) {
-  # Skip if it's the 'data/trend' directory
-  if (basename(subdir) == "trend") next
-  
-  if (!dir_exists(subdir)) next  # Skip if not a directory
-  
-  # Get all files (not folders) in this subdirectory
-  files <- dir(subdir, full.names = TRUE, recursive = FALSE)
-  files <- files[file.info(files)$isdir == FALSE]
-  
-  if (length(files) > 8) {
-    # Sort by modification time (newest first)
-    files_to_keep <- files %>%
-      tibble::tibble(path = ., mtime = file.info(.)$mtime) %>%
-      arrange(desc(mtime)) %>%
-      slice_head(n = 8) %>%
-      pull(path)
-    
-    # Files to delete = all files not in the 5 most recent
-    files_to_delete <- setdiff(files, files_to_keep)
-    
-    for (file_path in files_to_delete) {
-      cat("🗑️ Deleting old file:", file_path, "\n")
-      file.remove(file_path)
-    }
-  }
-}
 
