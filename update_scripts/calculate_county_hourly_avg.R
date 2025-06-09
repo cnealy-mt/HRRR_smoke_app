@@ -115,6 +115,9 @@ if (file_exists(hourly_path) && file_exists(daily_path)) {
                                 breaks = breaks,
                                 labels = labels,
                                 right = TRUE, include.lowest = TRUE))
+    # Ensure folders exist
+    ensure_dir("data/county_hrly_avg")
+    ensure_dir("data/county_24hr_avg")
     
     write_rds(county_hourly_avg, paste0("data//county_hrly_avg//", update_date, "_county_hrly_avg.rds"))
     write_rds(county_18hr_avg_first_day, paste0("data//county_24hr_avg//", update_date, "_updated_today_AQI_outlook.rds"))

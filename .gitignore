@@ -1,5 +1,6 @@
 # ✅ Keep .Rproj file
 # (do NOT ignore *.Rproj)
+!*.Rproj
 
 # ❌ Ignore RStudio user/session data
 .Rproj.user/
@@ -35,3 +36,7 @@ data/**
 
 # ✅ Keep empty folders via .keep files (optional)
 !data/**/.keep
+
+# ❌ Ignore install-generated files and folders
+tasks/
+app.bat

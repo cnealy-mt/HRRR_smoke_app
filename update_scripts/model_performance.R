@@ -1,4 +1,5 @@
-
+# Ensure folders exist
+ensure_dir("data/model_performance")
 
 compare_date <- as.Date(compare_date)
 yesterday_date <- compare_date + 1

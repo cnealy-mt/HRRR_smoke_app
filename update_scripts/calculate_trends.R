@@ -1,3 +1,6 @@
+# Ensure folders exist
+ensure_dir("data/trend")
+
 # Dates
 tomorrow_run <- as.Date(update_date)
 today_run <- as.Date(update_date) - 1

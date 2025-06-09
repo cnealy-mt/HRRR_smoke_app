@@ -22,6 +22,12 @@ mt_counties <- st_transform(mt_counties, crs = "EPSG:4326")
 
 mt_v <- vect(mt_counties)
 
+#-----------------------Folder Helper-----------------------
+# ensures data folders exist first time app update is run
+ensure_dir <- function(path) {
+  if (!fs::dir_exists(path)) fs::dir_create(path)
+}
+
 
 #------------------------UPDATE SCRIPT-------------------------------
 # Function to get the latest update date from the folder
@@ -87,7 +93,8 @@ run_scheduled_update <- function() {
       "update_scripts/archive_data.R",
       "update_scripts/get_AirNow_data.R",
       "update_scripts/model_performance.R",
-      "update_scripts/calculate_trends.R"
+      "update_scripts/calculate_trends.R",
+      "update_scripts/get_fire_data.R"
     )
     
     # Iterate through each index and associated date
@@ -163,6 +170,7 @@ run_scheduled_update <- function() {
     # If conditions not met, run AirNow-only update
     cat("🔄 Running AirNow-only update...\n")
     update_date <- Sys.Date()
+    assign("update_date", update_date, envir = .GlobalEnv)
     source("update_scripts/get_AirNow_data.R")
     cat("✅ AirNow-only update complete at:", format(Sys.time(), "%Y-%m-%d %H:%M:%S"), "\n")
   }

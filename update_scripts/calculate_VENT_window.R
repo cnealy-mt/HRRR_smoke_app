@@ -26,6 +26,9 @@ process_vent_window <- function(rast, filter_str, update_date, suffix = "", mt_v
   marginal_rast[valid_count_rast < 1] <- NA
   good_rast[valid_count_rast < 1]     <- NA
   
+  # Ensure folders exist
+  ensure_dir("data/VENT_WINDOW")
+  
   writeRaster(marginal_rast, paste0("data/VENT_WINDOW/", update_date, "_marginal_rast", suffix, ".tif"), overwrite = TRUE)
   writeRaster(good_rast, paste0("data/VENT_WINDOW/", update_date, "_good_rast", suffix, ".tif"), overwrite = TRUE)
   

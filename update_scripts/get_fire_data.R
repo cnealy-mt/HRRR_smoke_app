@@ -1,4 +1,5 @@
-
+# Ensure folders exist
+ensure_dir("data/fire_locs")
 
 # -------------------------------------- Get Point Fire Data ----------------------------
 

@@ -1,195 +1,0 @@
-
-Attaching package: 'dplyr'
-
-The following objects are masked from 'package:stats':
-
-    filter, lag
-
-The following objects are masked from 'package:base':
-
-    intersect, setdiff, setequal, union
-
-Warning message:
-package 'jsonlite' was built under R version 4.4.2 
-Warning message:
-package 'leaflet' was built under R version 4.4.3 
-
-Attaching package: 'lubridate'
-
-The following objects are masked from 'package:base':
-
-    date, intersect, setdiff, union
-
-Warning message:
-package 'lubridate' was built under R version 4.4.2 
-Warning message:
-package 'pingr' was built under R version 4.4.3 
-Linking to GEOS 3.13.0, GDAL 3.10.1, PROJ 9.5.1; sf_use_s2() is TRUE
-Warning message:
-package 'sf' was built under R version 4.4.2 
-Warning message:
-package 'slider' was built under R version 4.4.3 
-terra 1.8.21
-
-Attaching package: 'terra'
-
-The following object is masked from 'package:glue':
-
-    trim
-
-Warning message:
-package 'terra' was built under R version 4.4.2 
-
-Attaching package: 'tidyr'
-
-The following object is masked from 'package:terra':
-
-    extract
-
-To enable caching of data, set `options(tigris_use_cache = TRUE)`
-in your R script or .Rprofile.
-
-Attaching package: 'tigris'
-
-The following object is masked from 'package:terra':
-
-    blocks
-
-Warning message:
-package 'tigris' was built under R version 4.4.3 
-Loading required package: viridisLite
-Warning message:
-package 'viridis' was built under R version 4.4.3 
-  |                                                                              |                                                                      |   0%  |                                                                              |                                                                      |   1%  |                                                                              |=                                                                     |   1%  |                                                                              |=                                                                     |   2%  |                                                                              |==                                                                    |   2%  |                                                                              |==                                                                    |   3%  |                                                                              |==                                                                    |   4%  |                                                                              |===                                                                   |   4%  |                                                                              |===                                                                   |   5%  |                                                                              |====                                                                  |   5%  |                                                                              |====                                                                  |   6%  |                                                                              |=====                                                                 |   6%  |                                                                              |=====                                                                 |   7%  |                                                                              |=====                                                                 |   8%  |                                                                              |======                                                                |   8%  |                                                                              |======                                                                |   9%  |                                                                              |=======                                                               |   9%  |                                                                              |=======                                                               |  10%  |                                                                              |=======                                                               |  11%  |                                                                              |========                                                              |  11%  |                                                                              |========                                                              |  12%  |                                                                              |=========                                                             |  12%  |                                                                              |=========                                                             |  13%  |                                                                              |==========                                                            |  14%  |                                                                              |==========                                                            |  15%  |                                                                              |===========                                                           |  15%  |                                                                              |===========                                                           |  16%  |                                                                              |============                                                          |  17%  |                                                                              |============                                                          |  18%  |                                                                              |=============                                                         |  18%  |                                                                              |=============                                                         |  19%  |                                                                              |==============                                                        |  19%  |                                                                              |==============                                                        |  20%  |                                                                              |==============                                                        |  21%  |                                                                              |===============                                                       |  21%  |                                                                              |===============                                                       |  22%  |                                                                              |================                                                      |  22%  |                                                                              |================                                                      |  23%  |                                                                              |=================                                                     |  24%  |                                                                              |=================                                                     |  25%  |                                                                              |==================                                                    |  25%  |                                                                              |==================                                                    |  26%  |                                                                              |===================                                                   |  27%  |                                                                              |===================                                                   |  28%  |                                                                              |====================                                                  |  28%  |                                                                              |====================                                                  |  29%  |                                                                              |=====================                                                 |  29%  |                                                                              |=====================                                                 |  30%  |                                                                              |=====================                                                 |  31%  |                                                                              |======================                                                |  31%  |                                                                              |======================                                                |  32%  |                                                                              |=======================                                               |  32%  |                                                                              |=======================                                               |  33%  |                                                                              |========================                                              |  34%  |                                                                              |========================                                              |  35%  |                                                                              |=========================                                             |  35%  |                                                                              |=========================                                             |  36%  |                                                                              |==========================                                            |  37%  |                                                                              |==========================                                            |  38%  |                                                                              |===========================                                           |  38%  |                                                                              |===========================                                           |  39%  |                                                                              |============================                                          |  39%  |                                                                              |============================                                          |  40%  |                                                                              |============================                                          |  41%  |                                                                              |=============================                                         |  41%  |                                                                              |=============================                                         |  42%  |                                                                              |==============================                                        |  42%  |                                                                              |==============================                                        |  43%  |                                                                              |==============================                                        |  44%  |                                                                              |===============================                                       |  44%  |                                                                              |===============================                                       |  45%  |                                                                              |================================                                      |  45%  |                                                                              |================================                                      |  46%  |                                                                              |=================================                                     |  47%  |                                                                              |=================================                                     |  48%  |                                                                              |==================================                                    |  48%  |                                                                              |==================================                                    |  49%  |                                                                              |===================================                                   |  49%  |                                                                              |===================================                                   |  50%  |                                                                              |====================================                                  |  52%  |                                                                              |=====================================                                 |  53%  |                                                                              |=======================================                               |  55%  |                                                                              |========================================                              |  57%  |                                                                              |=========================================                             |  58%  |                                                                              |==========================================                            |  60%  |                                                                              |===========================================                           |  61%  |                                                                              |============================================                          |  63%  |                                                                              |=============================================                         |  64%  |                                                                              |==============================================                        |  66%  |                                                                              |===============================================                       |  67%  |                                                                              |===============================================                       |  68%  |                                                                              |=================================================                     |  69%  |                                                                              |==================================================                    |  71%  |                                                                              |===================================================                   |  72%  |                                                                              |====================================================                  |  74%  |                                                                              |=====================================================                 |  76%  |                                                                              |======================================================                |  77%  |                                                                              |=======================================================               |  79%  |                                                                              |========================================================              |  80%  |                                                                              |=========================================================             |  82%  |                                                                              |==========================================================            |  83%  |                                                                              |===========================================================           |  85%  |                                                                              |============================================================          |  86%  |                                                                              |==============================================================        |  88%  |                                                                              |===============================================================       |  89%  |                                                                              |================================================================      |  91%  |                                                                              |=================================================================     |  93%  |                                                                              |==================================================================    |  94%  |                                                                              |===================================================================   |  96%  |                                                                              |====================================================================  |  97%  |                                                                              |===================================================================== |  99%  |                                                                              |======================================================================| 100%
-⏰ UTC Time: 2025-06-06 19:45:07 
-📂 Latest file date in county_24hr_avg: 2025-06-05 
-📅 Today's update_date: 2025-06-06 
-# A tibble: 3 × 3
-  update_date group index
-  <date>      <dbl> <int>
-1 2025-06-04      1     1
-2 2025-06-05      1     2
-3 2025-06-06      1     3
-🔁 Processing iteration index: 1  — Update date: 20245 
-✅ Update started at: 2025-06-06 13:45:07 
-▶ Running: update_scripts/HRRR_download.R 
-data/MASSDEN/MASSDEN_2025-06-04.tif
-File already exists for MASSDEN on 2025-06-04, skipping.data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2025-06-04.tif
-File already exists for WIND_1hr_max_fcst on 2025-06-04, skipping.data/TMP/TMP_2025-06-04.tif
-File already exists for TMP on 2025-06-04, skipping.data/RH/RH_2025-06-04.tif
-File already exists for RH on 2025-06-04, skipping.data/CFNSF/CFNSF_2025-06-04.tif
-File already exists for CFNSF on 2025-06-04, skipping.data/GUST/GUST_2025-06-04.tif
-File already exists for GUST on 2025-06-04, skipping.data/HPBL/HPBL_2025-06-04.tif
-File already exists for HPBL on 2025-06-04, skipping.data/PRATE/PRATE_2025-06-04.tif
-File already exists for PRATE on 2025-06-04, skipping.▶ Running: update_scripts/calculate_VENT_RATE.R 
-Successfully processed VENT RATE for 2025-06-04▶ Running: update_scripts/calculate_county_hourly_avg.R 
-⏩ Output already exists for 2025-06-04, skipping calculation.▶ Running: update_scripts/calculate_VENT_window.R 
-[1] "data//VENT_RATE"
-Successfully processed VENT RATE WINDOW for 2025-06-04Successfully processed VENT RATE WINDOW _today_update for 2025-06-04🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_good_rast.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_good_rast_today_update.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_marginal_rast.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_marginal_rast_today_update.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_VENT_WINDOW_good_county_avg.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_VENT_WINDOW_good_county_avg_today_update.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_VENT_WINDOW_marginal_county_avg.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_VENT_WINDOW_marginal_county_avg_today_update.rds 
-✅ Update finished at: 2025-06-06 13:45:17 
-⏱️ Total time elapsed: 0.16 minutes
-
-🔁 Processing iteration index: 2  — Update date: 20245 
-✅ Update started at: 2025-06-06 13:45:17 
-▶ Running: update_scripts/HRRR_download.R 
-data/MASSDEN/MASSDEN_2025-06-05.tif
-File already exists for MASSDEN on 2025-06-05, skipping.data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2025-06-05.tif
-File already exists for WIND_1hr_max_fcst on 2025-06-05, skipping.data/TMP/TMP_2025-06-05.tif
-File already exists for TMP on 2025-06-05, skipping.data/RH/RH_2025-06-05.tif
-File already exists for RH on 2025-06-05, skipping.data/CFNSF/CFNSF_2025-06-05.tif
-File already exists for CFNSF on 2025-06-05, skipping.data/GUST/GUST_2025-06-05.tif
-File already exists for GUST on 2025-06-05, skipping.data/HPBL/HPBL_2025-06-05.tif
-File already exists for HPBL on 2025-06-05, skipping.data/PRATE/PRATE_2025-06-05.tif
-File already exists for PRATE on 2025-06-05, skipping.▶ Running: update_scripts/calculate_VENT_RATE.R 
-Successfully processed VENT RATE for 2025-06-05▶ Running: update_scripts/calculate_county_hourly_avg.R 
-⏩ Output already exists for 2025-06-05, skipping calculation.▶ Running: update_scripts/calculate_VENT_window.R 
-[1] "data//VENT_RATE"
-Successfully processed VENT RATE WINDOW for 2025-06-05Successfully processed VENT RATE WINDOW _today_update for 2025-06-05🗑️ Deleting old file: data/VENT_WINDOW/2025-06-04_good_rast.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-04_good_rast_today_update.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-04_marginal_rast.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-04_marginal_rast_today_update.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-04_VENT_WINDOW_good_county_avg.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-04_VENT_WINDOW_good_county_avg_today_update.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-04_VENT_WINDOW_marginal_county_avg.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-04_VENT_WINDOW_marginal_county_avg_today_update.rds 
-✅ Update finished at: 2025-06-06 13:45:23 
-⏱️ Total time elapsed: 0.11 minutes
-
-🔁 Processing iteration index: 3  — Update date: 20245 
-✅ Update started at: 2025-06-06 13:45:23 
-▶ Running: update_scripts/HRRR_download.R 
-data/MASSDEN/MASSDEN_2025-06-06.tif
-File already exists for MASSDEN on 2025-06-06, skipping.data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2025-06-06.tif
-File already exists for WIND_1hr_max_fcst on 2025-06-06, skipping.data/TMP/TMP_2025-06-06.tif
-File already exists for TMP on 2025-06-06, skipping.data/RH/RH_2025-06-06.tif
-File already exists for RH on 2025-06-06, skipping.data/CFNSF/CFNSF_2025-06-06.tif
-File already exists for CFNSF on 2025-06-06, skipping.data/GUST/GUST_2025-06-06.tif
-File already exists for GUST on 2025-06-06, skipping.data/HPBL/HPBL_2025-06-06.tif
-File already exists for HPBL on 2025-06-06, skipping.data/PRATE/PRATE_2025-06-06.tif
-File already exists for PRATE on 2025-06-06, skipping.▶ Running: update_scripts/calculate_VENT_RATE.R 
-Successfully processed VENT RATE for 2025-06-06▶ Running: update_scripts/calculate_county_hourly_avg.R 
-▶ Running calculations for 2025-06-06File exists: loading MASSDEN for 2025-06-06
-File exists: loading WIND_1hr_max_fcst for 2025-06-06
-File exists: loading TMP for 2025-06-06
-File exists: loading RH for 2025-06-06
-File exists: loading CFNSF for 2025-06-06
-File exists: loading GUST for 2025-06-06
-File exists: loading HPBL for 2025-06-06
-File exists: loading PRATE for 2025-06-06
-File exists: loading VENT_RATE for 2025-06-06
-✅ Finished writing outputs for 2025-06-06▶ Running: update_scripts/calculate_VENT_window.R 
-[1] "data//VENT_RATE"
-Successfully processed VENT RATE WINDOW for 2025-06-06Successfully processed VENT RATE WINDOW _today_update for 2025-06-06▶ Running later scripts (since it's the 3rd day or later in group)
-▶ Running: update_scripts/archive_data.R 
-▶ Running: update_scripts/get_AirNow_data.R 
-https://www.airnowapi.org/aq/data/?startDate=2025-06-03T19&endDate=2025-06-06T19&parameters=PM25,PM10&BBOX=-116.202774,44.045890,-103.722305,49.229925&dataType=C&format=text/csv&verbose=1&monitorType=0&includerawconcentrations=0&API_KEY=4A314159-4658-4690-8CE9-F716E5EABC20Rows: 2946 Columns: 10
-── Column specification ────────────────────────────────────────────────────────
-Delimiter: ","
-chr  (6): X4, X6, X7, X8, X9, X10
-dbl  (3): X1, X2, X5
-dttm (1): X3
-
-ℹ Use `spec()` to retrieve the full column specification for this data.
-ℹ Specify the column types or set `show_col_types = FALSE` to quiet this message.
-[1] "AirNow data retrieved successfully."
-Joining with `by = join_by(site_name)`
-▶ Running: update_scripts/model_performance.R 
-✅ AirNow data found: data//AirNow//2025-06-06_AirNow.rds✅ Both smoke raster files found:
-- data//MASSDEN//MASSDEN_2025-06-04.tif
-- data//MASSDEN//MASSDEN_2025-06-05.tifJoining with `by = join_by(site_name, latitude, longitude, date_mdt)`
-▶ Running: update_scripts/calculate_trends.R 
-[1] "Saved 1-day trend."
-[1] "Saved 2-day trend."
-[1] "data//MASSDEN"
-Successfully processed trend rasters for MASSDEN[1] "data//WIND_1hr_max_fcst"
-Successfully processed trend rasters for WIND_1hr_max_fcst[1] "data//TMP"
-Successfully processed trend rasters for TMP[1] "data//RH"
-Successfully processed trend rasters for RH[1] "data//CFNSF"
-Successfully processed trend rasters for CFNSF[1] "data//GUST"
-Successfully processed trend rasters for GUST[1] "data//HPBL"
-Successfully processed trend rasters for HPBL[1] "data//PRATE"
-Successfully processed trend rasters for PRATE[1] "data//VENT_RATE"
-Successfully processed trend rasters for VENT_RATE🗑️ Deleting old file: data/AirNow/2024-10-16_AirNow.rds 
-🗑️ Deleting old file: data/AirNow/2024-10-16_AirNow_running_avg.rds 
-🗑️ Deleting old file: data/county_24hr_avg/2025-06-02_county_24hr_avg.rds 
-🗑️ Deleting old file: data/county_24hr_avg/2025-06-02_updated_today_AQI_outlook.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_good_rast.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_good_rast_today_update.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_marginal_rast.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_marginal_rast_today_update.tif 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_VENT_WINDOW_good_county_avg.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_VENT_WINDOW_good_county_avg_today_update.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_VENT_WINDOW_marginal_county_avg.rds 
-🗑️ Deleting old file: data/VENT_WINDOW/2025-06-05_VENT_WINDOW_marginal_county_avg_today_update.rds 
-✅ Update finished at: 2025-06-06 13:52:03 
-⏱️ Total time elapsed: 6.66 minutes
-
-Warning message:
-package 'reticulate' was built under R version 4.4.3 

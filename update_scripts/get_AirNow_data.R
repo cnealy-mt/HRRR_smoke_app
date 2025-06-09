@@ -1,4 +1,5 @@
-
+# Ensure folders exist
+ensure_dir("data/AirNow")
 
 # today <- as.Date(update_date) # old way of defining based on update_date
 # start_date <- today - 2

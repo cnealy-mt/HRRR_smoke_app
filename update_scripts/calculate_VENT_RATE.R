@@ -21,8 +21,16 @@ mix_height_file <- tryCatch(
 if (!is.null(wind_file) & !is.null(mix_height_file)) {
   VENT_RATE <- wind_file * mix_height_file
   
+  # Define output folder path
+  folder_path <- "data/VENT_RATE"
+  
+  # Create folder if it doesn't exist
+  if (!fs::dir_exists(folder_path)) {
+    fs::dir_create(folder_path)
+  }
+  
   # Save result
-  writeRaster(VENT_RATE, paste0("data//VENT_RATE//VENT_RATE_", update_date, ".tif"), overwrite = TRUE)
+  writeRaster(VENT_RATE, file.path(folder_path, paste0("VENT_RATE_", update_date, ".tif")), overwrite = TRUE)
   
   cat(glue("Successfully processed VENT RATE for {update_date}\n"))
 } else {
