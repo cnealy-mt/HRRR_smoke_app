@@ -152,3 +152,10 @@ shell(sprintf('powershell -ExecutionPolicy Bypass -File "%s"', ps_file), wait = 
 
 cat("✅ Shortcut created on desktop (", shortcut_name, ")\n")
 
+cat("\n-------------------------\n")
+cat("📦 Running UPDATE_HRRR_APP.R...\n")
+cat("-------------------------\n\n")
+
+source("UPDATE_HRRR_APP.R")
+
+cat("\n✅ Finished running UPDATE_HRRR_APP.R\n")
