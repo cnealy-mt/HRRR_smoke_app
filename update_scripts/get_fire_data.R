@@ -31,7 +31,7 @@ CAN_point_data <- read.csv("https://cwfis.cfs.nrcan.gc.ca/downloads/activefires/
   select(IncidentName, FireDiscoveryDateTime, IncidentTypeCategory, IncidentSize, x, y)
 
 # 2. Read Canadian provinces shapefile and transform CRS to WGS84 (EPSG:4326)
-province_shapefile <- "C:/R Projects (dev)/HRRR_tools/misc/shapefiles/CAN_provinces"
+province_shapefile <- "misc/shapefiles/CAN_provinces"
 provinces <- st_read(province_shapefile) %>%
   st_transform(crs = 4326)
 
