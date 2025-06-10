@@ -26,7 +26,7 @@ update_date <- get_latest_update_date()
 # update_date <- "2024-07-25" #format(Sys.Date(), "%Y-%m-%d")
 
 today <- update_date
-airnow_today <- today #use Sys.Date() when operational or else AirNow hourly data won't plot properly between midnight and 8am (~model data update)
+airnow_today <- Sys.Date() #use Sys.Date() when operational or else AirNow hourly data won't plot properly between midnight and 8am (~model data update)
 
 
 #modules
