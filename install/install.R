@@ -1,18 +1,57 @@
 cat("Starting HRRR Smoke App installation...\n")
-# --- Step: Restore packages from renv.lock ---
-cat("Restoring R package environment using renv.lock...\n")
 
-# Make sure renv is installed before using it
-if (!requireNamespace("renv", quietly = TRUE)) {
-  install.packages("renv")
+# --- Step 1: Ensure RTools is configured ---
+cat("Installing pkgbuild to compile packages from source...\n")
+check_rtools <- function() {
+  gcc_path <- Sys.which("gcc")
+  make_path <- Sys.which("make")
+  
+  if (gcc_path == "" || make_path == "") {
+    cat("❌ Rtools not found in system PATH. Please install it from:\n",
+        "   https://cran.r-project.org/bin/windows/Rtools/\n")
+    return(FALSE)
+  } else {
+    cat("🔍 gcc found at:", gcc_path, "\n")
+    cat("🔍 make found at:", make_path, "\n")
+    
+    # Install pkgbuild and dependencies silently if not already installed
+    required_pkgs <- c("pkgbuild")
+    new_pkgs <- required_pkgs[!sapply(required_pkgs, requireNamespace, quietly = TRUE)]
+    
+    if (length(new_pkgs) > 0) {
+      cat("📦 Installing required packages:", paste(new_pkgs, collapse = ", "), "...\n")
+      install.packages(new_pkgs, dependencies = TRUE, ask = FALSE)
+    }
+    
+    # Now check using pkgbuild
+    has_tools <- pkgbuild::has_build_tools(debug = TRUE)
+    
+    if (has_tools) {
+      cat("✅ Rtools is correctly installed and ready for use.\n")
+    } else {
+      cat("⚠️ Rtools found but not fully configured. Restart R or check PATH settings.\n")
+    }
+    
+    return(has_tools)
+  }
 }
 
-# Restore packages as defined in renv.lock
-renv::restore(prompt = FALSE)
+# Run the check
+check_rtools()
 
-cat("✅ Package environment restored.\n")
+# --- Step 2: Restore packages from renv.lock ---
+message("Restoring R package environment using renv.lock...")
 
-# --- Step 1: Detect Paths ---
+tryCatch({
+  renv::restore(prompt = FALSE)
+  message("✅ Package environment successfully restored.")
+}, error = function(e) {
+  message("❌ renv::restore() encountered an error:")
+  message(e$message)
+  message("You may need to install some packages manually using install.packages().")
+})
+
+# --- Step 3: Detect Paths ---
 app_dir <- normalizePath(".")
 task_dir <- file.path(app_dir, "tasks")
 if (!dir.exists(task_dir)) dir.create(task_dir)
@@ -28,7 +67,7 @@ cat("Git path: ", git_path, "\n")
 cat("App directory: ", app_dir, "\n")
 cat("Task directory: ", task_dir, "\n")
 
-# --- Step 2: Create .bat Files ---
+# --- Step 4: Create .bat Files ---
 update_bat <- sprintf('@echo off
 cd /d "%s"
 "%s" "UPDATE_HRRR_APP.R" > "%s" 2>&1',
@@ -45,7 +84,7 @@ cd /d "%s"
 writeLines(git_pull_bat, file.path(task_dir, "GIT_PULL.bat"))
 cat("Created: GIT_PULL.bat\n")
 
-# --- Step 3a: Hourly Data Update Task ---
+# --- Step 4a: Hourly Data Update Task ---
 template_path <- file.path(app_dir, "install", "utils", "HRRR_App_Update_task_template.xml")
 xml_path <- file.path(task_dir, "HRRR_APP_UPDATE_task.xml")
 bat_path <- file.path(task_dir, "HRRR_APP_UPDATE.bat")
@@ -70,7 +109,7 @@ status <- shell(cmd, intern = TRUE)
 cat("✅ Task created from XML\n")
 cat("Scheduled task: HRRR_App_Update (hourly)\n")
 
-# --- Step 3b: Daily Git Version Control Task ---
+# --- Step 4b: Daily Git Version Control Task ---
 template_path_daily <- file.path(app_dir, "install", "utils", "HRRR_App_Version_Update_task_template.xml")
 xml_path_daily <- file.path(task_dir, "HRRR_APP_VERSION_UPDATE_task.xml")
 bat_path_daily <- file.path(task_dir, "GIT_PULL.bat")
@@ -95,8 +134,8 @@ cat("Scheduled task: HRRR_App_Version_Update (daily @ 22:00)\n")
 
 cat("✅ HRRR App installation complete.\n")
 
-# --- Step 4: Create Desktop Shortcut ---
-# --- Step 4a: Create HRRR_smoke_app.bat dynamically ---
+# --- Step 5: Create Desktop Shortcut ---
+# --- Step 5a: Create HRRR_smoke_app.bat dynamically ---
 cat("Creating HRRR_smoke_app.bat launcher...\n")
 
 launch_bat <- sprintf('@echo off
@@ -118,7 +157,7 @@ launch_bat_path <- file.path(app_dir, "app.bat")
 writeLines(launch_bat, launch_bat_path)
 cat("✅ Created HRRR_smoke_app.bat\n")
 
-# --- Step 4b: Create desktop shortcut ---
+# --- Step 5b: Create desktop shortcut ---
 cat("Creating desktop shortcut...\n")
 # Define paths
 bat_path <- normalizePath(file.path(app_dir, "app.bat"), winslash = "\\")
