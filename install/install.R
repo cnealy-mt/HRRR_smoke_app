@@ -3,20 +3,26 @@ cat("Starting HRRR Smoke App installation...\n")
 # Set CRAN mirror to avoid errors in non-interactive mode
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-# Determine the directory where this script is located
-this_file <- if (!interactive()) {
-  # For non-interactive use (e.g., source from another script)
-  commandArgs(trailingOnly = FALSE) |>
-    grep("^--file=", value = TRUE) |>
-    sub("^--file=", "", x = _) |>
-    normalizePath()
-} else {
-  # In interactive mode (e.g., RStudio), fallback
-  rstudioapi::getActiveDocumentContext()$path
-}
+# Detect current file path (non-interactive mode safe)
+this_file <- tryCatch({
+  # Works when script is run via Rscript or R CMD BATCH
+  cmdArgs <- commandArgs(trailingOnly = FALSE)
+  file_arg <- grep("^--file=", cmdArgs, value = TRUE)
+  if (length(file_arg) > 0) {
+    sub("^--file=", "", file_arg[1])
+  } else {
+    # fallback: assume working directory is already correct
+    "."
+  }
+}, error = function(e) {
+  "."
+})
 
-app_dir <- dirname(this_file)
+# Set and normalize app directory
+app_dir <- normalizePath(dirname(this_file), winslash = "/")
 setwd(app_dir)
+
+cat("Working directory set to:", app_dir, "\n")
 
 # --- Step 1: Restore packages from renv.lock ---
 message("Restoring R package environment using renv.lock...")
