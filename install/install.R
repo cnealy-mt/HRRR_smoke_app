@@ -1,46 +1,16 @@
 cat("Starting HRRR Smoke App installation...\n")
 
-# --- Step 1: Ensure RTools is configured ---
-cat("Installing pkgbuild to compile packages from source...\n")
-check_rtools <- function() {
-  gcc_path <- Sys.which("gcc")
-  make_path <- Sys.which("make")
-  
-  if (gcc_path == "" || make_path == "") {
-    cat("❌ Rtools not found in system PATH. Please install it from:\n",
-        "   https://cran.r-project.org/bin/windows/Rtools/\n")
-    return(FALSE)
-  } else {
-    cat("🔍 gcc found at:", gcc_path, "\n")
-    cat("🔍 make found at:", make_path, "\n")
-    
-    # Install pkgbuild and dependencies silently if not already installed
-    required_pkgs <- c("pkgbuild")
-    new_pkgs <- required_pkgs[!sapply(required_pkgs, requireNamespace, quietly = TRUE)]
-    
-    if (length(new_pkgs) > 0) {
-      cat("📦 Installing required packages:", paste(new_pkgs, collapse = ", "), "...\n")
-      install.packages(new_pkgs, dependencies = TRUE, ask = FALSE)
-    }
-    
-    # Now check using pkgbuild
-    has_tools <- pkgbuild::has_build_tools(debug = TRUE)
-    
-    if (has_tools) {
-      cat("✅ Rtools is correctly installed and ready for use.\n")
-    } else {
-      cat("⚠️ Rtools found but not fully configured. Restart R or check PATH settings.\n")
-    }
-    
-    return(has_tools)
-  }
-}
+# 🔧 Begin logging
+log_file <- file.path(app_dir, "install_log.txt")
+sink(log_file, split = TRUE)
+on.exit(sink(NULL), add = TRUE)
 
-# Run the check
-check_rtools()
 
-# --- Step 2: Restore packages from renv.lock ---
+# --- Step 1: Restore packages from renv.lock ---
 message("Restoring R package environment using renv.lock...")
+if (!requireNamespace("renv", quietly = TRUE)) {
+  install.packages("renv")
+}
 
 tryCatch({
   renv::restore(prompt = FALSE)
@@ -51,13 +21,34 @@ tryCatch({
   message("You may need to install some packages manually using install.packages().")
 })
 
-# --- Step 3: Detect Paths ---
+# --- Step 2: Detect Paths ---
 app_dir <- normalizePath(".")
 task_dir <- file.path(app_dir, "tasks")
 if (!dir.exists(task_dir)) dir.create(task_dir)
 
 rscript_path <- file.path(R.home("bin"), "Rscript.exe")
 git_path <- Sys.which("git")
+if (git_path == "") {
+  cat("❌ Git not found in PATH. Trying common install locations...\n")
+  possible_paths <- c(
+    file.path(Sys.getenv("LOCALAPPDATA"), "Programs", "Git", "cmd", "git.exe"),
+    "C:/Program Files/Git/cmd/git.exe",
+    "C:/Program Files (x86)/Git/cmd/git.exe"
+  )
+  
+  git_path <- Filter(file.exists, possible_paths)[1]
+  
+  if (length(git_path)) {
+    git_dir <- dirname(git_path)
+    cat("🔍 Git found at:", git_path, "\n")
+    add_to_user_path(git_dir)
+  } else {
+    stop("❌ Git not found. Please install Git from https://git-scm.com/")
+  }
+  
+} else {
+  cat("✅ Git already in PATH:", git_path, "\n")
+}
 
 if (!file.exists(rscript_path)) stop("Could not find Rscript.exe.")
 if (git_path == "") stop("Could not find git.exe. Make sure Git is installed and in your system PATH.")
@@ -67,7 +58,7 @@ cat("Git path: ", git_path, "\n")
 cat("App directory: ", app_dir, "\n")
 cat("Task directory: ", task_dir, "\n")
 
-# --- Step 4: Create .bat Files ---
+# --- Step 3: Create .bat Files ---
 update_bat <- sprintf('@echo off
 cd /d "%s"
 "%s" "UPDATE_HRRR_APP.R" > "%s" 2>&1',
