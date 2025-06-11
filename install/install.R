@@ -19,13 +19,18 @@ if (!requireNamespace("renv", quietly = TRUE)) {
 }
 
 tryCatch({
+  # Force renv to install into the project library (no symlinks, no sandbox)
+  Sys.setenv(RENV_CONFIG_CACHE_SYMLINKS = "FALSE")
+  Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = "FALSE")
+  
+  # Activate the project
   renv::activate(project = app_dir)
   
-  # Remove the existing project library
+  # Remove any existing renv project library
   unlink(file.path(app_dir, "renv/library"), recursive = TRUE, force = TRUE)
   
-  # Restore all packages into the local project library
-  renv::restore(repos = getOption("repos"), prompt = FALSE)
+  # Force a fresh restore from lockfile, into a clean local renv lib
+  renv::restore(project = app_dir, clean = TRUE, prompt = FALSE, repos = getOption("repos"))
   
   message("✅ Package environment successfully restored.")
 }, error = function(e) {
@@ -33,6 +38,7 @@ tryCatch({
   message(e$message)
   message("You may need to install some packages manually using install.packages().")
 })
+
 
 
 # --- Step 2: Detect Paths ---
