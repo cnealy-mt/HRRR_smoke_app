@@ -18,30 +18,23 @@ if (!requireNamespace("renv", quietly = TRUE)) {
 
 message("Restoring R package environment using renv.lock...")
 
-# Deactivate if active
-renv::deactivate()
-
-# 🔥 REMOVE the full renv folder (including the library and metadata)
+# 🔥 Remove entire renv folder (start truly fresh)
 unlink("renv", recursive = TRUE, force = TRUE)
 
-# Re-activate (this re-creates renv folder structure cleanly)
+# 🧼 Reactivate renv — this reinitializes everything
 renv::activate()
 
-# ✅ Full restore — clean ensures ghost packages are removed
-renv::restore(project = ".", clean = TRUE, prompt = FALSE)
-
-# Explicitly set library path for non-interactive use
+# 🔧 Set library path explicitly for non-interactive sessions
 lib_path <- file.path(app_dir, "renv/library", paste0("R-", getRversion()), .Platform$r_arch)
 .libPaths(lib_path)
 message("🔧 Forced .libPaths() to: ", lib_path)
 
-# Clean restore
+# ✅ Full restore — will populate the right library
 renv::restore(project = ".", clean = TRUE, prompt = FALSE)
 
-# Show where packages were installed
-message("Library path: ", .libPaths()[1])
-message("Installed packages: ", paste(list.files(.libPaths()[1]), collapse = ", "))
-
+# ✅ Confirm results
+message("📦 Library path: ", .libPaths()[1])
+message("📦 Installed packages: ", paste(list.files(.libPaths()[1]), collapse = ", "))
 
 
 
