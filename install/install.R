@@ -1,11 +1,5 @@
 cat("Starting HRRR Smoke App installation...\n")
 
-# 🔧 Begin logging
-log_file <- file.path(app_dir, "install_log.txt")
-sink(log_file, split = TRUE)
-on.exit(sink(NULL), add = TRUE)
-
-
 # --- Step 1: Restore packages from renv.lock ---
 message("Restoring R package environment using renv.lock...")
 if (!requireNamespace("renv", quietly = TRUE)) {
