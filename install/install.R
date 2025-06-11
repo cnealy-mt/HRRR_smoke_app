@@ -1,5 +1,8 @@
 cat("Starting HRRR Smoke App installation...\n")
 
+# Set CRAN mirror to avoid errors in non-interactive mode
+options(repos = c(CRAN = "https://cloud.r-project.org"))
+
 # --- Step 1: Restore packages from renv.lock ---
 message("Restoring R package environment using renv.lock...")
 if (!requireNamespace("renv", quietly = TRUE)) {
