@@ -1,46 +1,40 @@
 cat("Starting HRRR Smoke App installation...\n")
 
-cat("Starting HRRR Smoke App installation...\n")
-
-# Explicitly define app_dir since we know where the repo was cloned
+# Explicit app path
 app_dir <- normalizePath("C:/Smoke_App", winslash = "/")
 setwd(app_dir)
 
-cat("Working directory set to:", app_dir, "\n")
+# Disable symlinks and sandboxing BEFORE renv loads
+Sys.setenv(RENV_CONFIG_CACHE_SYMLINKS = "FALSE")
+Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = "FALSE")
 
-# --- Step 1: Restore packages from renv.lock ---
-message("Restoring R package environment using renv.lock...")
-
-# Set CRAN mirror to avoid errors in non-interactive mode
+# Set CRAN mirror for non-interactive use
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
+# Ensure renv is available
 if (!requireNamespace("renv", quietly = TRUE)) {
   install.packages("renv")
 }
 
-tryCatch({
-  # MUST be done BEFORE renv loads
-  Sys.setenv(RENV_CONFIG_CACHE_SYMLINKS = "FALSE")
-  Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = "FALSE")
-  
-  # Set working directory to project path
-  setwd(app_dir)
-  
-  # Activate project (also loads renv)
-  renv::activate()
-  
-  # Remove and recreate local library
-  unlink("renv/library", recursive = TRUE, force = TRUE)
-  dir.create("renv/library", recursive = TRUE)
-  
-  # Fully restore (no prompt, copy everything into renv/library)
-  renv::restore(project = ".", clean = TRUE, prompt = FALSE)
-  
-  message("✅ renv restore complete with full package copies.")
-}, error = function(e) {
-  message("❌ renv::restore() encountered an error:")
-  message(e$message)
-})
+message("Restoring R package environment using renv.lock...")
+
+# Deactivate if active
+renv::deactivate()
+
+# 🔥 REMOVE the full renv folder (including the library and metadata)
+unlink("renv", recursive = TRUE, force = TRUE)
+
+# Re-activate (this re-creates renv folder structure cleanly)
+renv::activate()
+
+# ✅ Full restore — clean ensures ghost packages are removed
+renv::restore(project = ".", clean = TRUE, prompt = FALSE)
+
+# Show where packages were installed
+message("Library path: ", .libPaths()[1])
+message("Installed packages: ", paste(list.files(.libPaths()[1]), collapse = ", "))
+
+
 
 
 
