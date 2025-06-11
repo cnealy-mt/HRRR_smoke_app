@@ -1,34 +1,25 @@
 cat("🚀 Starting HRRR Smoke App installation...\n")
 
-# Step 1: Confirm current project directory
 app_dir <- getwd()
 message("📂 Current project dir: ", app_dir)
 
-# Step 2: Set renv environment options
 Sys.setenv(RENV_CONFIG_CACHE_SYMLINKS = "FALSE")
 Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = "FALSE")
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-# Step 3: Ensure renv is installed
 if (!requireNamespace("renv", quietly = TRUE)) {
   install.packages("renv")
 }
 
-# Step 4: Activate renv for this project
 renv::activate(project = app_dir)
-
-# Step 5: Restore packages from lockfile
 renv::restore(project = app_dir, clean = TRUE, prompt = FALSE)
 
-# Step 6: Confirm install location and installed packages
 message("📦 Final library path: ", .libPaths()[1])
-message("📦 Installed packages: ", paste(list.files(.libPaths()[1]), collapse = ", "))
-
 cat("🔍 .libPaths():\n")
 print(.libPaths())
-
 cat("🔍 renv::paths$library():\n")
 print(renv::paths$library())
+
 
 
 
