@@ -1,39 +1,35 @@
-cat("Starting HRRR Smoke App installation...\n")
+cat("🚀 Starting HRRR Smoke App installation...\n")
 
-# Explicit app path
+# -- Step 0: Set project directory
 app_dir <- normalizePath("C:/Smoke_App", winslash = "/")
 setwd(app_dir)
 
-# Disable symlinks and sandboxing BEFORE renv loads
+# -- Step 1: Set renv environment variables *early*
 Sys.setenv(RENV_CONFIG_CACHE_SYMLINKS = "FALSE")
 Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = "FALSE")
 
-# Set CRAN mirror for non-interactive use
+# -- Step 2: Set CRAN mirror
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
-# Ensure renv is available
+# -- Step 3: Ensure renv is available
 if (!requireNamespace("renv", quietly = TRUE)) {
   install.packages("renv")
 }
 
-message("Restoring R package environment using renv.lock...")
-
-# 🔥 Remove entire renv folder (start truly fresh)
+# -- Step 4: Wipe and reactivate renv
 unlink("renv", recursive = TRUE, force = TRUE)
+renv::activate(project = app_dir)
 
-# 🧼 Reactivate renv — this reinitializes everything
-renv::activate()
-
-# 🔧 Set library path explicitly for non-interactive sessions
+# -- Step 5: Force correct library path
 lib_path <- file.path(app_dir, "renv/library", paste0("R-", getRversion()), .Platform$r_arch)
 .libPaths(lib_path)
 message("🔧 Forced .libPaths() to: ", lib_path)
 
-# ✅ Full restore — will populate the right library
-renv::restore(project = ".", clean = TRUE, prompt = FALSE)
+# -- Step 6: Restore into correct local library
+renv::restore(project = app_dir, clean = TRUE, prompt = FALSE)
 
-# ✅ Confirm results
-message("📦 Library path: ", .libPaths()[1])
+# -- Step 7: Confirm final library install location
+message("📦 Final library path: ", .libPaths()[1])
 message("📦 Installed packages: ", paste(list.files(.libPaths()[1]), collapse = ", "))
 
 
