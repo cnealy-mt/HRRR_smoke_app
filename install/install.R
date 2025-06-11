@@ -20,13 +20,20 @@ if (!requireNamespace("renv", quietly = TRUE)) {
 
 tryCatch({
   renv::activate(project = app_dir)
-  renv::restore(prompt = FALSE)
+  
+  # Remove the existing project library
+  unlink(file.path(app_dir, "renv/library"), recursive = TRUE, force = TRUE)
+  
+  # Restore all packages into the local project library
+  renv::restore(repos = getOption("repos"), prompt = FALSE)
+  
   message("✅ Package environment successfully restored.")
 }, error = function(e) {
   message("❌ renv::restore() encountered an error:")
   message(e$message)
   message("You may need to install some packages manually using install.packages().")
 })
+
 
 # --- Step 2: Detect Paths ---
 app_dir <- normalizePath(".")
