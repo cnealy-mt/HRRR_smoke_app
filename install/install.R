@@ -26,6 +26,29 @@ print(renv::paths$library())
 
 
 # --- Step 2: Detect Paths ---
+add_to_user_path <- function(new_dir) {
+  current_path <- Sys.getenv("PATH", names = TRUE)
+  if (!grepl(new_dir, current_path, fixed = TRUE)) {
+    # Get user-level PATH from registry
+    user_path <- tryCatch(
+      shell("reg query HKCU\\Environment /v PATH", intern = TRUE),
+      error = function(e) ""
+    )
+    user_path_value <- sub(".*\\s+PATH\\s+REG_SZ\\s+", "", user_path[length(user_path)])
+    
+    if (!grepl(new_dir, user_path_value, fixed = TRUE)) {
+      new_user_path <- paste(user_path_value, new_dir, sep = ";")
+      command <- sprintf('setx PATH "%s"', new_user_path)
+      cat("🔧 Adding to user PATH:", new_dir, "\n")
+      shell(command)
+    } else {
+      cat("✅ Directory already in user PATH:", new_dir, "\n")
+    }
+  } else {
+    cat("✅ Directory already in current session PATH:", new_dir, "\n")
+  }
+}
+
 app_dir <- normalizePath(".")
 task_dir <- file.path(app_dir, "tasks")
 if (!dir.exists(task_dir)) dir.create(task_dir)
