@@ -4,6 +4,10 @@ cat("🚀 Starting HRRR Smoke App installation...\n")
 app_dir <- normalizePath("C:/Smoke_App", winslash = "/")
 setwd(app_dir)
 
+lib_path <- file.path(app_dir, "renv/library", paste0("R-", getRversion()), .Platform$r_arch)
+.libPaths(lib_path)
+
+message("🔧 Forced .libPaths() to: ", lib_path)
 # -- Step 1: Set renv environment variables *early*
 Sys.setenv(RENV_CONFIG_CACHE_SYMLINKS = "FALSE")
 Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = "FALSE")
