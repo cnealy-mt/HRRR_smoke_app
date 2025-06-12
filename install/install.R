@@ -1,38 +1,8 @@
 # install.R in C:/Smoke_App_test
 
-cat("🚀 Starting HRRR Smoke App renv restore...\n")
+cat("🚀 Starting HRRR Smoke App setup and install...\n")
 
-# Set working directory to ensure renv uses the correct context
-setwd("C:/Smoke_App_test")
-
-# Set renv safety options
-Sys.setenv(RENV_CONFIG_CACHE_SYMLINKS = "FALSE")
-Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = "FALSE")
-
-# Set CRAN repo
-options(repos = c(CRAN = "https://cloud.r-project.org"))
-
-# Ensure renv is available
-if (!requireNamespace("renv", quietly = TRUE)) {
-  install.packages("renv")
-}
-
-# Activate and restore in-place
-renv::activate()
-renv::restore(clean = TRUE, prompt = FALSE)
-
-cat("✅ renv restore complete.\n")
-cat("📦 Final .libPaths():\n")
-print(.libPaths())
-
-
-
-
-
-
-
-
-# --- Step 2: Detect Paths ---
+# --- Step 1: Detect Paths ---
 add_to_user_path <- function(new_dir) {
   current_path <- Sys.getenv("PATH", names = TRUE)
   if (!grepl(new_dir, current_path, fixed = TRUE)) {
@@ -92,7 +62,7 @@ cat("Git path: ", git_path, "\n")
 cat("App directory: ", app_dir, "\n")
 cat("Task directory: ", task_dir, "\n")
 
-# --- Step 3: Create .bat Files ---
+# --- Step 2: Create .bat Files ---
 update_bat <- sprintf('@echo off
 cd /d "%s"
 "%s" "UPDATE_HRRR_APP.R" > "%s" 2>&1',
@@ -109,7 +79,7 @@ cd /d "%s"
 writeLines(git_pull_bat, file.path(task_dir, "GIT_PULL.bat"))
 cat("Created: GIT_PULL.bat\n")
 
-# --- Step 4a: Hourly Data Update Task ---
+# --- Step 3a: Hourly Data Update Task ---
 template_path <- file.path(app_dir, "install", "utils", "HRRR_App_Update_task_template.xml")
 xml_path <- file.path(task_dir, "HRRR_APP_UPDATE_task.xml")
 bat_path <- file.path(task_dir, "HRRR_APP_UPDATE.bat")
@@ -134,7 +104,7 @@ status <- shell(cmd, intern = TRUE)
 cat("✅ Task created from XML\n")
 cat("Scheduled task: HRRR_App_Update (hourly)\n")
 
-# --- Step 4b: Daily Git Version Control Task ---
+# --- Step 3b: Daily Git Version Control Task ---
 template_path_daily <- file.path(app_dir, "install", "utils", "HRRR_App_Version_Update_task_template.xml")
 xml_path_daily <- file.path(task_dir, "HRRR_APP_VERSION_UPDATE_task.xml")
 bat_path_daily <- file.path(task_dir, "GIT_PULL.bat")
@@ -159,8 +129,8 @@ cat("Scheduled task: HRRR_App_Version_Update (daily @ 22:00)\n")
 
 cat("✅ HRRR App installation complete.\n")
 
-# --- Step 5: Create Desktop Shortcut ---
-# --- Step 5a: Create HRRR_smoke_app.bat dynamically ---
+# --- Step 4: Create Desktop Shortcut ---
+# --- Step 4a: Create HRRR_smoke_app.bat dynamically ---
 cat("Creating HRRR_smoke_app.bat launcher...\n")
 
 launch_bat <- sprintf('@echo off
@@ -182,7 +152,7 @@ launch_bat_path <- file.path(app_dir, "app.bat")
 writeLines(launch_bat, launch_bat_path)
 cat("✅ Created HRRR_smoke_app.bat\n")
 
-# --- Step 5b: Create desktop shortcut ---
+# --- Step 4b: Create desktop shortcut ---
 cat("Creating desktop shortcut...\n")
 # Define paths
 bat_path <- normalizePath(file.path(app_dir, "app.bat"), winslash = "\\")
@@ -223,3 +193,10 @@ cat("-------------------------\n\n")
 source("UPDATE_HRRR_APP.R")
 
 cat("\n✅ Finished running UPDATE_HRRR_APP.R\n")
+
+
+
+
+
+
+
