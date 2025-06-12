@@ -405,6 +405,18 @@ ui <- page_sidebar(
       )
     ),
     
+    # AQA Threshold input
+    div(
+      style = "margin-bottom: 10px;",
+      numericInput(
+        inputId = "aqa_thresh",
+        label = "AQA Threshold (µg/m³)",
+        value = 35,
+        min = 0,
+        step = 0.1
+      )
+    ),
+    
     # Flex container for two inputs side-by-side, tightly spaced
     div(
       style = "display: flex; gap: 10px; align-items: center;",
@@ -534,7 +546,8 @@ server <- function(input, output, session) {
     aqi_outlook_choice = reactive(input$aqi_outlook_choice),
     exp_time = reactive(input$exp_time),
     exp_date = reactive(input$exp_date),
-    reason = reactive(input$reason)
+    reason = reactive(input$reason),
+    aqa_thresh = reactive(input$aqa_thresh)
   )
 }
 

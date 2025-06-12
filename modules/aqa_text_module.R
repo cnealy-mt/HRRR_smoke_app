@@ -7,7 +7,7 @@ aqa_text_ModuleUI <- function(id) {
 }
 
 
-aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, exp_time, exp_date, reason) {
+aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, exp_time, exp_date, reason, aqa_thresh) {
   moduleServer(id, function(input, output, session) {
     ns <- session$ns
     
@@ -37,11 +37,8 @@ aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, e
         df <- readRDS(file_path)
         
         df <- df %>%
-          mutate(AQA_Required = case_when(
-            is.na(AQI_category) ~ "No",
-            AQI_category %in% c("Good", "Moderate") ~ "No",
-            TRUE ~ "Yes"
-          ))
+          mutate(AQA_Required = if_else(MASSDEN > aqa_thresh(), "Yes", "No"))
+        
         
         # Identify counties where AQA is required
         aqa_counties <- df %>%
@@ -61,6 +58,10 @@ aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, e
           
           # Combine and deduplicate counties
           aqa_counties <- unique(c(aqa_counties, AirNow_avg_recent))
+          
+          # Update AQA_Required to "Yes" for counties in AirNow_avg_recent
+          df <- df %>%
+            mutate(AQA_Required = if_else(county %in% AirNow_avg_recent, "Yes", AQA_Required))
         }
         
         # Prepare list of all counties with AQA flag
