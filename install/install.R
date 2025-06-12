@@ -75,11 +75,17 @@ cat("Created: HRRR_APP_UPDATE.bat\n")
 
 git_pull_bat <- sprintf('@echo off
 cd /d "%s"
-"%s" pull > "%s" 2>&1',
-                        app_dir, git_path, file.path(task_dir, "GIT_PULL_log.txt"))
+echo 🧹 Resetting local changes...
+"%s" reset --hard HEAD
+"%s" clean -fd
+echo 🔄 Pulling from origin...
+"%s" fetch origin
+"%s" reset --hard origin/main
+', app_dir, git_path, git_path, git_path, git_path)
 
 writeLines(git_pull_bat, file.path(task_dir, "GIT_PULL.bat"))
-cat("Created: GIT_PULL.bat\n")
+cat("✅ Created: GIT_PULL.bat\n")
+
 
 # --- Step 3a: Hourly Data Update Task ---
 template_path <- file.path(app_dir, "install", "utils", "HRRR_App_Update_task_template.xml")
