@@ -76,12 +76,17 @@ cat("Created: HRRR_APP_UPDATE.bat\n")
 git_pull_bat <- sprintf('@echo off
 cd /d "%s"
 echo 🧹 Resetting local changes...
-"%s" reset --hard HEAD
-"%s" clean -fd
+"%s" reset --hard HEAD >> "%s" 2>&1
+"%s" clean -fd >> "%s" 2>&1
 echo 🔄 Pulling from origin...
-"%s" fetch origin
-"%s" reset --hard origin/main
-', app_dir, git_path, git_path, git_path, git_path)
+"%s" fetch origin >> "%s" 2>&1
+"%s" reset --hard origin/main >> "%s" 2>&1
+echo ✅ Git pull complete. >> "%s"
+', app_dir, git_path, file.path(task_dir, "GIT_PULL_log.txt"),
+                        git_path, file.path(task_dir, "GIT_PULL_log.txt"),
+                        git_path, file.path(task_dir, "GIT_PULL_log.txt"),
+                        git_path, file.path(task_dir, "GIT_PULL_log.txt"),
+                        file.path(task_dir, "GIT_PULL_log.txt"))
 
 writeLines(git_pull_bat, file.path(task_dir, "GIT_PULL.bat"))
 cat("✅ Created: GIT_PULL.bat\n")
