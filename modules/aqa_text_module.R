@@ -12,7 +12,7 @@ aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, e
     ns <- session$ns
     
     output$aqa_message <- renderText({
-      "This form summarizes counties requiring AQA due to air quality concerns."
+      ""
     })
     
     output$download_aqa_txt <- downloadHandler(

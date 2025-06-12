@@ -11,6 +11,7 @@ library(lubridate)
 library(glue)
 library(stringr)
 library(writexl)
+library(ggplot2)
 
 get_latest_update_date <- function(dir_path = "data/county_24hr_avg") {
   files <- list.files(path = dir_path, pattern = "^\\d{4}-\\d{2}-\\d{2}_.+\\.rds$", full.names = FALSE)
@@ -44,6 +45,8 @@ source(paste0("modules/model_performance_tile_module.R"))
 source(paste0("modules/bias_plot_module.R"))
 source(paste0("modules/model_performance_timeseries_module.R"))
 source(paste0("modules/aqa_text_module.R"))
+source(paste0("modules/aqa_map_module.R"))
+
 
 
 
@@ -393,53 +396,55 @@ ui <- page_sidebar(
   conditionalPanel(
     condition = "input.main_tabs == 'AQA Text Product'",
     
-    # Add "Use:" selection
-    div(
-      style = "margin-bottom: 10px;",
-      radioButtons(
-        inputId = "aqi_outlook_choice",
-        label = "Use:",
-        choices = c("Today AQI Outlook", "Tomorrow AQI Outlook"),
-        selected = "Today AQI Outlook",
-        inline = TRUE
-      )
-    ),
-    
-    # AQA Threshold input
-    div(
-      style = "margin-bottom: 10px;",
-      numericInput(
-        inputId = "aqa_thresh",
-        label = "AQA Threshold (µg/m³)",
-        value = 35,
-        min = 0,
-        step = 0.1
-      )
-    ),
-    
-    # Flex container for two inputs side-by-side, tightly spaced
-    div(
-      style = "display: flex; gap: 10px; align-items: center;",
-      textInput("exp_time", "Expiration Time", value = "8AM", width = "150px"),
-      dateInput("exp_date", "Expiration Date", value = Sys.Date(), width = "200px")
-    ),
-    
-    # Full width reason input with width: 100%
+    # Top section with inputs and map
     fluidRow(
       column(
-        12,
-        textInput(
-          "reason", 
-          "Reason for alert:", 
-          placeholder = "Optional: brief description of AQ & smoke conditions",
-          width = "100%"
-        )
+        6,
+        div(
+          style = "margin-bottom: 10px;",
+          radioButtons(
+            inputId = "aqi_outlook_choice",
+            label = "Use:",
+            choices = c("Today AQI Outlook", "Tomorrow AQI Outlook"),
+            selected = "Today AQI Outlook",
+            inline = TRUE
+          )
+        ),
+        div(
+          style = "margin-bottom: 10px;",
+          numericInput(
+            inputId = "aqa_thresh",
+            label = "AQA Threshold (µg/m³)",
+            value = 35,
+            min = 0,
+            step = 0.1
+          )
+        ),
+        div(
+          style = "display: flex; gap: 10px; align-items: center; margin-bottom: 10px;",
+          textInput("exp_time", "Expiration Time", value = "8AM", width = "150px"),
+          dateInput("exp_date", "Expiration Date", value = Sys.Date(), width = "200px")
+        ),
+        div(
+          style = "margin-bottom: 10px;",
+          textInput(
+            "reason", 
+            "Reason for alert:", 
+            placeholder = "Optional: brief description of AQ & smoke conditions",
+            width = "100%"
+          )
+        ),
+        aqa_text_ModuleUI("aqa_message")
+      ),
+      
+      column(
+        6,
+        aqa_map_ModuleUI("aqa_map")
       )
-    ),
-    
-    aqa_text_ModuleUI("aqa_message")
+    )
   )
   
+
 )
 
 
@@ -547,6 +552,16 @@ server <- function(input, output, session) {
     exp_time = reactive(input$exp_time),
     exp_date = reactive(input$exp_date),
     reason = reactive(input$reason),
+    aqa_thresh = reactive(input$aqa_thresh)
+  )
+  
+  aqa_map_ModuleServer(
+    id = "aqa_map",
+    today = today,
+    airnow_today = airnow_today,
+    exp_time = reactive(input$exp_time),
+    exp_date = reactive(input$exp_date),
+    aqi_outlook_choice = reactive(input$aqi_outlook_choice),
     aqa_thresh = reactive(input$aqa_thresh)
   )
 }
