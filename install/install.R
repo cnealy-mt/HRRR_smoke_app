@@ -1,24 +1,31 @@
-cat("🚀 Starting HRRR Smoke App installation...\n")
+# install.R in C:/Smoke_App_test
 
-app_dir <- getwd()
-message("📂 Current project dir: ", app_dir)
+cat("🚀 Starting HRRR Smoke App renv restore...\n")
 
+# Set working directory to ensure renv uses the correct context
+setwd("C:/Smoke_App_test")
+
+# Set renv safety options
 Sys.setenv(RENV_CONFIG_CACHE_SYMLINKS = "FALSE")
 Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = "FALSE")
+
+# Set CRAN repo
 options(repos = c(CRAN = "https://cloud.r-project.org"))
 
+# Ensure renv is available
 if (!requireNamespace("renv", quietly = TRUE)) {
   install.packages("renv")
 }
 
-renv::activate(project = app_dir)
-renv::restore(project = app_dir, clean = TRUE, prompt = FALSE)
+# Activate and restore in-place
+renv::activate()
+renv::restore(clean = TRUE, prompt = FALSE)
 
-message("📦 Final library path: ", .libPaths()[1])
-cat("🔍 .libPaths():\n")
+cat("✅ renv restore complete.\n")
+cat("📦 Final .libPaths():\n")
 print(.libPaths())
-cat("🔍 renv::paths$library():\n")
-print(renv::paths$library())
+
+
 
 
 
