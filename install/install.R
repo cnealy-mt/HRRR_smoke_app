@@ -1,43 +1,8 @@
 # install.R in C:/Smoke_App_test
 
-cat("🚀 Starting HRRR Smoke App renv restore...\n")
+cat("🚀 Starting HRRR Smoke App setup and initial data download...\n")
 
-# 🔧 Toggle this flag to simulate a fresh install (i.e., no renv cache)
-simulate_fresh_user <- TRUE
-
-# 🔁 Optional project path (useful if not run from RStudio)
-# setwd("C:/Smoke_App_test")
-
-# 🧼 Set safety options
-Sys.setenv(RENV_CONFIG_CACHE_SYMLINKS = "FALSE")
-Sys.setenv(RENV_CONFIG_SANDBOX_ENABLED = "FALSE")
-options(repos = c(CRAN = "https://cloud.r-project.org"))
-
-# 🧪 Simulate fresh user with no cache
-if (simulate_fresh_user) {
-  temp_cache <- tempfile("renv_cache_")
-  dir.create(temp_cache, recursive = TRUE)
-  Sys.setenv(RENV_PATHS_CACHE = temp_cache)
-  cat("🧪 Simulating fresh user. Using temporary renv cache:\n", temp_cache, "\n")
-} else {
-  cat("💾 Using default renv cache at:\n", renv::paths$cache(), "\n")
-}
-
-# 📦 Ensure renv is installed
-if (!requireNamespace("renv", quietly = TRUE)) {
-  install.packages("renv")
-}
-
-# 🔧 Activate and restore project environment
-renv::activate()
-renv::restore(clean = TRUE, prompt = FALSE)
-
-# 📍 Output paths for verification
-cat("✅ Restore complete.\n")
-cat("📦 Active .libPaths():\n")
-print(.libPaths())
-cat("📁 renv project library path:\n")
-print(renv::paths$library())
+# unlink(renv::paths$cache(), recursive = TRUE, force = TRUE)
 
 # --- Step 1: Detect Paths ---
 add_to_user_path <- function(new_dir) {
