@@ -24,18 +24,7 @@ Thumbs.db
 *~
 
 # ❌ Ignore everything in data/
-data/**
-
-# ✅ Allow folder structure in data/
-!data/
-!data/*/
-
-# ✅ Keep files in archive and model_performance
-!data/archive/**
-!data/model_performance/**
-
-# ✅ Keep empty folders via .keep files (optional)
-!data/**/.keep
+data/
 
 # ❌ Ignore install-generated files and folders
 tasks/
