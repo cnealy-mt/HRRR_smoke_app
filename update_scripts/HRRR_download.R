@@ -1,19 +1,18 @@
 #---------------------------------Get Data-----------------------------------------
 
 library(reticulate)
-#virtualenv_create() # use this line to create virtual environment on machine that runs data updates
-use_virtualenv("C:/Users/cba573/AppData/Local/R/cache/R/reticulate/py_env") # change to machine that will be running 
 
-# will need to install these packages on any machine running data downloads
-required_packages <- c("s3fs", "xarray", "metpy", "boto3", "numcodecs", "numpy", "dataclasses", "datetime", "zarr")
+required_packages <- c(
+  "s3fs", "xarray", "metpy", "boto3",
+  "numcodecs", "numpy", "dataclasses",
+  "datetime", "zarr"
+)
 
-# if packages 
-for (pkg in required_packages) {
-  if (!py_module_available(pkg)) {
-    py_install(pkg)
-    print(paste("Installing:", pkg))
-  }
-}
+py_require(required_packages)
+
+cat("✅ Using Python at:", py_config()$python, "\n")
+#print(py_list_packages())
+
 
 # Pass year, month, and day to Python
 update_date_py <- as.Date(update_date)
