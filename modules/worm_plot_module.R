@@ -21,7 +21,30 @@ worm_plot_ModuleServer <- function(id, airnow_today, AirNow_select) {
         "_AirNow.rds"
       }
       
-      file_path <- paste0("data/AirNow/", airnow_today, file_suffix)
+      # Construct the expected file name using current airnow_today
+      expected_file <- paste0("data/AirNow/", airnow_today, file_suffix)
+      
+      # Check if it exists
+      if (file.exists(expected_file)) {
+        file_path <- expected_file
+      } else {
+        # List all matching files in the directory
+        all_files <- list.files("data/AirNow/", pattern = paste0(file_suffix, "$"), full.names = TRUE)
+        
+        if (length(all_files) == 0) {
+          stop("❌ No AirNow data files found with suffix: ", file_suffix)
+        }
+        
+        # Extract dates from filenames and find the most recent
+        file_dates <- all_files |>
+          basename() |>
+          gsub(file_suffix, "", x = _) |>
+          as.Date(format = "%Y-%m-%d")
+        
+        latest_index <- which.max(file_dates)
+        file_path <- all_files[latest_index]
+        message("⚠️ Using fallback AirNow file: ", basename(file_path))
+      }
       
       df <- readRDS(file_path) %>%
         mutate(

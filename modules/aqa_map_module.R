@@ -12,6 +12,7 @@ aqa_map_ModuleServer <- function(id, today, airnow_today, exp_time, exp_date, aq
     
     # ✅ Make df a reactive expression
     df <- reactive({
+      # Main county-level file path
       file_path <- if (aqi_outlook_choice() == "Tomorrow AQI Outlook") {
         paste0("data/county_24hr_avg/", today, "_county_24hr_avg.rds")
       } else {
@@ -23,19 +24,26 @@ aqa_map_ModuleServer <- function(id, today, airnow_today, exp_time, exp_date, aq
       df_local <- readRDS(file_path) %>%
         mutate(AQA_Required = if_else(MASSDEN > aqa_thresh(), "Yes", "No"))
       
-      # Supplement from AirNow if needed
+      # ✅ Optionally augment with AirNow data if Today AQI Outlook is selected
       if (aqi_outlook_choice() == "Today AQI Outlook") {
-        AirNow_avg <- readRDS(paste0("data/AirNow/", airnow_today, "_AirNow_running_avg.rds"))
-        AirNow_avg_recent <- AirNow_avg %>%
-          group_by(site_name) %>%
-          filter(date_mdt == max(date_mdt, na.rm = TRUE)) %>%
-          ungroup() %>%
-          filter(sample_measurement_24hr_avg >= 35.4) %>%
-          distinct(county) %>%
-          pull(county)
+        airnow_file_path <- paste0("data/AirNow/", airnow_today, "_AirNow_running_avg.rds")
         
-        df_local <- df_local %>%
-          mutate(AQA_Required = if_else(county %in% AirNow_avg_recent, "Yes", AQA_Required))
+        if (file.exists(airnow_file_path)) {
+          AirNow_avg <- readRDS(airnow_file_path)
+          
+          AirNow_avg_recent <- AirNow_avg %>%
+            group_by(site_name) %>%
+            filter(date_mdt == max(date_mdt, na.rm = TRUE)) %>%
+            ungroup() %>%
+            filter(sample_measurement_24hr_avg >= 35.4) %>%
+            distinct(county) %>%
+            pull(county)
+          
+          df_local <- df_local %>%
+            mutate(AQA_Required = if_else(county %in% AirNow_avg_recent, "Yes", AQA_Required))
+        } else {
+          message("⚠️ AirNow averages not being used for AQA map: file not found for ", airnow_today)
+        }
       }
       
       df_local

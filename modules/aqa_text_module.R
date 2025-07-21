@@ -47,21 +47,28 @@ aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, e
         
         # If "Today AQI Outlook", evaluate running averages from AirNow_avg
         if (aqi_outlook_choice() == "Today AQI Outlook") {
-          AirNow_avg <- readRDS(paste0("data/AirNow/", airnow_today, "_AirNow_running_avg.rds"))
-          AirNow_avg_recent <- AirNow_avg %>%
-            group_by(site_name) %>%
-            filter(date_mdt == max(date_mdt, na.rm = TRUE)) %>%
-            ungroup() %>%
-            filter(sample_measurement_24hr_avg >= 35.4) %>%
-            distinct(county) %>%
-            pull(county)
+          airnow_file_path <- paste0("data/AirNow/", airnow_today, "_AirNow_running_avg.rds")
           
-          # Combine and deduplicate counties
-          aqa_counties <- unique(c(aqa_counties, AirNow_avg_recent))
-          
-          # Update AQA_Required to "Yes" for counties in AirNow_avg_recent
-          df <- df %>%
-            mutate(AQA_Required = if_else(county %in% AirNow_avg_recent, "Yes", AQA_Required))
+          if (file.exists(airnow_file_path)) {
+            AirNow_avg <- readRDS(airnow_file_path)
+            
+            AirNow_avg_recent <- AirNow_avg %>%
+              group_by(site_name) %>%
+              filter(date_mdt == max(date_mdt, na.rm = TRUE)) %>%
+              ungroup() %>%
+              filter(sample_measurement_24hr_avg >= 35.4) %>%
+              distinct(county) %>%
+              pull(county)
+            
+            # Combine and deduplicate counties
+            aqa_counties <- unique(c(aqa_counties, AirNow_avg_recent))
+            
+            # Update AQA_Required to "Yes" for counties in AirNow_avg_recent
+            df <- df %>%
+              mutate(AQA_Required = if_else(county %in% AirNow_avg_recent, "Yes", AQA_Required))
+          } else {
+            message("⚠️ AirNow averages not being used for AQA text: file not found for ", airnow_today) 
+          }
         }
         
         # Prepare list of all counties with AQA flag
@@ -101,7 +108,21 @@ aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, e
 
         # CURRENT AQI--------------------------------------------------------------------------------
         
-        AirNow <- readRDS(paste0("data/AirNow/", today, "_AirNow.rds"))
+        airnow_file_path <- paste0("data/AirNow/", today, "_AirNow.rds")
+        
+        # Load file if it exists, otherwise create an empty AirNow dataframe
+        AirNow <- if (file.exists(airnow_file_path)) {
+          readRDS(airnow_file_path)
+        } else {
+          message("⚠️ AirNow file for today not found. Proceeding with empty AirNow data frame.")
+          
+          # Create empty tibble with correct column names and types
+          tibble(
+            site_name = character(),
+            date_gmt = as.POSIXct(character()),
+            sample_measurement = numeric()
+          )
+        }
         
         aqi_labels <- c("Good", "Moderate", "Unhealthy for Sensitive Groups", "Unhealthy", "Very Unhealthy", "Hazardous")
         aqi_breaks <- c(0, 9, 35.4, 55.4, 125.4, 225.4, 1000)
