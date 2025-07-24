@@ -24,7 +24,7 @@ Thumbs.db
 *~
 
 # ❌ Ignore everything in data/
-data/
+#data/
 
 # ❌ Ignore install-generated files and folders
 tasks/
