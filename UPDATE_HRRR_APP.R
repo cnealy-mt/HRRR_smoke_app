@@ -130,24 +130,29 @@ run_scheduled_update <- function() {
       subdirs <- dir("data", full.names = TRUE, recursive = FALSE)
       
       for (subdir in subdirs) {
-        # Skip if it's the 'data/trend' directory
-        if (basename(subdir) == "trend") next
+        folder_name <- basename(subdir)
         
-        if (!dir_exists(subdir)) next  # Skip if not a directory
+        # Skip if not a directory
+        if (!dir_exists(subdir)) next
         
-        # Get all files (not folders) in this subdirectory
+        # Skip "trend" folder entirely
+        if (folder_name == "trend") next
+        
+        # Determine file limit based on folder name
+        file_limit <- if (folder_name == "VENT_WINDOW") 8 else 3
+        
+        # Get all files (ignore subfolders)
         files <- dir(subdir, full.names = TRUE, recursive = FALSE)
         files <- files[file.info(files)$isdir == FALSE]
         
-        if (length(files) > 8) {
-          # Sort by modification time (newest first)
-          files_to_keep <- files %>%
-            tibble::tibble(path = ., mtime = file.info(.)$mtime) %>%
+        # Delete old files if exceeding limit
+        if (length(files) > file_limit) {
+          files_to_keep <- tibble::tibble(path = files,
+                                          mtime = file.info(files)$mtime) %>%
             arrange(desc(mtime)) %>%
-            slice_head(n = 8) %>%
+            slice_head(n = file_limit) %>%
             pull(path)
           
-          # Files to delete = all files not in the 8 most recent
           files_to_delete <- setdiff(files, files_to_keep)
           
           for (file_path in files_to_delete) {
@@ -156,6 +161,7 @@ run_scheduled_update <- function() {
           }
         }
       }
+      
       
       # End timing
       end_time <- Sys.time()
