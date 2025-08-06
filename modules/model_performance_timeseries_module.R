@@ -7,29 +7,31 @@ model_performance_timeseries_ModuleServer <- function(id, site_name_mp, start_da
   moduleServer(id, function(input, output, session) {
     output$model_performance_timeseries <- renderHighchart({
       
-      model_performance_timeseries <- readRDS("data/model_performance/hourly_model_performance.rds") %>%
+
+      
+      # filter to only include data up to latest AirNow data and between calendar selection input
+      model_performance_timeseries <- hourly_model_performance %>% # loaded in plot_utils.R
         filter(site_name == site_name_mp() &
-                 date >= start_date_mp() & date <= end_date_mp()) %>%
-        mutate(
-          date_utc = date_mdt - hours(6)
-        )
+                 date >= start_date_mp() & date <= end_date_mp())
       
       # Use standard `if` to conditionally assign column mappings
-      if (lead_time() == "zero_day") {
-        model_performance_timeseries <- model_performance_timeseries %>%
+      if (lead_time() == 0) {
+        df <- model_performance_timeseries %>%
           mutate(
-            HRRR_point_hourly = smoke_ug_m3_today_update,
-            HRRR_point_24hr_running = HRRR_24hr_today_update_point,
-            AirNow_hourly = sample_measurement,           # These stay the same
-            AirNow_24hr_running = AirNow_24hr
+            local_time_utc = lubridate::force_tz(local_time, tzone = "UTC"), # this way highcharter will put in correct timezone since it thinks local_time is UTC
+            model_point_hourly = model_smoke_lead0,
+            model_point_24hr_running = `24hr_avg_model_smoke_lead0`,
+            AirNow_hourly = airnow_obs,           # These stay the same
+            AirNow_24hr_running = `24hr_avg_airnow_obs`
           )
       } else {
-        model_performance_timeseries <- model_performance_timeseries %>%
+        df <- model_performance_timeseries %>%
           mutate(
-            HRRR_point_hourly = smoke_ug_m3,
-            HRRR_point_24hr_running = HRRR_24hr_point,
-            AirNow_hourly = sample_measurement,
-            AirNow_24hr_running = AirNow_24hr
+            local_time_utc = lubridate::force_tz(local_time, tzone = "UTC"), # this way highcharter will put in correct timezone since it thinks local_time is UTC
+            model_point_hourly = model_smoke_lead1,
+            model_point_24hr_running = `24hr_avg_model_smoke_lead1`,
+            AirNow_hourly = airnow_obs,           # These stay the same
+            AirNow_24hr_running = `24hr_avg_airnow_obs`
           )
       }
 
@@ -62,19 +64,19 @@ model_performance_timeseries_ModuleServer <- function(id, site_name_mp, start_da
         ) %>%
         hc_add_series(
           name = "HRRR Hourly",
-          data = model_performance_timeseries %>%
+          data = df %>%
             transmute(
-              x = datetime_to_timestamp(date_utc),
-              y = HRRR_point_hourly
+              x = datetime_to_timestamp(local_time_utc),
+              y = model_point_hourly
             ) %>%
             list_parse2(),
           color = "#F54D28"
         ) %>%
         hc_add_series(
           name = "AirNow Hourly",
-          data = model_performance_timeseries %>%
+          data = df %>%
             transmute(
-              x = datetime_to_timestamp(date_utc),
+              x = datetime_to_timestamp(local_time_utc),
               y = AirNow_hourly
             ) %>%
             list_parse2(),
@@ -82,10 +84,10 @@ model_performance_timeseries_ModuleServer <- function(id, site_name_mp, start_da
         ) %>%
         hc_add_series(
           name = "HRRR 24-hr Running Avg",
-          data = model_performance_timeseries %>%
+          data = df %>%
             transmute(
-              x = datetime_to_timestamp(date_utc),
-              y = HRRR_point_24hr_running
+              x = datetime_to_timestamp(local_time_utc),
+              y = model_point_24hr_running
             ) %>%
             list_parse2(),
           color = "#F54D28",
@@ -95,9 +97,9 @@ model_performance_timeseries_ModuleServer <- function(id, site_name_mp, start_da
         ) %>%
         hc_add_series(
           name = "AirNow 24-hr Running Avg",
-          data = model_performance_timeseries %>%
+          data = df %>%
             transmute(
-              x = datetime_to_timestamp(date_utc),
+              x = datetime_to_timestamp(local_time_utc),
               y = AirNow_24hr_running
             ) %>%
             list_parse2(),

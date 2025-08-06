@@ -7,10 +7,13 @@ library(RColorBrewer)
 library(sf)
 library(scales)
 
+# ===================================PNG Anchors=========================================
+montana_bounds <- readRDS("modules/utils/png_bounds.rds")
+
 #------------------------------------AQI Scale-------------------------------------------
 
 # AQI
-aqi_breaks <- c(0, 9, 35.4, 55.4, 125.4, 225.4, 1000)
+aqi_breaks <- c(0, 9, 35.4, 55.4, 125.4, 225.4, Inf)
 aqi_colors <- c(
   "#00E400",  # "Good"
   "#FFFF00",  # "Moderate"
@@ -49,14 +52,26 @@ aqi_trend_palette <- colorFactor(
 MASSDEN_breaks <- c(0, 1, 2, 4, 6, 8, 12, 16, 20, 25, 30, 40, 60, 100, 200, Inf)
 MASSDEN_colors <- c("transparent", "#D6EAF8", "#AED6F1", "#5DADE2", "#2874A6", "#117A65", "#27AE60", "#A0E424", "#FFF284", "#FFAD41", "#FF950A", "#FF6A00", "#C60000", "#970000", "#9A00FF")
 # Create color function
-MASSDEN_palette <- colorBin(palette = MASSDEN_colors, bins = MASSDEN_breaks, na.color = "transparent")
+MASSDEN_palette <- function(x) {
+  ifelse(x < 1, "#FFFFFF00", colorBin(
+    palette = MASSDEN_colors[-1], 
+    bins = MASSDEN_breaks[-1], 
+    na.color = "transparent"
+  )(x))
+}
 
 # PRATE
 PRATE_breaks <- c(0, 0.00125, 0.00375, 0.0125, 0.0375, 0.0625, 0.09375, 0.125, 0.1875, 0.25, 0.375, 0.5, 0.625, 0.75, 1, Inf
 )
 PRATE_colors <- c("transparent", "#D6EAF8", "#AED6F1", "#5DADE2", "#2874A6", "#117A65", "#27AE60", "#A0E424", "#FFF284", "#FFAD41", "#FF950A", "#FF6A00", "#C60000", "#970000", "#9A00FF")
 # Create color function
-PRATE_palette <- colorBin(palette = PRATE_colors, bins = PRATE_breaks, na.color = "transparent")
+PRATE_palette <- function(x) {
+  ifelse(x < 0.00125, "#FFFFFF00", colorBin(
+    palette = PRATE_colors[-1], 
+    bins = PRATE_breaks[-1], 
+    na.color = "transparent"
+  )(x))
+}
 
 # GUST
 GUST_palette <- colorBin(
@@ -138,6 +153,47 @@ mt_state_boundary <- st_transform(mt_state_boundary, crs = "EPSG:4326")
 mt_counties <- counties(state = "MT", cb = TRUE, year = 2022)
 mt_counties <- st_transform(mt_counties, crs = "EPSG:4326")
 
+#======================Monitor AQI Points (add to map function ======================================
+airnow_data <- readRDS("data/AirNow/AirNow.rds")
+
+add_airnow_layers <- function(map, airnow_df) {
+  # Ensure latest reading per site
+  latest_airnow <- airnow_df %>%
+    group_by(site_name) %>%
+    filter(local_time == max(local_time)) %>%
+    ungroup()
+  
+  # AQI color palette
+  aqi_palette <- colorBin(
+    palette = aqi_colors,
+    bins = aqi_breaks,
+    na.color = "transparent",
+    right = FALSE
+  )
+  
+  # Popup content
+  popup_content <- paste0(
+    "<strong>", latest_airnow$site_name, "</strong><br>",
+    "Value: ", round(latest_airnow$sample_measurement, 1), " ", latest_airnow$units_of_measure, "<br>",
+    "Last Updated: ", latest_airnow$local_time, "<br>",
+    "Agency: ", latest_airnow$monitoring_agency
+  )
+  
+  map %>%
+    addCircleMarkers(
+      lng = latest_airnow$longitude,
+      lat = latest_airnow$latitude,
+      group = "Monitors",
+      radius = 6,
+      color = "black",
+      weight = 1,
+      fillColor = aqi_palette(latest_airnow$sample_measurement),
+      fillOpacity = 0.9,
+      popup = popup_content
+    ) 
+}
+
+
 #------------------------------------Fire Data-------------------------------------------
 point_data_sf <- readRDS("data/fire_locs/fire_point.rds")
 perim_data_sf <- readRDS("data/fire_locs/fire_poly.rds")
@@ -186,13 +242,95 @@ add_fire_layers <- function(map, perim_data_sf, point_data_sf) {
       fillColor = "black",
       fillOpacity = 0.8,
       popup = popup_content_point
-    ) %>%
-    addLayersControl(
-      overlayGroups = c("Wildfires (perimeters)", "Wildfires (points)"),
-      options = layersControlOptions(collapsed = FALSE),
-      position = "bottomleft"
-    ) 
+    )
 }
+
+#================================Hourly Map Legend Function=================================
+add_var_legend <- function(map, var, layerId = "varLegend") {
+  if (var == "MASSDEN") {
+    legend_pal <- colorBin(
+      palette = MASSDEN_colors[-1],
+      bins = MASSDEN_breaks[-1],
+      na.color = "transparent"
+    )
+    map <- addLegend(map, 
+                     pal = legend_pal, 
+                     values = MASSDEN_breaks[-1],
+                     title = get_label(var), 
+                     position = "bottomright",
+                     layerId = layerId)
+    
+  } else if (var == "PRATE") {
+    legend_pal <- colorBin(
+      palette = PRATE_colors[-1], 
+      bins = PRATE_breaks[-1], 
+      na.color = "transparent"
+    )
+    map <- addLegend(map, 
+                     pal = legend_pal, 
+                     values = PRATE_breaks[-1], 
+                     title = get_label(var), 
+                     position = "bottomright",
+                     layerId = layerId)
+    
+  } else if (var == "TMP") {
+    map <- addLegend(map, 
+                     pal = TMP_palette, 
+                     values = seq(0, 100, length.out = 21), 
+                     title = get_label(var), 
+                     position = "bottomright",
+                     layerId = layerId)
+    
+  } else if (var == "VENT_RATE") {
+    legend_pal <- colorBin(
+      palette = VENT_RATE_colors,
+      bins = VENT_RATE_breaks,
+      na.color = "transparent"
+    )
+    map <- addLegend(map, 
+                     pal = legend_pal, 
+                     values = VENT_RATE_breaks, 
+                     labels = VENT_RATE_labels, 
+                     title = get_label(var), 
+                     position = "bottomright",
+                     layerId = layerId)
+    
+  } else if (var == "WIND_1hr_max_fcst") {
+    map <- addLegend(map,
+                     pal = WIND_1hr_max_fcst_palette,
+                     values = seq(0, 20, length.out = 21),
+                     title = get_label(var),
+                     position = "bottomright",
+                     layerId = layerId)
+    
+  } else if (var == "RH") {
+    map <- addLegend(map,
+                     pal = RH_palette,
+                     values = seq(0, 100, length.out = 21),
+                     title = get_label(var),
+                     position = "bottomright",
+                     layerId = layerId)
+    
+  } else if (var == "HPBL") {
+    map <- addLegend(map,
+                     pal = HPBL_palette,
+                     values = seq(0, 4000, length.out = 21),
+                     title = get_label(var),
+                     position = "bottomright",
+                     layerId = layerId)
+    
+  } else if (var == "GUST") {
+    map <- addLegend(map,
+                     pal = GUST_palette,
+                     values = seq(0, 20, length.out = 21),
+                     title = get_label(var),
+                     position = "bottomright",
+                     layerId = layerId)
+  }
+  
+  return(map)
+}
+
 
 #--------------------------------NO DATA MESSAGE---------------------------------------------
 

@@ -50,7 +50,7 @@ model_performance_tile_ModuleServer <- function(id, year, month, variable) {
         list_parse()
       
       # Step 6: Color scale
-      if (variable() %in% c("accuracy", "accuracy_update")) {
+      if (variable() %in% c("model_smoke_lead0_accuracy", "model_smoke_lead1_accuracy")) {
         aqi_accuracy_values <- -5:5
         aqi_accuracy_colors <- c(
           colorRampPalette(c("#922b21", "#fcf3cf"))(5),
@@ -74,11 +74,11 @@ model_performance_tile_ModuleServer <- function(id, year, month, variable) {
       # Step 7: Chart title
       plot_title <- switch(
         variable(),
-        "accuracy" = "AQI Difference - HRRR minus Monitor Obs (1-day lead)",
-        "accuracy_update" = "AQI Difference - HRRR minus Monitor Obs (0-day lead)",
-        "avg_HRRR_ug_m3" = "HRRR Concentration (1-day lead)",
-        "avg_HRRR_ug_m3_today_update" = "HRRR Concentration (0-day lead)",
-        "avg_sample_measurement" = "Monitor Obs Concentration",
+        "model_smoke_lead0_accuracy" = "AQI Difference - HRRR minus Monitor Obs (0-day lead)",
+        "model_smoke_lead1_accuracy" = "AQI Difference - HRRR minus Monitor Obs (1-day lead)",
+        "model_smoke_lead0" = "HRRR Concentration (0-day lead)",
+        "model_smoke_lead1" = "HRRR Concentration (1-day lead)",
+        "airnow_obs" = "Monitor Obs Concentration",
         "Unknown Variable"
       )
       

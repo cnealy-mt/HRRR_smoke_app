@@ -3,29 +3,25 @@ ensure_dir("data/AirNow")
 
 # today <- as.Date(update_date) # old way of defining based on update_date
 # start_date <- today - 2
+AirNow <- readRDS("data/AirNow/AirNow.rds")
 
-# Get current times and offsets
-current_utc_time <- now(tzone = "UTC")
-current_local_time <- with_tz(current_utc_time, tzone = Sys.timezone())
-local_hour <- hour(current_local_time)
-utc_hour <- hour(current_utc_time)
-utc_offset <- as.numeric(format(current_local_time, "%z")) / 100  # -6 for MDT, -7 for MST
+# 1. Find the most recent date_gmt
+most_recent <- max(AirNow$date_gmt, na.rm = TRUE)
 
-# Determine cutoff hour (local midnight in UTC terms)
-cutoff_hour <- ifelse(utc_offset == -6, 18, 17)
+# 2. Start time = most recent + 1 hour
+start_time <- most_recent - hours(2)
 
-# Adjust update_date if past cutoff
-adjusted_update_date <- as.Date(update_date) + ifelse(local_hour >= cutoff_hour, 1, 0)
+# 3. End time = current UTC time, truncated to hour
+end_time <- floor_date(with_tz(Sys.time(), "UTC"), "hour")
 
-# Format date strings for API (using adjusted date)
-end_date_str <- format(adjusted_update_date, "%Y-%m-%d")
-start_date_str <- format(adjusted_update_date - 3, "%Y-%m-%d")
-UTC_hr <- sprintf("T%02d", utc_hour)
+# Format strings for API
+start_str <- format(start_time, "%Y-%m-%dT%H")
+end_str   <- format(end_time, "%Y-%m-%dT%H")
 
-# Example URL construction
+# Construct URL
 url <- paste0(
-  "https://www.airnowapi.org/aq/data/?startDate=", start_date_str, UTC_hr,
-  "&endDate=", end_date_str, UTC_hr,
+  "https://www.airnowapi.org/aq/data/?startDate=", start_str,
+  "&endDate=", end_str,
   "&parameters=PM25,PM10&BBOX=-116.202774,44.045890,-103.722305,49.229925",
   "&dataType=C&format=text/csv&verbose=1&monitorType=0&includerawconcentrations=0",
   "&API_KEY=4A314159-4658-4690-8CE9-F716E5EABC20"
@@ -49,8 +45,9 @@ tryCatch({
                    "units_of_measure", "site_name", "monitoring_agency", "AQSID", "Full_AQSID")
     colnames(air_quality_data) <- col_names
     
-    AirNow <- air_quality_data %>%
+    AirNow_update <- air_quality_data %>%
       mutate(
+        local_time = with_tz(date_gmt, tzone = "America/Denver"),
         AQSID = as.character(AQSID),
         Full_AQSID = as.character(Full_AQSID),
         country_code = substr(Full_AQSID, 1, 3),
@@ -63,16 +60,26 @@ tryCatch({
     print("AirNow data retrieved successfully.")
     
     #------------------------------Remove rows where sample_measurement is less than -900-------------------------
-    AirNow <- AirNow %>%
+    AirNow_update <- AirNow_update %>%
       filter(sample_measurement >= -900 & parameter == "PM2.5") 
     
-    saveRDS(AirNow, paste0("data//AirNow//", update_date, "_AirNow.rds"))
+    #------------------------------Append Data Update-------------------------
+    
+    AirNow_appended <- AirNow %>%
+      mutate(source_flag = 0) %>%                      # old = 0
+      bind_rows(AirNow_update %>% mutate(source_flag = 1)) %>%  # new = 1
+      group_by(site_name, date_gmt) %>%
+      slice_max(order_by = source_flag, n = 1, with_ties = FALSE) %>%
+      ungroup() %>%
+      select(-source_flag) %>%
+      filter(local_time >= Sys.time() - days(3))
+    
+    saveRDS(AirNow_appended, paste0("data//AirNow//AirNow.rds"))
     
     
     #---------------------------Calculate running average------------------------------------
-    AirNow_avg <- AirNow %>%
-      mutate(date_mdt = date_gmt - hours(6)) %>%
-      arrange(AQSID, date_mdt) %>%
+    AirNow_avg <- AirNow_appended %>%
+      arrange(AQSID, local_time) %>%
       group_by(AQSID) %>%
       mutate(
         sample_measurement_24hr_avg = slide_period_dbl(
@@ -100,7 +107,7 @@ tryCatch({
       left_join(sites_and_counties)
     
     
-    saveRDS(AirNow_avg, paste0("data//AirNow//", update_date, "_AirNow_running_avg.rds"))
+    saveRDS(AirNow_avg, paste0("data//AirNow//AirNow_running_avg.rds"))
     
   } else {
     message(paste("Failed to fetch data. Status code:", status_code(response)))
@@ -109,7 +116,34 @@ tryCatch({
   message("GET request failed with error: ", e$message)
 })
 
+# Merge New AirNow data to hourly_model_performance
+AirNow <- readRDS("data/AirNow/AirNow.rds")
+hourly_model_performance <- readRDS("data/model_performance/hourly_model_performance.rds")
 
+#--------------------------Append Most Recent AirNow Update-------------------------
+hourly_model_performance <- hourly_model_performance %>%
+  left_join(
+    AirNow %>% select(site_name, local_time, sample_measurement),
+    by = c("site_name", "local_time")
+  ) %>%
+  mutate(
+    # If there's a sample_measurement value, use it; otherwise keep existing airnow_obs
+    airnow_obs = if_else(!is.na(sample_measurement), sample_measurement, airnow_obs)
+  ) %>%
+  select(-sample_measurement)
 
+#---------------------------Calculate Running 24-hr Averages---------------------------
+hourly_model_performance <- hourly_model_performance %>%
+  group_by(site_name) %>%
+  arrange(local_time, .by_group = TRUE) %>%
+  mutate(
+    across(
+      airnow_obs,
+      ~ slide_dbl(.x, mean, .before = 23, .complete = TRUE, na.rm = TRUE),
+      .names = "24hr_avg_{.col}"
+    )
+  ) %>%
+  ungroup()
 
+saveRDS(hourly_model_performance, "data/model_performance/hourly_model_performance.rds")
 

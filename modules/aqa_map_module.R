@@ -14,9 +14,9 @@ aqa_map_ModuleServer <- function(id, today, airnow_today, exp_time, exp_date, aq
     df <- reactive({
       # Main county-level file path
       file_path <- if (aqi_outlook_choice() == "Tomorrow AQI Outlook") {
-        paste0("data/county_24hr_avg/", today, "_county_24hr_avg.rds")
+        paste0("data/county_24hr_avg/", today, "_county_24hr_avg_lead1.rds")
       } else {
-        paste0("data/county_24hr_avg/", today, "_updated_today_AQI_outlook.rds")
+        paste0("data/county_24hr_avg/", today, "_county_24hr_avg_lead0.rds")
       }
       
       if (!file.exists(file_path)) return(NULL)
@@ -26,14 +26,14 @@ aqa_map_ModuleServer <- function(id, today, airnow_today, exp_time, exp_date, aq
       
       # ✅ Optionally augment with AirNow data if Today AQI Outlook is selected
       if (aqi_outlook_choice() == "Today AQI Outlook") {
-        airnow_file_path <- paste0("data/AirNow/", airnow_today, "_AirNow_running_avg.rds")
+        airnow_file_path <- paste0("data/AirNow/AirNow_running_avg.rds")
         
         if (file.exists(airnow_file_path)) {
           AirNow_avg <- readRDS(airnow_file_path)
           
           AirNow_avg_recent <- AirNow_avg %>%
             group_by(site_name) %>%
-            filter(date_mdt == max(date_mdt, na.rm = TRUE)) %>%
+            filter(local_time == max(local_time, na.rm = TRUE)) %>%
             ungroup() %>%
             filter(sample_measurement_24hr_avg >= 35.4) %>%
             distinct(county) %>%

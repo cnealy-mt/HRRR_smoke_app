@@ -1,28 +1,15 @@
 #Produce VENT RATE
 
-# Try loading wind and mix height rasters safely
-wind_file <- tryCatch(
-  rast(paste0("data//WIND_1hr_max_fcst//WIND_1hr_max_fcst_", update_date, ".tif")),
-  error = function(e) {
-    cat(glue("Warning: Missing WIND file for {update_date}. Proceeding without it.\n"))
-    return(NULL)
-  }
-)
-
-mix_height_file <- tryCatch(
-  rast(paste0("data//HPBL//HPBL_", update_date, ".tif")),
-  error = function(e) {
-    cat(glue("Warning: Missing HPBL file for {update_date}. Proceeding without it.\n"))
-    return(NULL)
-  }
-)
-
 # Proceed only if both files exist
-if (!is.null(wind_file) & !is.null(mix_height_file)) {
-  VENT_RATE <- wind_file * mix_height_file
+if (!is.null(WIND_1hr_max_fcst_stack) & !is.null(HPBL_stack)) {
+  this_var_name <- "VENT_RATE"
   
   # Define output folder path
-  folder_path <- "data/VENT_RATE"
+  folder_path <- "www/VENT_RATE"
+  
+  VENT_RATE_stack <- WIND_1hr_max_fcst_stack * HPBL_stack
+  stack <- VENT_RATE_stack
+ 
   
   # Create folder if it doesn't exist
   if (!fs::dir_exists(folder_path)) {
@@ -30,7 +17,7 @@ if (!is.null(wind_file) & !is.null(mix_height_file)) {
   }
   
   # Save result
-  writeRaster(VENT_RATE, file.path(folder_path, paste0("VENT_RATE_", update_date, ".tif")), overwrite = TRUE)
+  source("update_scripts/write_hourly_png.R")
   
   cat(glue("Successfully processed VENT RATE for {update_date}\n"))
 } else {

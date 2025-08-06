@@ -7,7 +7,7 @@ bias_plot_ModuleUI <- function(id) {
 
 
 # Module Server
-bias_plot_ModuleServer <- function(id, year, month, variable, lead_time) {
+bias_plot_ModuleServer <- function(id, year, month, lead_time) {
   moduleServer(id, function(input, output, session) {
     output$bias_plot <- renderHighchart({
       
@@ -16,25 +16,25 @@ bias_plot_ModuleServer <- function(id, year, month, variable, lead_time) {
                  lubridate::year(date) == year())
       
       # Use standard `if` to choose the columns based on lead_time (a scalar input)
-      if (lead_time() == "zero_day") {
+      if (lead_time() == 0) {
         daily_model_performance <- daily_model_performance %>%
           mutate(
-            model_value = avg_HRRR_ug_m3_today_update,
-            accuracy_value = accuracy_update
+            model_value = model_smoke_lead0,
+            accuracy_value = model_smoke_lead0_accuracy
           )
       } else {
         daily_model_performance <- daily_model_performance %>%
           mutate(
-            model_value = avg_HRRR_ug_m3,
-            accuracy_value = accuracy
+            model_value = model_smoke_lead1,
+            accuracy_value = model_smoke_lead1_accuracy
           )
       }
       
       bias <- daily_model_performance %>%
-        select(model_value, avg_sample_measurement, obs_AQI, accuracy_value) %>%
+        select(model_value, airnow_obs, AQI_obs, accuracy_value) %>%
         drop_na() %>%
-        mutate(bias = model_value - avg_sample_measurement) %>%
-        group_by(obs_AQI) %>%
+        mutate(bias = model_value - airnow_obs) %>%
+        group_by(AQI_obs) %>%
         summarise(
           mean_bias = mean(bias),
           sample_count = n(),
@@ -49,8 +49,8 @@ bias_plot_ModuleServer <- function(id, year, month, variable, lead_time) {
       # 2. Prepare chart data: filter to only the AQI levels you have data for
       chart_data <- bias %>%
         mutate(
-          category = aqi_labels[obs_AQI],
-          color = aqi_colors[obs_AQI]
+          category = aqi_labels[AQI_obs],
+          color = aqi_colors[AQI_obs]
         )
       
       # 3. Build the highchart

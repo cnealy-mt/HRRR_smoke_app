@@ -24,9 +24,9 @@ aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, e
 
         # Determine the correct file path based on the outlook choice
         file_path <- if (aqi_outlook_choice() == "Tomorrow AQI Outlook") {
-          paste0("data/county_24hr_avg/", today, "_county_24hr_avg.rds")
+          paste0("data/county_24hr_avg/", today, "_county_24hr_avg_lead1.rds")
         } else {
-          paste0("data/county_24hr_avg/", today, "_updated_today_AQI_outlook.rds")
+          paste0("data/county_24hr_avg/", today, "_county_24hr_avg_lead0.rds")
         }
         
         if (!file.exists(file_path)) {
@@ -47,14 +47,14 @@ aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, e
         
         # If "Today AQI Outlook", evaluate running averages from AirNow_avg
         if (aqi_outlook_choice() == "Today AQI Outlook") {
-          airnow_file_path <- paste0("data/AirNow/", airnow_today, "_AirNow_running_avg.rds")
+          airnow_file_path <- paste0("data/AirNow/AirNow_running_avg.rds")
           
           if (file.exists(airnow_file_path)) {
             AirNow_avg <- readRDS(airnow_file_path)
             
             AirNow_avg_recent <- AirNow_avg %>%
               group_by(site_name) %>%
-              filter(date_mdt == max(date_mdt, na.rm = TRUE)) %>%
+              filter(local_time == max(local_time, na.rm = TRUE)) %>%
               ungroup() %>%
               filter(sample_measurement_24hr_avg >= 35.4) %>%
               distinct(county) %>%
@@ -108,7 +108,7 @@ aqa_text_ModuleServer <- function(id, today, airnow_today, aqi_outlook_choice, e
 
         # CURRENT AQI--------------------------------------------------------------------------------
         
-        airnow_file_path <- paste0("data/AirNow/", today, "_AirNow.rds")
+        airnow_file_path <- paste0("data/AirNow/AirNow.rds")
         
         # Load file if it exists, otherwise create an empty AirNow dataframe
         AirNow <- if (file.exists(airnow_file_path)) {

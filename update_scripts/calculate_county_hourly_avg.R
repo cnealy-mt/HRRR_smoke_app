@@ -2,7 +2,7 @@
 
 # Define expected output paths
 hourly_path <- paste0("data//county_hrly_avg//", update_date, "_county_hrly_avg.rds")
-daily_path <- paste0("data//county_24hr_avg//", update_date, "_county_24hr_avg.rds")
+daily_path <- paste0("data//county_24hr_avg//", update_date, "_county_24hr_avg_lead0.rds")
 
 # Check if either file exists
 if (file_exists(hourly_path) && file_exists(daily_path)) {
@@ -20,12 +20,15 @@ if (file_exists(hourly_path) && file_exists(daily_path)) {
     # Loop over each variable
     for (this_var_name in var_loop) {
       
-      folder_path <- paste0("data//", this_var_name) 
-      filename <- fs::path(folder_path, paste0(this_var_name, "_", update_date, ".tif"))
+      # Build the name of the stack object (e.g., "MASSDEN_stack")
+      stack_name <- paste0(this_var_name, "_stack")
       
-      if (fs::file_exists(filename)) {
-        message(glue::glue("File exists: loading {this_var_name} for {update_date}"))
-        stack <- rast(filename)
+      # Check if that object exists in memory
+      if (exists(stack_name, envir = .GlobalEnv)) {
+        message(glue::glue("Using preloaded stack: {stack_name}"))
+        
+        # Get the actual raster stack
+        stack <- get(stack_name, envir = .GlobalEnv)
         
         # Calculate County Hourly Avg
         temp_df <- lapply(seq_len(nlyr(stack)), function(j) {
@@ -34,8 +37,8 @@ if (file_exists(hourly_path) && file_exists(daily_path)) {
           
           data.frame(
             county = mt_counties$NAME[extracted$ID],
-            fcst_hour = j-1,
-            timestamp_MDT = names(stack)[j],
+            fcst_hour = j,
+            time_local = local_runtime + hours(j),
             value = extracted[, 2]
           )
         }) %>% bind_rows()
@@ -47,14 +50,16 @@ if (file_exists(hourly_path) && file_exists(daily_path)) {
         if (is.null(county_hourly_avg)) {
           county_hourly_avg <- temp_df
         } else {
-          county_hourly_avg <- dplyr::full_join(county_hourly_avg, temp_df,
-                                                by = c("county", "fcst_hour", "timestamp_MDT"))
+          county_hourly_avg <- dplyr::full_join(
+            county_hourly_avg, temp_df,
+            by = c("county", "fcst_hour", "time_local")
+          )
         }
         
       } else {
-        message(glue::glue("File does not exist: adding empty column for {this_var_name}"))
+        message(glue::glue("No preloaded stack found for {this_var_name}, adding empty column"))
         
-        # If the main data frame exists, just add a column of NA
+        # If main df exists, just add NA column
         if (!is.null(county_hourly_avg)) {
           county_hourly_avg[[this_var_name]] <- NA_real_
         }
@@ -62,34 +67,17 @@ if (file_exists(hourly_path) && file_exists(daily_path)) {
     }
     
     
+    
     #--------------------------Calculate County 24-hr Avg-------------------------
+    # Build reference table (copied from calculate_VENT_window.R)
+    leadtime_ref <- tibble(
+      datetime = county_hourly_avg$time_local,
+      date = as.Date(county_hourly_avg$time_local, tz = "America/Denver"),
+      lead_time = as.integer(difftime(date, as.Date(local_runtime), units = "days"))
+    ) %>%
+      distinct()
     
-    vent_rate_max_df <- county_hourly_avg %>%
-      mutate(date = as.Date(timestamp_MDT)) %>%
-      group_by(county, date) %>%
-      summarise(
-        VENT_RATE_max = max(VENT_RATE, na.rm = TRUE),
-        .groups = "drop"
-      )
-    
-    county_24hr_avg <- county_hourly_avg %>%
-      mutate(date = as.Date(timestamp_MDT)) %>%
-      group_by(county, date) %>%
-      summarise(
-        across(all_of(var_loop), ~ mean(.x, na.rm = TRUE)),
-        .groups = "drop"
-      ) %>%
-      left_join(vent_rate_max_df, by = c("county", "date"))
-    
-    first_date <- sort(unique(county_24hr_avg$date))[1]
-    
-    # Only the 2nd date (i.e. the day after the 12 UTC/6 MDT ) will have a complete day of data for 24-hr averages
-    second_date <- sort(unique(county_24hr_avg$date))[2]
-    
-    county_18hr_avg_first_day <- county_24hr_avg %>%
-      filter(date == first_date)
-    county_24hr_avg_second_day <- county_24hr_avg %>%
-      filter(date == second_date)
+    unique_leads <- sort(unique(leadtime_ref$lead_time))
     
     #--------------------------Add AQI Data-------------------------
     
@@ -98,30 +86,68 @@ if (file_exists(hourly_path) && file_exists(daily_path)) {
     labels <- c("Good", "Moderate", "Unhealthy for Sensitive Groups",
                 "Unhealthy", "Very Unhealthy", "Hazardous")
     
+    # Loop through each lead_time group
+    for (lt in unique_leads) {
+      rows_to_keep <- leadtime_ref %>%
+        filter(lead_time == lt)
+      
+      # Check minimum layer count
+      if (nrow(rows_to_keep) < 16) {
+        cat(glue::glue("Skipping lead_time {lt}: only {nrow(rows_to_keep)} hours available\n"))
+        next
+      }
+      
+      
+      vent_rate_max_df <- county_hourly_avg %>%
+        filter(time_local %in% rows_to_keep$datetime) %>%
+        mutate(date = as.Date(time_local, tz = "America/Denver")) %>%
+        group_by(county, date) %>%
+        summarise(
+          VENT_RATE_max = max(VENT_RATE, na.rm = TRUE),
+          .groups = "drop"
+        )
+      
+      county_24hr_avg <- county_hourly_avg %>%
+        filter(time_local %in% rows_to_keep$datetime) %>%
+        mutate(date = as.Date(time_local, tz = "America/Denver")) %>%
+        group_by(county, date) %>%
+        summarise(
+          across(all_of(var_loop), ~ mean(.x, na.rm = TRUE)),
+          .groups = "drop"
+        ) %>%
+        left_join(vent_rate_max_df, by = c("county", "date"))
+      
+      county_24hr_avg <- county_24hr_avg %>%
+        mutate(AQI_category = cut(MASSDEN,
+                                  breaks = breaks,
+                                  labels = labels,
+                                  right = TRUE, include.lowest = TRUE))
+      
+      # Ensure folder exists and remove old files once per var
+      var_path <- glue("data/county_24hr_avg/")
+      ensure_dir(var_path)
+      old_files <- fs::dir_ls(var_path, regexp = "\\.rds$")
+      old_files <- old_files[!grepl(glue("^{update_date}"), basename(old_files))]
+      if (length(old_files) > 0) fs::file_delete(old_files)
+      
+      write_rds(county_24hr_avg, paste0("data//county_24hr_avg//", update_date, "_county_24hr_avg_lead", lt, ".rds"))
+    }
+      
     county_hourly_avg <- county_hourly_avg %>%
       mutate(AQI_category = cut(MASSDEN,
                                 breaks = breaks,
                                 labels = labels,
                                 right = TRUE, include.lowest = TRUE))
-    
-    # Add the AQI category column based on daily avg MASSDEN
-    county_18hr_avg_first_day <- county_18hr_avg_first_day %>%
-      mutate(AQI_category = cut(MASSDEN,
-                                breaks = breaks,
-                                labels = labels,
-                                right = TRUE, include.lowest = TRUE))
-    county_24hr_avg_second_day <- county_24hr_avg_second_day %>%
-      mutate(AQI_category = cut(MASSDEN,
-                                breaks = breaks,
-                                labels = labels,
-                                right = TRUE, include.lowest = TRUE))
-    # Ensure folders exist
-    ensure_dir("data/county_hrly_avg")
-    ensure_dir("data/county_24hr_avg")
+
+    # Ensure folder exists and remove old files once per var
+    var_path <- glue("data/county_hrly_avg/")
+    ensure_dir(var_path)
+    old_files <- fs::dir_ls(var_path, regexp = "\\.rds$")
+    old_files <- old_files[!grepl(glue("^{update_date}"), basename(old_files))]
+    if (length(old_files) > 0) fs::file_delete(old_files)
     
     write_rds(county_hourly_avg, paste0("data//county_hrly_avg//", update_date, "_county_hrly_avg.rds"))
-    write_rds(county_18hr_avg_first_day, paste0("data//county_24hr_avg//", update_date, "_updated_today_AQI_outlook.rds"))
-    write_rds(county_24hr_avg_second_day, paste0("data//county_24hr_avg//", update_date, "_county_24hr_avg.rds"))
+
     
     cat(glue("✅ Finished writing outputs for {update_date}\n"))
   }, error = function(e) {

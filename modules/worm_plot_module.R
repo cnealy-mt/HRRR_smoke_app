@@ -14,44 +14,21 @@ worm_plot_ModuleServer <- function(id, airnow_today, AirNow_select) {
     # switched from using 'today' (i.e., update_date, as defined in top level of app) to system date/time for operational use; 
     # ensures that hourly monitoring data is always up to date, but the forecasts are correctly labeled (i.e., displays yesterdays forecasts and labels if new model run hasn't been updated for the day) 
     data <- reactive({
-      # Choose file name based on AirNow_select()
+      # Decide which file to use based on selection
       file_suffix <- if (AirNow_select() == "running_avg") {
-        "_AirNow_running_avg.rds"
+        "AirNow_running_avg.rds"
       } else {
-        "_AirNow.rds"
+        "AirNow.rds"
       }
       
-      # Construct the expected file name using current airnow_today
-      expected_file <- paste0("data/AirNow/", airnow_today, file_suffix)
+      file_path <- file.path("data/AirNow", file_suffix)
       
-      # Check if it exists
-      if (file.exists(expected_file)) {
-        file_path <- expected_file
-      } else {
-        # List all matching files in the directory
-        all_files <- list.files("data/AirNow/", pattern = paste0(file_suffix, "$"), full.names = TRUE)
-        
-        if (length(all_files) == 0) {
-          stop("❌ No AirNow data files found with suffix: ", file_suffix)
-        }
-        
-        # Extract dates from filenames and find the most recent
-        file_dates <- all_files |>
-          basename() |>
-          gsub(file_suffix, "", x = _) |>
-          as.Date(format = "%Y-%m-%d")
-        
-        latest_index <- which.max(file_dates)
-        file_path <- all_files[latest_index]
-        message("⚠️ Using fallback AirNow file: ", basename(file_path))
+      # Validate existence
+      if (!file.exists(file_path)) {
+        stop("❌ AirNow file not found: ", file_path)
       }
       
-      df <- readRDS(file_path) %>%
-        mutate(
-          date_mdt = date_gmt - hours(6),
-          date_mdt_ms = as.numeric(date_mdt) * 1000
-        ) %>%
-        filter(date_mdt >= as.Date(airnow_today) - hours(48))
+      df <- readRDS(file_path) 
       
       if (AirNow_select() == "hourly") {
         df <- df %>% mutate(sample_value = trunc(sample_measurement * 10) / 10)
@@ -59,7 +36,9 @@ worm_plot_ModuleServer <- function(id, airnow_today, AirNow_select) {
         df <- df %>% mutate(sample_value = trunc(sample_measurement_24hr_avg * 10) / 10)
       }
       
-      df
+      df <- df %>%
+        mutate(local_time_naive = force_tz(local_time, "UTC"),  # force UTC because Highcharter will converto local time for display
+               local_time_ms = as.numeric(local_time_naive) * 1000)
     })
     
     # Zones
@@ -75,7 +54,7 @@ worm_plot_ModuleServer <- function(id, airnow_today, AirNow_select) {
           hc_add_series(
             data = df_site,
             type = "area",
-            hcaes(x = date_mdt_ms, y = sample_value),
+            hcaes(x = local_time_ms, y = sample_value),
             name = if (AirNow_select() == "hourly") "Hourly PM2.5" else "24-hr Avg PM2.5",
             zones = zones,
             lineWidth = 5,

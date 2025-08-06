@@ -5,18 +5,23 @@
 # Units lookup
 get_unit <- function(var_inp) {
   units <- c(
+    AQI_avg = "cat.",
+    AQI_max = "cat.",
     MASSDEN = "µg/m³",
+    MASSDEN_avg = "µg/m³",
+    MASSDEN_max = "µg/m³",
     WIND_1hr_max_fcst = "m/s",
+    WIND_1hr_max_fcst_max = "m/s",
     TMP = "°F",
+    TMP_max = "°F",
     RH = "%",
     GUST = "m/s",
     HPBL = "m",
     PRATE = "in/hr",
+    PRATE_acc = "inches",
     VENT_RATE = "m²/s",
     VENT_RATE_max = "m²/s",
-    VENT_RATE_max_today_update = "m²/s",
-    VENT_WINDOW = "hours",
-    VENT_WINDOW_today_update = "hours"
+    VENT_WINDOW = "hours"
   )
   
   units[[var_inp]] %||% ""
@@ -25,18 +30,23 @@ get_unit <- function(var_inp) {
 # Variable Name lookup
 get_var_name <- function(var_inp) {
   names <- c(
-    MASSDEN = "Near-Surface Smoke",
+    AQI_avg = "AQI",
+    AQI_max = "AQI",
+    MASSDEN = "Surface Smoke",
+    MASSDEN_avg = "Surface Smoke",
+    MASSDEN_max = "Surface Smoke",
     WIND_1hr_max_fcst = "Wind Speed",
+    WIND_1hr_max_fcst_max = "Wind Speed",
     TMP = "Temperature",
+    TMP_max = "Temperature",
     RH = "Relative Humidity",
     GUST = "Wind Gust",
     HPBL = "Boundary Layer Height",
-    PRATE = "Precipitation Rate",
-    VENT_RATE = "Ventilation Rate",
-    VENT_RATE_max = "Ventilation Rate",
-    VENT_RATE_max_today_update = "Ventilation Rate",
-    VENT_WINDOW = "Ventilation Window",
-    VENT_WINDOW_today_update = "Ventilation Window"
+    PRATE = "Precip Rate",
+    PRATE_acc = "Precip Daily Total",
+    VENT_RATE = "Vent Rate",
+    VENT_RATE_max = "Vent Rate",
+    VENT_WINDOW = "Vent Window"
   )
   
   names[[var_inp]] %||% var_inp  # fallback to var_inp if no name found
@@ -49,20 +59,6 @@ get_label <- function(var_inp) {
 
 # Safe operator
 `%||%` <- function(a, b) if (!is.null(a)) a else b
-
-#--------------------------Trend Utils-------------------
-get_trend_label <- function(trend_duration, today) {
-  today <- as.Date(today)
-  names <- c(
-    `1day` = paste0(today + 1, " (fcst date) minus ", today),
-    `2day` = paste0(today + 1, " (fcst date) minus ", today - 1)
-  )
-  
-  # Accessing the label based on the trend_duration argument
-  names[trend_duration]
-}
-
-#get_trend_label("2day", today)
 
 #-------------------------Hourly Fcst Labels------------
 get_hourly_label <- function(today, fcst_hour) {

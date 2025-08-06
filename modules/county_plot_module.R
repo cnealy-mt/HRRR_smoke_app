@@ -13,12 +13,9 @@ county_plot_ModuleServer <- function(id, county, today) {
   moduleServer(id, function(input, output, session) {
     
     hourly_data <- readRDS(paste0("data/county_hrly_avg/",today,"_county_hrly_avg.rds")) 
-    hourly_data$timestamp_MDT <- as.POSIXct(hourly_data$timestamp_MDT, format = "%Y-%m-%d %H:%M", tz = "UTC") #use UTC (even though it's actually MDT) to tell R not to adjust the timezone
-    
 
-    
     # Define the variables to plot (excluding non-numeric or non-variable columns)
-    vars_to_plot <- setdiff(names(hourly_data), c("county", "fcst_hour", "timestamp_MDT", "AQI_category", "CFNSF"))
+    vars_to_plot <- setdiff(names(hourly_data), c("county", "fcst_hour", "time_local", "AQI_category"))
     
     # Reactive data filtered by selected county
     data_filtered <- reactive({
@@ -32,16 +29,19 @@ county_plot_ModuleServer <- function(id, county, today) {
       req(data_filtered())
       
       map(vars_to_plot, function(var) {
-        data_var <- data_filtered()
-        data_var$timestamp_ms <- as.numeric(data_var$timestamp_MDT) * 1000  # POSIXct to milliseconds
+        data_var <- data_filtered() 
         
+        data_var <- data_var %>%
+          mutate(local_time_naive = force_tz(time_local, "UTC"),  # reinterpret as UTC
+                 local_time_ms = as.numeric(local_time_naive) * 1000)
+
         zones <- get_zones(var)
         
         highchart() %>%
           hc_add_series(
             data = data_var,
             type = "area",  # Change from "line" to "area"
-            hcaes(x = timestamp_ms, y = .data[[var]]),
+            hcaes(x = local_time_ms, y = .data[[var]]),
             name = var,
             lineWidth = 2,
             zones = zones,

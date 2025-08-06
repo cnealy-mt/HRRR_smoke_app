@@ -15,7 +15,7 @@ cat("✅ Using Python at:", py_config()$python, "\n")
 
 
 # Pass year, month, and day to Python
-update_date_py <- as.Date(update_date)
+update_date_py <- as.Date(update_date) # we want this as UTC date since that's how the model files are structured (check update_date in UPDATE_HRRR_APP.R)
 
 # Safe variable names
 year_val <- as.integer(format(update_date_py, "%Y"))
@@ -24,8 +24,8 @@ day_val <- as.integer(format(update_date_py, "%d"))
 
 
 vars <- tibble::tibble(
-  var_level = c("8m_above_ground", "10m_above_ground", "2m_above_ground", "2m_above_ground", "surface", "surface", "surface", "surface"),
-  var_name = c("MASSDEN", "WIND_1hr_max_fcst", "TMP", "RH", "CFNSF", "GUST", "HPBL", "PRATE")
+  var_level = c("8m_above_ground", "10m_above_ground", "2m_above_ground", "2m_above_ground", "surface", "surface", "surface"),
+  var_name = c("MASSDEN", "WIND_1hr_max_fcst", "TMP", "RH", "GUST", "HPBL", "PRATE")
 )
 
 
@@ -39,19 +39,11 @@ for (i in seq_len(nrow(vars))) {
   tryCatch({
     # Save to a multi-layer GeoTIFF
     file_date <- format(update_date_py, "%Y-%m-%d")  # Formats as "2024-09-09"
-    folder_path <- paste0("data//", this_var_name)
-    # Create folder if it doesn't exist
-    if (!fs::dir_exists(folder_path)) {
-      fs::dir_create(folder_path)
-    }
-    filename <- fs::path(folder_path, paste0(this_var_name, "_", file_date, ".tif"))
-    print(filename)
+    folder_path <- paste0("www/", this_var_name)
     
-    # Check if file already exists
-    if (fs::file_exists(filename)) {
-      cat(glue("File already exists for {this_var_name} on {file_date}, skipping.\n"))
-    } else {
-      py_run_string(glue("
+    fs::dir_create(folder_path)    # recreate empty folder 
+    
+    py_run_string(glue("
 import dataclasses
 import datetime
 
@@ -84,25 +76,19 @@ zarr_id = ZarrId(
   
   # If you want to check the object in Python, you can print or return it
   py_run_string("print(zarr_id)")
-    
+  
   # Run the Python script
   source_python("update_scripts//HRRR_download.py")
   
   #---------------------------------Process Data to Raster-----------------------------------------
   
-
   
-  #---------------Time Metadata
+  
+  #---------------Layer Names
   
   # Step 1: Extract run time and forecast hours
   run_time <- zarr_id$run_hour              # Should be a POSIXct or datetime object
-  forecast_hours <- py$py_time             # Vector of hours: 0, 1, 2, ..., 47
-  
-  # Step 2: Calculate timestamps
-  layer_datetimes <- run_time + hours(forecast_hours-6) #subtract 6 to convert UTC to MDT
-  
-  # Step 3: Format the timestamps as ISO strings (or whatever format you like)
-  layer_names <- format(layer_datetimes, "%Y-%m-%d %H:%M")
+  forecast_hours <- py$py_time + 1             # Vector of hours: 0, 1, 2, ..., 47
   
   #---------------Make Raster Stack
   
@@ -141,19 +127,21 @@ zarr_id = ZarrId(
   
   # Step 6: Combine and label
   stack <- rast(rasters)
-  names(stack) <- layer_names
+  names(stack) <- forecast_hours
   
-
-    writeRaster(stack, filename, overwrite = TRUE)
-    cat(glue("Successfully processed {this_var_name} for {file_date}\n"))
-  }
+  assign(paste0(this_var_name, "_stack"), stack)
   
+  # Step 7: Save hourly PNGs
+  source("update_scripts/write_hourly_png.R")
+  
+  cat(glue("Successfully processed {this_var_name} for {file_date}\n"))
     
-}, error = function(e) {
-  # Print a warning if it fails
-  cat(glue("Warning: Failed to process {this_var_name} ({this_var_level}) — {e$message}\n"))
-})
+  }, error = function(e) {
+    # Print a warning if it fails
+    cat(glue("Warning: Failed to process {this_var_name} ({this_var_level}) — {e$message}\n"))
+  })
 }
+
 # Preview
 #plot(stack[[1]])
 

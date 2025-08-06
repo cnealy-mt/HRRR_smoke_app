@@ -12,6 +12,7 @@ library(glue)
 library(stringr)
 library(writexl)
 library(ggplot2)
+library(htmlwidgets)
 
 get_latest_update_date <- function(dir_path = "data/county_24hr_avg") {
   files <- list.files(path = dir_path, pattern = "^\\d{4}-\\d{2}-\\d{2}_.+\\.rds$", full.names = FALSE)
@@ -29,13 +30,17 @@ update_date <- get_latest_update_date()
 today <- update_date
 airnow_today <- Sys.Date() #use Sys.Date() when operational or else AirNow hourly data won't plot properly between midnight and 8am (~model data update)
 
+# Model Offset
+montana_time <- as.POSIXlt(Sys.time(), tz = "America/Denver")
+offset_hours <- montana_time$gmtoff / 3600
 
-#modules
+# utils
 source(paste0("modules/utils/variable_utils.R"))
 source(paste0("modules/utils/map_module_utils.R"))
 source(paste0("modules/utils/plot_utils.R"))
 
 
+# modules
 source(paste0("modules/outlook_map_module.R"))
 source(paste0("modules/hourly_map_module.R"))
 source(paste0("modules/fire_table_module.R"))
@@ -98,71 +103,47 @@ ui <- page_sidebar(
       condition = "input.main_tabs == 'Outlook and Trends'",
       selectInput("var_inp_outlook", "Variable:",
                 choices = c(
-                  "AQI Outlook (tomorrow)" = "AQI_24hr",
-                  "AQI Outlook (today)" = "AQI_today_update",
-                  "Ventilation Rate (tomorrow)" = "VENT_RATE_max",
-                  "Ventilation Rate (today)" = "VENT_RATE_max_today_update",
-                  "Ventilation Window (tomorrow)" = "VENT_WINDOW",
-                  "Ventilation Window (today)" = "VENT_WINDOW_today_update",
-                  "AQI Category (trend)" = "AQI_trend",
-                  "PM2.5 (trend)" = "MASSDEN",
-                  "Temperature (trend)" = "TMP",
-                  "Precipitation (trend)" = "PRATE",
-                  "Relative Humidity (trend)" = "RH",
-                  "Wind Gust (trend)" = "GUST",
-                  "Wind Speed (trend)" = "WIND_1hr_max_fcst",
-                  "Boundary Layer Height (trend)" = "HPBL",
-                  "Ventilation Rate (trend)" = "VENT_RATE"
+                  "AQI (county avg)" = "AQI_cty",
+                  "AQI (avg)" = "AQI_avg",
+                  "AQI (max)" = "AQI_max",
+                  "PM2.5 (avg)" = "MASSDEN_avg",
+                  "PM2.5 (max)" = "MASSDEN_max",
+                  "Temp (max)" = "TMP_max",
+                  "Precip (acc)" = "PRATE_acc",
+                  "Wind (max)" = "WIND_1hr_max_fcst_max",
+                  "Ventilation Rate (max)" = "VENT_RATE_max",
+                  "Ventilation Window" = "VENT_WINDOW"
                 )
     )),
     
     conditionalPanel(
+      condition = "input.main_tabs == 'Outlook and Trends'",
+      selectInput("lead_time_outlook", "Lead Time (days):",
+                  choices = c(0, 1)
+      )),
+    
+    conditionalPanel(
       condition = "(
-          input.var_inp_outlook == 'VENT_WINDOW' || 
-          input.var_inp_outlook == 'VENT_WINDOW_today_update'
+          input.var_inp_outlook == 'VENT_WINDOW'
           ) && input.main_tabs == 'Outlook and Trends'",
       selectInput("vent_category", "Ventilation Threshold:",
                   choices = c("Good or better" = "Good", "Marginal or better" = "Marginal"))
     )
     ,
     
-    conditionalPanel(
-      condition = "input.main_tabs == 'Outlook and Trends' && 
-               input.var_inp_outlook != 'AQI_24hr' && 
-               input.var_inp_outlook != 'AQI_today_update' && 
-               input.var_inp_outlook != 'VENT_RATE_max' && 
-               input.var_inp_outlook != 'VENT_RATE_max_today_update' &&
-               input.var_inp_outlook != 'VENT_WINDOW' &&
-               input.var_inp_outlook != 'VENT_WINDOW_today_update'",
-      selectInput("trend_duration", "Trend Duration:",
-                  choices = c("One Day" = "1day", "Two Day" = "2day"))
-    )
-    ,
-    
     #------------------------------------Hourly Forecast Tab-------------------------------------------
     conditionalPanel(
       condition = "input.main_tabs == 'Hourly Forecast'",
-      sliderInput("fcst_hour",
-                  label = "Forecast Hour:",
-                  min = 0,
-                  max = 47,
-                  value = 0,
-                  step = 1,
-                  animate = animationOptions(
-                    interval = 1000,    # milliseconds between steps
-                    loop = TRUE,        # whether to loop
-                    playButton = NULL,  # use default play icon
-                    pauseButton = NULL  # use default pause icon
-                  )
-      )
+      sliderInput("layer", "Forecast Hour", min = 1, max = 48, value = 1, step = 1),
+      sliderInput("speed", "Speed (ms)", min = 50, max = 500, value = 100, step = 50),
+      actionButton("play", "▶ Play / Pause")
     ),
     
     conditionalPanel(
       condition = "input.main_tabs == 'Hourly Forecast'",
       selectInput("var_inp_hourly", "Variable:",
                   choices = c(
-                    "AQI Category" = "AQI_hourly",
-                    "PM2.5" = "MASSDEN",
+                    "Surface Smoke" = "MASSDEN",
                     "Temperature" = "TMP",
                     "Precipitation Rate" = "PRATE",
                     "Relative Humidity" = "RH",
@@ -183,11 +164,9 @@ ui <- page_sidebar(
     
     conditionalPanel(
       condition = "input.main_tabs == 'Model Performance'",
-      selectInput("lead_time", "Lead Time:",
-                  choices = c(
-                    "0 Days" = "zero_day",
-                    "1 Day" = "one_day"
-                  ))),
+      selectInput("lead_time", "Lead Time (days):",
+                  choices = c(0, 1)
+                  )),
     
     
     
@@ -331,9 +310,9 @@ ui <- page_sidebar(
         width = 4,
         selectInput("tile_var", "Variable:",
                     choices = c(
-                      "HRRR vs. Obs AQI" = "accuracy",
-                      "HRRR Concentration" = "avg_HRRR_ug_m3",
-                      "Obs Concentration" = "avg_sample_measurement"
+                      "HRRR vs. Obs AQI" = "model_smoke_lead0_accuracy",
+                      "HRRR Concentration" = "model_smoke_lead0",
+                      "Obs Concentration" = "airnow_obs"
                     ))
       )
     ),
@@ -359,10 +338,10 @@ ui <- page_sidebar(
             dateRangeInput(
               inputId = "date_range_mp",
               label = "Select Date Range:",
-              start = max(daily_model_performance$date),
-              end = max(daily_model_performance$date),
-              min = min(daily_model_performance$date),
-              max = max(daily_model_performance$date),
+              start = max(hourly_model_performance$date)-days(1),
+              end = max(hourly_model_performance$date),
+              min = min(hourly_model_performance$date),
+              max = max(hourly_model_performance$date),
               format = "yyyy-mm-dd",
               startview = "month"
             )
@@ -455,53 +434,67 @@ server <- function(input, output, session) {
     id = "outlook_map",
     today = today,
     var_inp = reactive(input$var_inp_outlook),
+    lead_time = reactive(input$lead_time_outlook),
     vent_category = reactive(input$vent_category),
-    trend_duration = reactive(input$trend_duration),
     transparency = reactive(input$transparency),
     active_tab = reactive(input$main_tabs)
   )
   
+  # hourly_map server-------------------------------------------------
+  playing <- reactiveVal(FALSE)
+  
+  observeEvent(input$play, {
+    playing(!playing())  # toggles TRUE/FALSE on each click
+  }) # use session$rootScope() instead of session for updateSliderInput in hourly_map_module.R
+  
   hourly_map_ModuleServer(
     id = "hourly_map",
     today = today,
+    offset_hours = offset_hours,
     var_inp = reactive(input$var_inp_hourly),
-    fcst_hour = reactive(input$fcst_hour),
-    transparency = reactive(input$transparency),
-    active_tab = reactive(input$main_tabs)  # NEW
+    layer = reactive(input$layer),
+    speed = reactive(input$speed),
+    playing = playing
+    # transparency = reactive(input$transparency),
+    # active_tab = reactive(input$main_tabs)  # NEW
   )
   
+  # fire_table server-------------------------------------------------
   fire_table_ModuleServer("fire_table")
   
+  # county_plot server-----------------------------------------------
   county_plot_ModuleServer(
     id = "county_plot",  # Same ID as in county_plot_UI
     today = today,
     county = reactive(input$county)  # From the global selectInput
   )
   
+  # worm_plot server-------------------------------------------------
   worm_plot_ModuleServer(
     id = "worm_plot",
     airnow_today = airnow_today,
     AirNow_select = reactive(input$AirNow_select)
   )
   
+  # model_performance_tile server-------------------------------------------------
   observeEvent(input$lead_time, {
-    if (input$lead_time == "zero_day") {
+    if (input$lead_time == 0) {
       updateSelectInput(
         session,
         inputId = "tile_var",
         choices = c(
-          "HRRR vs. Obs AQI" = "accuracy_update",
-          "HRRR Concentration" = "avg_HRRR_ug_m3_today_update",
-          "Obs Concentration" = "avg_sample_measurement"
+          "HRRR vs. Obs AQI" = "model_smoke_lead0_accuracy",
+          "HRRR Concentration" = "model_smoke_lead0",
+          "Obs Concentration" = "airnow_obs"
         )
       )
-    } else if (input$lead_time == "one_day") {
+    } else if (input$lead_time == 1) {
       updateSelectInput(
         session,
         inputId = "tile_var",
         choices = c(
-          "HRRR vs. Obs AQI" = "accuracy",
-          "HRRR Concentration" = "avg_HRRR_ug_m3",
+          "HRRR vs. Obs AQI" = "model_smoke_lead1_accuracy",
+          "HRRR Concentration" = "model_smoke_lead1",
           "Obs Concentration" = "avg_sample_measurement"
         )
       )
@@ -516,12 +509,14 @@ server <- function(input, output, session) {
     variable = reactive(input$tile_var)
   )
   
+  # bias_plot server-------------------------------------------------
   bias_plot_ModuleServer(
     id = "bias_plot",
     lead_time = reactive(input$lead_time),
     year = reactive(input$bias_plot_year)
   )
   
+  # model_performance_timseries server-------------------------------------------------
   model_performance_timeseries_ModuleServer(
     id = "model_performance_timeseries",
     site_name_mp = reactive(input$site_name_mp),
@@ -530,6 +525,7 @@ server <- function(input, output, session) {
     lead_time = reactive(input$lead_time)
   )
   
+  # aqa_text server-------------------------------------------------
   observeEvent(input$aqi_outlook_choice, {
     new_date <- if (input$aqi_outlook_choice == "Today AQI Outlook") {
       Sys.Date() + 1

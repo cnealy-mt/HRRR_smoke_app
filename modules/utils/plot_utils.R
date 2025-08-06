@@ -67,8 +67,21 @@ montana_counties <- sort(c(
   "Wheatland", "Wibaux", "Yellowstone"
 ))
 
-daily_model_performance <- readRDS("data/model_performance/hourly_model_performance.rds") # helps define calendar range for model performance tab 
-site_names <- daily_model_performance %>%
+# Model Performance Timeseries 
+hourly_model_performance <- readRDS("data/model_performance/hourly_model_performance.rds") # helps define calendar range for model performance tab 
+  
+# extract latest AirNow value
+latest_non_na <- hourly_model_performance %>%
+  filter(!is.na(airnow_obs)) %>%
+  summarise(max_time = max(local_time)) %>%
+  pull(max_time)
+
+hourly_model_performance <- hourly_model_performance %>%
+  filter(local_time <= latest_non_na) %>%
+  mutate(date = as.Date(local_time, tz = "America/Denver"))
+
+
+site_names <- hourly_model_performance %>%
   pull(site_name) %>%
   unique() %>%
   sort()

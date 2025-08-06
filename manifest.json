@@ -137,6 +137,37 @@
         "Archs": "x64"
       }
     },
+    "PKI": {
+      "Source": "CRAN",
+      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "description": {
+        "Package": "PKI",
+        "Version": "0.1-14",
+        "Title": "Public Key Infrastucture for R Based on the X.509 Standard",
+        "Author": "Simon Urbanek <Simon.Urbanek@r-project.org>",
+        "Maintainer": "Simon Urbanek <Simon.Urbanek@r-project.org>",
+        "Depends": "R (>= 2.9.0), base64enc",
+        "Enhances": "gmp",
+        "Description": "Public Key Infrastucture functions such as verifying certificates, RSA encription and signing which can be used to build PKI infrastructure and perform cryptographic tasks.",
+        "License": "GPL-2 | GPL-3 | file LICENSE",
+        "URL": "http://www.rforge.net/PKI",
+        "SystemRequirements": "OpenSSL library and headers (openssl-dev or\nsimilar)",
+        "NeedsCompilation": "yes",
+        "Packaged": "2024-06-15 19:22:05 UTC; rforge",
+        "Repository": "RSPM",
+        "Date/Publication": "2024-06-15 19:40:02 UTC",
+        "Encoding": "UTF-8",
+        "Built": "R 4.5.0; x86_64-w64-mingw32; 2025-04-09 18:20:29 UTC; windows",
+        "Archs": "x64",
+        "RemoteType": "standard",
+        "RemoteRef": "PKI",
+        "RemotePkgRef": "PKI",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "x86_64-w64-mingw32",
+        "RemoteSha": "0.1-14"
+      }
+    },
     "R6": {
       "Source": "CRAN",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -2015,6 +2046,41 @@
         "Archs": "x64"
       }
     },
+    "packrat": {
+      "Source": "CRAN",
+      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "description": {
+        "Type": "Package",
+        "Package": "packrat",
+        "Title": "A Dependency Management System for Projects and their R Package\nDependencies",
+        "Version": "0.9.3",
+        "Authors@R": "c(\n    person(\"Aron\", \"Atkins\", , \"aron@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Toph\", \"Allen\", role = \"aut\"),\n    person(\"Kevin\", \"Ushey\", role = \"aut\"),\n    person(\"Jonathan\", \"McPherson\", role = \"aut\"),\n    person(\"Joe\", \"Cheng\", role = \"aut\"),\n    person(\"JJ\", \"Allaire\", role = \"aut\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Manage the R packages your project depends on in an isolated,\n    portable, and reproducible way.",
+        "License": "GPL-2",
+        "URL": "https://github.com/rstudio/packrat",
+        "BugReports": "https://github.com/rstudio/packrat/issues",
+        "Depends": "R (>= 3.0.0)",
+        "Imports": "tools, utils",
+        "Suggests": "devtools, httr, knitr, mockery, rmarkdown, testthat (>=\n3.0.0), webfakes, withr",
+        "Config/testthat/edition": "3",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.2",
+        "NeedsCompilation": "no",
+        "Packaged": "2025-06-16 19:37:19 UTC; aron",
+        "Author": "Aron Atkins [aut, cre],\n  Toph Allen [aut],\n  Kevin Ushey [aut],\n  Jonathan McPherson [aut],\n  Joe Cheng [aut],\n  JJ Allaire [aut],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Aron Atkins <aron@posit.co>",
+        "Repository": "RSPM",
+        "Date/Publication": "2025-06-16 20:00:02 UTC",
+        "Built": "R 4.5.0; ; 2025-06-17 04:37:40 UTC; windows",
+        "RemoteType": "standard",
+        "RemoteRef": "packrat",
+        "RemotePkgRef": "packrat",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "x86_64-w64-mingw32",
+        "RemoteSha": "0.9.3"
+      }
+    },
     "pillar": {
       "Source": "CRAN",
       "Repository": "https://packagemanager.posit.co/cran/latest",
@@ -2474,9 +2540,9 @@
         "Packaged": "2025-03-20 16:43:40 UTC; kevin",
         "Author": "Kevin Ushey [aut, cre] (<https://orcid.org/0000-0003-2880-7407>),\n  Hadley Wickham [aut] (<https://orcid.org/0000-0003-4757-117X>),\n  Posit Software, PBC [cph, fnd]",
         "Maintainer": "Kevin Ushey <kevin@rstudio.com>",
-        "Repository": "CRAN",
+        "Repository": "RSPM",
         "Date/Publication": "2025-03-20 18:10:01 UTC",
-        "Built": "R 4.5.0; ; 2025-06-09 00:26:26 UTC; windows"
+        "Built": "R 4.5.0; ; 2025-07-25 20:52:18 UTC; windows"
       }
     },
     "reticulate": {
@@ -2652,6 +2718,76 @@
         "Repository": "RSPM",
         "Date/Publication": "2023-11-05 10:20:02 UTC",
         "Built": "R 4.5.0; ; 2025-04-06 06:07:09 UTC; windows"
+      }
+    },
+    "rsconnect": {
+      "Source": "CRAN",
+      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "description": {
+        "Type": "Package",
+        "Package": "rsconnect",
+        "Title": "Deploy Docs, Apps, and APIs to 'Posit Connect', 'shinyapps.io',\nand 'RPubs'",
+        "Version": "1.5.0",
+        "Authors@R": "c(\n    person(\"Aron\", \"Atkins\", , \"aron@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Toph\", \"Allen\", role = \"aut\"),\n    person(\"Hadley\", \"Wickham\", role = \"aut\"),\n    person(\"Jonathan\", \"McPherson\", role = \"aut\"),\n    person(\"JJ\", \"Allaire\", role = \"aut\"),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Programmatic deployment interface for 'RPubs',\n    'shinyapps.io', and 'Posit Connect'. Supported content types include R\n    Markdown documents, Shiny applications, Plumber APIs, plots, and\n    static web content.",
+        "License": "GPL-2",
+        "URL": "https://rstudio.github.io/rsconnect/,\nhttps://github.com/rstudio/rsconnect",
+        "BugReports": "https://github.com/rstudio/rsconnect/issues",
+        "Depends": "R (>= 3.5.0)",
+        "Imports": "cli, curl, digest, jsonlite, lifecycle, openssl (>= 2.0.0),\nPKI, packrat (>= 0.6), renv (>= 1.0.0), rlang (>= 1.0.0),\nrstudioapi (>= 0.5), snowflakeauth, tools, yaml (>= 2.1.5),\nutils",
+        "Suggests": "Biobase, BiocManager, foreign, knitr, MASS, plumber (>=\n0.3.2), quarto, RCurl, reticulate, rmarkdown (>= 1.1), shiny,\ntestthat (>= 3.1.9), webfakes, withr",
+        "VignetteBuilder": "knitr, rmarkdown",
+        "Config/Needs/website": "tidyverse/tidytemplate",
+        "Config/testthat/edition": "3",
+        "Config/testthat/parallel": "true",
+        "Encoding": "UTF-8",
+        "RoxygenNote": "7.3.2",
+        "NeedsCompilation": "no",
+        "Packaged": "2025-06-26 15:08:33 UTC; aron",
+        "Author": "Aron Atkins [aut, cre],\n  Toph Allen [aut],\n  Hadley Wickham [aut],\n  Jonathan McPherson [aut],\n  JJ Allaire [aut],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "Aron Atkins <aron@posit.co>",
+        "Repository": "RSPM",
+        "Date/Publication": "2025-06-26 15:50:02 UTC",
+        "Built": "R 4.5.0; ; 2025-06-27 04:28:32 UTC; windows",
+        "RemoteType": "standard",
+        "RemoteRef": "rsconnect",
+        "RemotePkgRef": "rsconnect",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "x86_64-w64-mingw32",
+        "RemoteSha": "1.5.0"
+      }
+    },
+    "rstudioapi": {
+      "Source": "CRAN",
+      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "description": {
+        "Package": "rstudioapi",
+        "Title": "Safely Access the RStudio API",
+        "Description": "Access the RStudio API (if available) and provide informative error\n    messages when it's not.",
+        "Version": "0.17.1",
+        "Authors@R": "c(\n    person(\"Kevin\", \"Ushey\", role = c(\"aut\", \"cre\"), email = \"kevin@rstudio.com\"),\n    person(\"JJ\", \"Allaire\", role = c(\"aut\"), email = \"jj@posit.co\"),\n    person(\"Hadley\", \"Wickham\", role = c(\"aut\"), email = \"hadley@posit.co\"),\n    person(\"Gary\", \"Ritchie\", role = c(\"aut\"), email = \"gary@posit.co\"),\n    person(family = \"RStudio\", role = \"cph\")\n    )",
+        "Maintainer": "Kevin Ushey <kevin@rstudio.com>",
+        "License": "MIT + file LICENSE",
+        "URL": "https://rstudio.github.io/rstudioapi/,\nhttps://github.com/rstudio/rstudioapi",
+        "BugReports": "https://github.com/rstudio/rstudioapi/issues",
+        "RoxygenNote": "7.3.2",
+        "Suggests": "testthat, knitr, rmarkdown, clipr, covr",
+        "VignetteBuilder": "knitr",
+        "Encoding": "UTF-8",
+        "NeedsCompilation": "no",
+        "Packaged": "2024-10-22 20:55:52 UTC; kevin",
+        "Author": "Kevin Ushey [aut, cre],\n  JJ Allaire [aut],\n  Hadley Wickham [aut],\n  Gary Ritchie [aut],\n  RStudio [cph]",
+        "Repository": "RSPM",
+        "Date/Publication": "2024-10-22 22:40:02 UTC",
+        "Built": "R 4.5.0; ; 2025-04-06 06:09:20 UTC; windows",
+        "RemoteType": "standard",
+        "RemoteRef": "rstudioapi",
+        "RemotePkgRef": "rstudioapi",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "x86_64-w64-mingw32",
+        "RemoteSha": "0.17.1"
       }
     },
     "s2": {
@@ -2841,6 +2977,39 @@
         "Date/Publication": "2024-10-25 17:40:02 UTC",
         "Built": "R 4.5.0; x86_64-w64-mingw32; 2025-04-09 20:04:44 UTC; windows",
         "Archs": "x64"
+      }
+    },
+    "snowflakeauth": {
+      "Source": "CRAN",
+      "Repository": "https://packagemanager.posit.co/cran/latest",
+      "description": {
+        "Package": "snowflakeauth",
+        "Title": "Authentication Helpers for 'Snowflake'",
+        "Version": "0.1.2",
+        "Authors@R": "c(\n    person(\"Aaron\", \"Jacobs\", , \"aaron.jacobs@posit.co\", role = c(\"aut\")),\n    person(\"E. David\", \"Aja\", , \"david@posit.co\", role = c(\"aut\", \"cre\")),\n    person(\"Posit Software, PBC\", role = c(\"cph\", \"fnd\"))\n  )",
+        "Description": "Authentication helpers for 'Snowflake'.\n    It provides compatibility with authentication approaches supported\n    by the 'Snowflake Connector for Python' <https://pypi.org/project/snowflake-connector-python>\n    and the 'Snowflake CLI' <https://pypi.org/project/snowflake-cli>.",
+        "License": "MIT + file LICENSE",
+        "Encoding": "UTF-8",
+        "Imports": "cli, curl, jsonlite, RcppTOML, rlang",
+        "Suggests": "jose, openssl, testthat (>= 3.0.0), withr",
+        "RoxygenNote": "7.3.2",
+        "Config/testthat/edition": "3",
+        "URL": "https://posit-dev.github.io/snowflakeauth/,\nhttps://github.com/posit-dev/snowflakeauth",
+        "BugReports": "https://github.com/posit-dev/snowflakeauth/issues",
+        "NeedsCompilation": "no",
+        "Packaged": "2025-06-18 13:05:51 UTC; edavidaja",
+        "Author": "Aaron Jacobs [aut],\n  E. David Aja [aut, cre],\n  Posit Software, PBC [cph, fnd]",
+        "Maintainer": "E. David Aja <david@posit.co>",
+        "Repository": "RSPM",
+        "Date/Publication": "2025-06-19 15:20:02 UTC",
+        "Built": "R 4.5.0; ; 2025-06-20 04:31:33 UTC; windows",
+        "RemoteType": "standard",
+        "RemoteRef": "snowflakeauth",
+        "RemotePkgRef": "snowflakeauth",
+        "RemoteRepos": "https://packagemanager.posit.co/cran/latest",
+        "RemoteReposName": "CRAN",
+        "RemotePkgPlatform": "x86_64-w64-mingw32",
+        "RemoteSha": "0.1.2"
       }
     },
     "sourcetools": {
@@ -3683,400 +3852,85 @@
   },
   "files": {
     ".RData": {
-      "checksum": "5f577fe67ae51a199d1eb5d569d24e80"
+      "checksum": "51ec64df160bcdcad5a680aa70aad9d6"
     },
     ".Rprofile": {
-      "checksum": "7ce0624206089741010f20e081c32488"
+      "checksum": "c255921439a56c3c823b02f14b50734e"
     },
     "app.bat": {
       "checksum": "a50cbaa13ecd483c26269b995805338f"
     },
     "app.R": {
-      "checksum": "8d7608b6153722f5b5116b4a99ecfbe7"
+      "checksum": "a366ccb807471ef584b07d5f4905b425"
     },
-    "data/AirNow/2021-08-14_AirNow.rds": {
-      "checksum": "4f7839179e8015e2fe6706484f84d2f3"
+    "data/AirNow/AirNow.rds": {
+      "checksum": "7260bc51c5e29342139dd5bf4bca1562"
     },
-    "data/AirNow/2021-08-14_AirNow_running_avg.rds": {
-      "checksum": "10a06fe2546e53d9c3f96bffc4861c7a"
+    "data/AirNow/AirNow_running_avg.rds": {
+      "checksum": "b30bd6c4763e9376d64db41f226e6ed4"
     },
-    "data/AirNow/2025-06-15_AirNow.rds": {
-      "checksum": "df9ab44c17d43214a8759a90956168e3"
+    "data/county_24hr_avg/2025-08-05_county_24hr_avg_lead0.rds": {
+      "checksum": "8e4b6347de7267829c7e2fcbc545e704"
     },
-    "data/AirNow/2025-06-15_AirNow_running_avg.rds": {
-      "checksum": "1f16e00b61fd0da31835205878fb4364"
+    "data/county_24hr_avg/2025-08-05_county_24hr_avg_lead1.rds": {
+      "checksum": "1fb0146cbe6e5aadd1bb9d1574e73c4c"
     },
-    "data/AirNow/2025-06-16_AirNow.rds": {
-      "checksum": "3028b3a42dbac23b859640526ef53a27"
-    },
-    "data/AirNow/2025-06-16_AirNow_running_avg.rds": {
-      "checksum": "d5bfe57aad39a4ac4d8ad164d58dbe90"
-    },
-    "data/AirNow/2025-06-17_AirNow.rds": {
-      "checksum": "717c8a25a5e6faf410b6aa74977113e4"
-    },
-    "data/AirNow/2025-06-17_AirNow_running_avg.rds": {
-      "checksum": "2bc8862afd6a918c10b7c5bb7efea646"
-    },
-    "data/archive/county_24hr_archive.rds": {
-      "checksum": "cf8c0a24e1418e430a0e1e6744d62f4d"
-    },
-    "data/archive/county_hourly_archive.rds": {
-      "checksum": "bbff4c54651b8d54bb66f86c96bcd23d"
-    },
-    "data/CFNSF/CFNSF_2021-08-12.tif": {
-      "checksum": "ff0ad3ad3be7efadcaa5f395f496c415"
-    },
-    "data/CFNSF/CFNSF_2021-08-13.tif": {
-      "checksum": "06473095bf39a3cd52f3e89900e4de55"
-    },
-    "data/CFNSF/CFNSF_2021-08-14.tif": {
-      "checksum": "257924aeaf5eea1e5a77f788b84ad7c7"
-    },
-    "data/CFNSF/CFNSF_2025-06-13.tif": {
-      "checksum": "2bda297507593645c106d018da3626c4"
-    },
-    "data/CFNSF/CFNSF_2025-06-14.tif": {
-      "checksum": "f71d734a81fa10b4acffbfae902ed083"
-    },
-    "data/CFNSF/CFNSF_2025-06-15.tif": {
-      "checksum": "0004e63714daf4cd29a4b2aeb3b6e5d5"
-    },
-    "data/CFNSF/CFNSF_2025-06-16.tif": {
-      "checksum": "e062410989df041920f8aa2f30fe8be5"
-    },
-    "data/CFNSF/CFNSF_2025-06-17.tif": {
-      "checksum": "46b74dcd8ee0a4eddd5a7c00eb37d175"
-    },
-    "data/county_24hr_avg/2021-08-12_county_24hr_avg.rds": {
-      "checksum": "20ebfe9fb7884eb00ce9d44cd3bb5c79"
-    },
-    "data/county_24hr_avg/2021-08-12_updated_today_AQI_outlook.rds": {
-      "checksum": "7edb365512b49fa3c98638c34b1da852"
-    },
-    "data/county_24hr_avg/2021-08-13_county_24hr_avg.rds": {
-      "checksum": "3406d1e08cda34f02250980ed4de4333"
-    },
-    "data/county_24hr_avg/2021-08-13_updated_today_AQI_outlook.rds": {
-      "checksum": "f7de7ee8324d67e63c0c60135d8e7e39"
-    },
-    "data/county_24hr_avg/2021-08-14_county_24hr_avg.rds": {
-      "checksum": "8689ba4a0160048d6f7b5328c4ed69ed"
-    },
-    "data/county_24hr_avg/2021-08-14_updated_today_AQI_outlook.rds": {
-      "checksum": "901257ec28c6b4ca5e01e3e2c957387d"
-    },
-    "data/county_hrly_avg/2021-08-12_county_hrly_avg.rds": {
-      "checksum": "7f794163cb04e077db60d304e09d53e9"
-    },
-    "data/county_hrly_avg/2021-08-13_county_hrly_avg.rds": {
-      "checksum": "f738b46260f9dd709c01eef422adb656"
-    },
-    "data/county_hrly_avg/2021-08-14_county_hrly_avg.rds": {
-      "checksum": "329421db3c188d82192ff208698d7935"
-    },
-    "data/county_hrly_avg/2025-06-13_county_hrly_avg.rds": {
-      "checksum": "7ec19e6006aa94b9ff51fe7e7f62df22"
-    },
-    "data/county_hrly_avg/2025-06-14_county_hrly_avg.rds": {
-      "checksum": "2d317031285d4b28f58a9bdb2d33f382"
-    },
-    "data/county_hrly_avg/2025-06-15_county_hrly_avg.rds": {
-      "checksum": "0a681bb46c6184e2dbb5181e9acc39c1"
-    },
-    "data/county_hrly_avg/2025-06-16_county_hrly_avg.rds": {
-      "checksum": "1e234e97a2a43e2a92cc422a272d609f"
-    },
-    "data/county_hrly_avg/2025-06-17_county_hrly_avg.rds": {
-      "checksum": "56b1eb8c78dffb86eef4a7d62dcb31d8"
+    "data/county_hrly_avg/2025-08-05_county_hrly_avg.rds": {
+      "checksum": "d67a65ee514bfb84f33a4cb628a09034"
     },
     "data/fire_locs/fire_point.rds": {
-      "checksum": "e6ae66a991805449476883d1068d4673"
+      "checksum": "861464cde490c8ac0273883c3d519740"
     },
     "data/fire_locs/fire_poly.rds": {
-      "checksum": "dad53e9e955d549ababd4d5e4ea2a42b"
+      "checksum": "527af8734f9effedaebb72de2fd1d871"
     },
-    "data/GUST/GUST_2021-08-12.tif": {
-      "checksum": "ec57cc29c302c64132c8b1fab4d572fb"
+    "data/MASSDEN/2025-08-05_MASSDEN_avg_lead0.tif": {
+      "checksum": "b2cdf521ae2916128b6e8762b77f7a31"
     },
-    "data/GUST/GUST_2021-08-13.tif": {
-      "checksum": "3f418704a90f4944d78860cc572c2011"
+    "data/MASSDEN/2025-08-05_MASSDEN_avg_lead1.tif": {
+      "checksum": "19b182e689a3c2caa7d046a86de921a7"
     },
-    "data/GUST/GUST_2021-08-14.tif": {
-      "checksum": "bda4e317de69af95ce57d4cdc63e9057"
+    "data/MASSDEN/2025-08-05_MASSDEN_max_lead0.tif": {
+      "checksum": "e227aa616dae110d685244e8259a927f"
     },
-    "data/GUST/GUST_2025-06-13.tif": {
-      "checksum": "75d47f30638b3dbce2130602dbef952d"
-    },
-    "data/GUST/GUST_2025-06-14.tif": {
-      "checksum": "1f5384973ce56bd11a3154c95d8bdbc2"
-    },
-    "data/GUST/GUST_2025-06-15.tif": {
-      "checksum": "dffb57aacc7d50d2c09d93352b4b2aca"
-    },
-    "data/GUST/GUST_2025-06-16.tif": {
-      "checksum": "e3e28c1cc0612e9cf4278dda1ceebafe"
-    },
-    "data/GUST/GUST_2025-06-17.tif": {
-      "checksum": "027b1141486f14f3b1d7054a69fe564b"
-    },
-    "data/HPBL/HPBL_2021-08-12.tif": {
-      "checksum": "b985497f2dc2ce4bfa3bc2d2606a883a"
-    },
-    "data/HPBL/HPBL_2021-08-13.tif": {
-      "checksum": "fb19773e6d97002ee0d2aa4f792c57f5"
-    },
-    "data/HPBL/HPBL_2021-08-14.tif": {
-      "checksum": "88fc865d303f8ad77434309233e95092"
-    },
-    "data/HPBL/HPBL_2025-06-13.tif": {
-      "checksum": "5a516ad56998a0390e76608f372dfc61"
-    },
-    "data/HPBL/HPBL_2025-06-14.tif": {
-      "checksum": "7cd7ae7d08b310e546cf12943325a328"
-    },
-    "data/HPBL/HPBL_2025-06-15.tif": {
-      "checksum": "ae0c48a433c9a9f3a4e5c5a4def4e2f3"
-    },
-    "data/HPBL/HPBL_2025-06-16.tif": {
-      "checksum": "7352549eb0596a364ff09b960b46e21e"
-    },
-    "data/HPBL/HPBL_2025-06-17.tif": {
-      "checksum": "d8a30896aa4f4cccf1e77857ab28c94a"
-    },
-    "data/MASSDEN/MASSDEN_2021-08-12.tif": {
-      "checksum": "e009cafef9f6cc21092531d97d1cdd2e"
-    },
-    "data/MASSDEN/MASSDEN_2021-08-13.tif": {
-      "checksum": "6169a1074d0eab08fe2241ebfe2765a9"
-    },
-    "data/MASSDEN/MASSDEN_2021-08-14.tif": {
-      "checksum": "b50e173d291d78328ed64aecbbfe2413"
-    },
-    "data/MASSDEN/MASSDEN_2025-06-13.tif": {
-      "checksum": "0fe5dc5efdc9b28e44d93ec53e2c5ee5"
-    },
-    "data/MASSDEN/MASSDEN_2025-06-14.tif": {
-      "checksum": "c99f628bfa44cd2506ed5fc795a9ce1e"
-    },
-    "data/MASSDEN/MASSDEN_2025-06-15.tif": {
-      "checksum": "01da2832f2886658b09f097c751e5c72"
-    },
-    "data/MASSDEN/MASSDEN_2025-06-16.tif": {
-      "checksum": "96a020af566ac666f8ac0dd4fc43cae5"
-    },
-    "data/MASSDEN/MASSDEN_2025-06-17.tif": {
-      "checksum": "384514ac46b4b73ad9db1fed9abf0399"
+    "data/MASSDEN/2025-08-05_MASSDEN_max_lead1.tif": {
+      "checksum": "aa81df9034894630111c8f4398c008c3"
     },
     "data/model_performance/daily_model_performance.rds": {
-      "checksum": "a10ec7777710924f43c473f028326e2c"
+      "checksum": "4ac64409c80126a8171a0e0f57eeabd6"
     },
     "data/model_performance/hourly_model_performance.rds": {
-      "checksum": "031078173a776d0c843515901001c90c"
+      "checksum": "a21286567fa8d9ab68c3b26d3bf06d05"
     },
-    "data/PRATE/PRATE_2021-08-12.tif": {
-      "checksum": "cce895e70bb22d55038108dec1e68e24"
+    "data/PRATE/2025-08-05_PRATE_acc_lead0.tif": {
+      "checksum": "48eb326cd944dc5cbe962bb543fc2a86"
     },
-    "data/PRATE/PRATE_2021-08-13.tif": {
-      "checksum": "35d5b174f09d0c181f0b4d2545a26a72"
+    "data/PRATE/2025-08-05_PRATE_acc_lead1.tif": {
+      "checksum": "3c581018d47d1e3110d9c290649a4619"
     },
-    "data/PRATE/PRATE_2021-08-14.tif": {
-      "checksum": "e1f54804ac64732a0b28d58cc1e8d8fc"
+    "data/TMP/2025-08-05_TMP_max_lead0.tif": {
+      "checksum": "ebe06b1d7949820ecb22c0484d6d2197"
     },
-    "data/PRATE/PRATE_2025-06-13.tif": {
-      "checksum": "adefda5440f972dfa804f182a6d24822"
+    "data/TMP/2025-08-05_TMP_max_lead1.tif": {
+      "checksum": "51b068a4367256253665e08f43dbdea0"
     },
-    "data/PRATE/PRATE_2025-06-14.tif": {
-      "checksum": "015954a8a159e4b0c84b0ac072e26e6f"
+    "data/VENT_WINDOW/2025-08-05_good_rast_lead0.tif": {
+      "checksum": "00fa3a81d5bbe5f7adcd8d6356782484"
     },
-    "data/PRATE/PRATE_2025-06-15.tif": {
-      "checksum": "63f5f3e1eecb2d229533158ba2cf3910"
+    "data/VENT_WINDOW/2025-08-05_good_rast_lead1.tif": {
+      "checksum": "9ea5f7b31624933424d73eb56b8a80a9"
     },
-    "data/PRATE/PRATE_2025-06-16.tif": {
-      "checksum": "dfffd3fa56339bbe321d34aa2ea11ff6"
+    "data/VENT_WINDOW/2025-08-05_marginal_rast_lead0.tif": {
+      "checksum": "c73017affb157cb33e08aaac8af48f99"
     },
-    "data/PRATE/PRATE_2025-06-17.tif": {
-      "checksum": "741543ea6d7c3c592f9e01de6f6823ac"
+    "data/VENT_WINDOW/2025-08-05_marginal_rast_lead1.tif": {
+      "checksum": "b558b7a6a78f606c6c6a6219dc70afe0"
     },
-    "data/RH/RH_2021-08-12.tif": {
-      "checksum": "06924c1cbac7a84819a1f2297d5bf3ce"
+    "data/WIND_1hr_max_fcst/2025-08-05_WIND_1hr_max_fcst_max_lead0.tif": {
+      "checksum": "d3229f2ecdd25a846f59dab7be7aa79d"
     },
-    "data/RH/RH_2021-08-13.tif": {
-      "checksum": "f99f8cceda8f3bdcb2afd1c1e2971c1d"
-    },
-    "data/RH/RH_2021-08-14.tif": {
-      "checksum": "9c1a5e19624750c057a9a36eb98eecf6"
-    },
-    "data/RH/RH_2025-06-13.tif": {
-      "checksum": "60614f0e295e0d9ba9b3ddca176e06ab"
-    },
-    "data/RH/RH_2025-06-14.tif": {
-      "checksum": "26a514ef03c2cb6c84837c54143211e0"
-    },
-    "data/RH/RH_2025-06-15.tif": {
-      "checksum": "c749ce40c7c0f9204077d21a8c1b93ff"
-    },
-    "data/RH/RH_2025-06-16.tif": {
-      "checksum": "7a8107a4b611d6da671f44aa912e72cc"
-    },
-    "data/RH/RH_2025-06-17.tif": {
-      "checksum": "8c6aef69cd4cc413a8d0e05a2b93f53a"
-    },
-    "data/TMP/TMP_2021-08-12.tif": {
-      "checksum": "c0a1be949d1eedb9a77eab90503c15dd"
-    },
-    "data/TMP/TMP_2021-08-13.tif": {
-      "checksum": "0fc2559472f872d47395522081cf7897"
-    },
-    "data/TMP/TMP_2021-08-14.tif": {
-      "checksum": "4c557b447f849d539b9e4c5f62e4040a"
-    },
-    "data/TMP/TMP_2025-06-13.tif": {
-      "checksum": "fe2e3f98d6094c47b7fbbeac7c61efa8"
-    },
-    "data/TMP/TMP_2025-06-14.tif": {
-      "checksum": "a621856c80e9a53c76340e016968b54b"
-    },
-    "data/TMP/TMP_2025-06-15.tif": {
-      "checksum": "278aa4c7d22e3e191cf22c7f0c13b87e"
-    },
-    "data/TMP/TMP_2025-06-16.tif": {
-      "checksum": "b990bd66685b50c39c2924e597738316"
-    },
-    "data/TMP/TMP_2025-06-17.tif": {
-      "checksum": "cc292f016054f8d655ce813c2b272b25"
-    },
-    "data/trend/CFNSF_1day_trend.tif": {
-      "checksum": "9cf5f4ac0e9ace15c9196155bbe7fa1a"
-    },
-    "data/trend/CFNSF_2day_trend.tif": {
-      "checksum": "bf58cb2edc4d29d0a07ecd473af4ec4e"
-    },
-    "data/trend/county_trend_1day.rds": {
-      "checksum": "15d345598f028bfec17533c88649ed98"
-    },
-    "data/trend/county_trend_2day.rds": {
-      "checksum": "2e6d39e3104401869a52e0e0645beab7"
-    },
-    "data/trend/GUST_1day_trend.tif": {
-      "checksum": "035d89803b05c1a6944e9ac9c1b9191c"
-    },
-    "data/trend/GUST_2day_trend.tif": {
-      "checksum": "0b7bfcda4b0f96dab384d04e14e416ff"
-    },
-    "data/trend/HPBL_1day_trend.tif": {
-      "checksum": "aadf5e531be103539c01bf453bd96537"
-    },
-    "data/trend/HPBL_2day_trend.tif": {
-      "checksum": "16b77cdde7dd84a7679aeade82b54010"
-    },
-    "data/trend/MASSDEN_1day_trend.tif": {
-      "checksum": "0f9d9f8d108cbb7ebb58efc96943030b"
-    },
-    "data/trend/MASSDEN_2day_trend.tif": {
-      "checksum": "060afc1784d7e98db08ce3853d33f7e1"
-    },
-    "data/trend/PRATE_1day_trend.tif": {
-      "checksum": "5407b194c18b56bd631fc6774d17c626"
-    },
-    "data/trend/PRATE_2day_trend.tif": {
-      "checksum": "2daa265c94216e18e35b917e0018ef28"
-    },
-    "data/trend/RH_1day_trend.tif": {
-      "checksum": "359037a8901b0e9ce52f9e419b869ad7"
-    },
-    "data/trend/RH_2day_trend.tif": {
-      "checksum": "fe758f0e007e7ffdcdd0b15c9220ec0a"
-    },
-    "data/trend/TMP_1day_trend.tif": {
-      "checksum": "f371f28e17c01536ccbb8dd7c94e2d8c"
-    },
-    "data/trend/TMP_2day_trend.tif": {
-      "checksum": "90d08646d461d64d3ee1b7e50de5e115"
-    },
-    "data/trend/VENT_RATE_1day_trend.tif": {
-      "checksum": "deb4d29670902213080948c61f746aa6"
-    },
-    "data/trend/VENT_RATE_2day_trend.tif": {
-      "checksum": "eec2b7fbe0916104f23409c0bc533e5b"
-    },
-    "data/trend/WIND_1hr_max_fcst_1day_trend.tif": {
-      "checksum": "bfa8bd27ea0a82e1e68ae51b19894859"
-    },
-    "data/trend/WIND_1hr_max_fcst_2day_trend.tif": {
-      "checksum": "f3c6e3835fb1199d08c21db7bd36bed7"
-    },
-    "data/VENT_RATE/VENT_RATE_2021-08-12.tif": {
-      "checksum": "c2bac7cb186ce4696e8c9da70771b85a"
-    },
-    "data/VENT_RATE/VENT_RATE_2021-08-13.tif": {
-      "checksum": "fc8eb3598e6c5964cb493e0df68e381d"
-    },
-    "data/VENT_RATE/VENT_RATE_2021-08-14.tif": {
-      "checksum": "77c406f6b8227a7d8c74d8d06627cfc5"
-    },
-    "data/VENT_RATE/VENT_RATE_2025-06-13.tif": {
-      "checksum": "32ca2fed985016a5c5f0976b07c5d532"
-    },
-    "data/VENT_RATE/VENT_RATE_2025-06-14.tif": {
-      "checksum": "30116a36853cd59d3f86bf2e9454942f"
-    },
-    "data/VENT_RATE/VENT_RATE_2025-06-15.tif": {
-      "checksum": "c8b773570cf0f4f8e152bec737f27e2e"
-    },
-    "data/VENT_RATE/VENT_RATE_2025-06-16.tif": {
-      "checksum": "05c2be6b5e7adb55099fb83df25a0ee5"
-    },
-    "data/VENT_RATE/VENT_RATE_2025-06-17.tif": {
-      "checksum": "a614112a4ab1bebf637de012222fffe7"
-    },
-    "data/VENT_WINDOW/2021-08-14_good_rast.tif": {
-      "checksum": "a463d31fa06e4c0db92c1336c05996d9"
-    },
-    "data/VENT_WINDOW/2021-08-14_good_rast_today_update.tif": {
-      "checksum": "35a9b949a556a2f1ab548131ac98e353"
-    },
-    "data/VENT_WINDOW/2021-08-14_marginal_rast.tif": {
-      "checksum": "e4990b35d9b4da48c56549797a268e8b"
-    },
-    "data/VENT_WINDOW/2021-08-14_marginal_rast_today_update.tif": {
-      "checksum": "3825aead2c36b6d1cdbe656f969af7fa"
-    },
-    "data/VENT_WINDOW/2021-08-14_VENT_WINDOW_good_county_avg.rds": {
-      "checksum": "03118d68257442eccee471cc98d8cfcb"
-    },
-    "data/VENT_WINDOW/2021-08-14_VENT_WINDOW_good_county_avg_today_update.rds": {
-      "checksum": "e35573f80266be3ceae5881057d64169"
-    },
-    "data/VENT_WINDOW/2021-08-14_VENT_WINDOW_marginal_county_avg.rds": {
-      "checksum": "008692a7cdca2d4022205c69d61b7b00"
-    },
-    "data/VENT_WINDOW/2021-08-14_VENT_WINDOW_marginal_county_avg_today_update.rds": {
-      "checksum": "a8c2a13acf1fe532809437b961380fcd"
-    },
-    "data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2021-08-12.tif": {
-      "checksum": "5fe9f15569bc649b26d318bc79fb44b4"
-    },
-    "data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2021-08-13.tif": {
-      "checksum": "4dfee5240d0926f24002c5306eddb4d8"
-    },
-    "data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2021-08-14.tif": {
-      "checksum": "147925657c98a2e45315613a10bfbb47"
-    },
-    "data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2025-06-13.tif": {
-      "checksum": "6cd8197f3a7d9dbeb54fe2d37065503f"
-    },
-    "data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2025-06-14.tif": {
-      "checksum": "139610e642d005f0fe31b6a71a430c21"
-    },
-    "data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2025-06-15.tif": {
-      "checksum": "353231c51503f0d5dd0ac4a02b2a40d7"
-    },
-    "data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2025-06-16.tif": {
-      "checksum": "832c1b7a323b3edbf447422f18bbc23f"
-    },
-    "data/WIND_1hr_max_fcst/WIND_1hr_max_fcst_2025-06-17.tif": {
-      "checksum": "ffdbf002ec8b9c60f01c2ec49a479ffd"
+    "data/WIND_1hr_max_fcst/2025-08-05_WIND_1hr_max_fcst_max_lead1.tif": {
+      "checksum": "70409dda85cee80d6a7ef1f1959d5a91"
     },
     "install/install.R": {
       "checksum": "f6c3fb1418cd600425cb670df164fa02"
@@ -4115,85 +3969,76 @@
       "checksum": "2b92f56230de1441e6146f5afd63555b"
     },
     "modules/aqa_map_module.R": {
-      "checksum": "3889790c6cdd2d2e7bf7684530c94a43"
+      "checksum": "89d8a5f4e489c026f9c1bdbae6054cf6"
     },
     "modules/aqa_text_module.R": {
-      "checksum": "b5a1b0e83debd05268e3e75cf056bf3a"
+      "checksum": "f6822f62b020809650b23fa3cc355695"
     },
     "modules/bias_plot_module.R": {
-      "checksum": "35788021b0fb42d12bfd1c0801c8c2c3"
+      "checksum": "a81c6b0c928c5d8a4bd12d03e44c2039"
     },
     "modules/county_plot_module.R": {
-      "checksum": "962586d5ac51f46d388ed6b276ba4caf"
+      "checksum": "5b68e817b331895cebe7685eb4af42b6"
     },
     "modules/fire_table_module.R": {
       "checksum": "a589a3027e70f502322db03713078458"
     },
     "modules/hourly_map_module.R": {
-      "checksum": "18a472b508d2395be90674d204477260"
+      "checksum": "38a114a08a1ed86dc689cde6c6814c87"
     },
     "modules/model_performance_tile_module.R": {
-      "checksum": "628b98572351ed3e6e57da115dce565c"
+      "checksum": "bd6b39215233ce689009b780937cc0c7"
     },
     "modules/model_performance_timeseries_module.R": {
-      "checksum": "655f43aec2025c805d8305327c8b86e8"
+      "checksum": "72408256bcb86dde0eb16650d60d303b"
     },
     "modules/outlook_map_module.R": {
-      "checksum": "b4f4d10ce5da4af8a08bee55b7cda84c"
+      "checksum": "c261f5aa574c2f688f9ffdbec514250b"
     },
     "modules/utils/get_point_fcst.R": {
       "checksum": "20e200b6aa2b3100edba4951315fef25"
     },
     "modules/utils/map_module_utils.R": {
-      "checksum": "c3365e9454e92aa197876b90c2f5d643"
+      "checksum": "ef9b79099fa8d257aeafc740a583e5a9"
     },
     "modules/utils/plot_utils.R": {
       "checksum": "7557599bf26ee626738b325c5500f699"
     },
+    "modules/utils/png_bounds.rds": {
+      "checksum": "7025c3ef937186835b5e8a048197cfbc"
+    },
     "modules/utils/variable_utils.R": {
-      "checksum": "aa3f826e7442f99e48ad918712d021ce"
+      "checksum": "2714f3309461be2aad61a888f3caeaa7"
     },
     "modules/worm_plot_module.R": {
-      "checksum": "5d9dfafebd701e1fd850ca0b2692917c"
+      "checksum": "2e804d2e91eabc53b3cd2997e1ce703b"
     },
     "renv.lock": {
-      "checksum": "700d1ffd714e7092334a535421c3578c"
+      "checksum": "03fe75d527d263f8b15b6f922f70d827"
     },
-    "tasks/GIT_PULL.bat": {
-      "checksum": "2cc65986ec7be080cf60b4bc49af4342"
-    },
-    "tasks/HRRR_APP_UPDATE.bat": {
-      "checksum": "571b258fcda278b0b3a3ac9ae2e5d6e4"
-    },
-    "tasks/HRRR_APP_UPDATE_log.txt": {
-      "checksum": "f2901982f1b7604a4caf450acd1aba59"
-    },
-    "tasks/HRRR_APP_UPDATE_task.xml": {
-      "checksum": "43401be16b76349e0a79ce552c6a8ab8"
-    },
-    "tasks/HRRR_APP_VERSION_UPDATE_task.xml": {
-      "checksum": "6e62cae765dff4ca623f293d08971333"
+    "test2.R": {
+      "checksum": "6ed963b8838a71723f95ef55ec129f47"
     },
     "UPDATE_HRRR_APP.R": {
-      "checksum": "0378f284f3fb323acc41fae695c07c70"
-    },
-    "update_scripts/archive_data.R": {
-      "checksum": "aed5af3afbcf6e0e8b8259d59a640707"
+      "checksum": "c34563a0c03f9f773ebd3f594c77f2e6"
     },
     "update_scripts/calculate_county_hourly_avg.R": {
-      "checksum": "f6dd1e5c45d26aed77ed68b1cbc4d8f9"
+      "checksum": "dacdc9e0ef2c9a4277394ca1e3910448"
+    },
+    "update_scripts/calculate_outlook.R": {
+      "checksum": "b1547653e051c180414273cc916875f8"
     },
     "update_scripts/calculate_trends.R": {
       "checksum": "1b826d2186d648178b57f7a1060bbcd9"
     },
     "update_scripts/calculate_VENT_RATE.R": {
-      "checksum": "d2c25458e4a66d3593a39ab8d5dee65c"
+      "checksum": "f503ad883ee462a9d46c8f45cd8bb42b"
     },
     "update_scripts/calculate_VENT_window.R": {
-      "checksum": "d98060744d3f1d124a21a0089ed42960"
+      "checksum": "5601b270f1f0bb0ee3412e1b8c309166"
     },
     "update_scripts/get_AirNow_data.R": {
-      "checksum": "28d27ee657be3b164f28271937450ebb"
+      "checksum": "6ad606c87b129b424938ece8e3875478"
     },
     "update_scripts/get_fire_data.R": {
       "checksum": "aef16e90e7cb4a3e3c4f4bdb9dbfe051"
@@ -4202,13 +4047,22 @@
       "checksum": "661020616b6efaddcc0440116dc660b4"
     },
     "update_scripts/HRRR_download.R": {
-      "checksum": "a8ba3e49c718635bea25ec1f5405f9de"
+      "checksum": "2fa6a34a17eb378c41ce60bf08ce1257"
     },
     "update_scripts/model_performance.R": {
-      "checksum": "809b37258267dd026450e8c99c9dfcc4"
+      "checksum": "f5bea891a54a718ff8d3c805f8bca997"
+    },
+    "update_scripts/write_hourly_png.R": {
+      "checksum": "6d471d700b8b7f2533d6a3db79bbe4ec"
     },
     "utils/Update_HRRR_data_INITIALIZE.R": {
       "checksum": "996bc3e03c05572b65619caebc9e3798"
+    },
+    "utils/write_manifest_for_connect.R": {
+      "checksum": "418fb479b85772e84d4f10fb76d4b7a2"
+    },
+    "write_png.R": {
+      "checksum": "5465400cf23264fe34cf1a07cdfa2ac7"
     },
     "www/app_icon.ico": {
       "checksum": "a40d064573183b1b0a7a9245e524196f"
@@ -4216,8 +4070,1304 @@
     "www/AQI_scale.png": {
       "checksum": "09c115063127f5fc970a89e78c314e3b"
     },
+    "www/GUST/2025-08-05_01.png": {
+      "checksum": "593b97b1157ec9700c224ff682aab4f1"
+    },
+    "www/GUST/2025-08-05_02.png": {
+      "checksum": "725f585438ce71a332b3fdcc05430144"
+    },
+    "www/GUST/2025-08-05_03.png": {
+      "checksum": "08de4f6f18a8fcd5bc4a6c0c51e8881e"
+    },
+    "www/GUST/2025-08-05_04.png": {
+      "checksum": "39b4f7ce5037a090ad9fd9570b5a7de5"
+    },
+    "www/GUST/2025-08-05_05.png": {
+      "checksum": "d714cb7d475756e2b422e3c328e630b4"
+    },
+    "www/GUST/2025-08-05_06.png": {
+      "checksum": "ce7e4e4e629cc72b3d0845ea8bf0562e"
+    },
+    "www/GUST/2025-08-05_07.png": {
+      "checksum": "a30e2b0db43de1cdb91c0a9b52689bd8"
+    },
+    "www/GUST/2025-08-05_08.png": {
+      "checksum": "01916abf00f97cbdf8de33af9d8b85b1"
+    },
+    "www/GUST/2025-08-05_09.png": {
+      "checksum": "d0f29bb29bcfe11d31a8a1853b210599"
+    },
+    "www/GUST/2025-08-05_10.png": {
+      "checksum": "0cb4e498d201e93bc3ad406f847478de"
+    },
+    "www/GUST/2025-08-05_11.png": {
+      "checksum": "3a28b8ca0a3144ba8e70d7ecdfddfd2b"
+    },
+    "www/GUST/2025-08-05_12.png": {
+      "checksum": "a4bfaf6ec5665cabae0c30742d4bdcef"
+    },
+    "www/GUST/2025-08-05_13.png": {
+      "checksum": "44df252243334c390c306112ae9e491e"
+    },
+    "www/GUST/2025-08-05_14.png": {
+      "checksum": "f8e77fb8cf89cda55cabdbb757c90979"
+    },
+    "www/GUST/2025-08-05_15.png": {
+      "checksum": "8fc47dd4637d138f0aa40a15ae05c133"
+    },
+    "www/GUST/2025-08-05_16.png": {
+      "checksum": "2e788c60e30bfad5ffab6ef86d6e0590"
+    },
+    "www/GUST/2025-08-05_17.png": {
+      "checksum": "89e0c354cd42bc73994cddc588911d84"
+    },
+    "www/GUST/2025-08-05_18.png": {
+      "checksum": "99e926d9b9ad47118ca74154822e2c5b"
+    },
+    "www/GUST/2025-08-05_19.png": {
+      "checksum": "fa66fe0d34cc0f804de9abafd573d00b"
+    },
+    "www/GUST/2025-08-05_20.png": {
+      "checksum": "321a4c232aafabf85ba2f3a631f11481"
+    },
+    "www/GUST/2025-08-05_21.png": {
+      "checksum": "ea42d9d11401baa69c072996fffa8c61"
+    },
+    "www/GUST/2025-08-05_22.png": {
+      "checksum": "42e23f5304fffcd83fa769070fb61d67"
+    },
+    "www/GUST/2025-08-05_23.png": {
+      "checksum": "df2c8299ef76d8b9cfc194c6ec8224ff"
+    },
+    "www/GUST/2025-08-05_24.png": {
+      "checksum": "edca2b7e2f96cb3b99a6227bef5fa3d6"
+    },
+    "www/GUST/2025-08-05_25.png": {
+      "checksum": "3baf441ffa7cf48c141953d3f328d71c"
+    },
+    "www/GUST/2025-08-05_26.png": {
+      "checksum": "69550534d28057dc97278a5639d553b3"
+    },
+    "www/GUST/2025-08-05_27.png": {
+      "checksum": "8925870dc031451133c6406c9e0e063b"
+    },
+    "www/GUST/2025-08-05_28.png": {
+      "checksum": "f004dad59733d57581f7afdc339cc193"
+    },
+    "www/GUST/2025-08-05_29.png": {
+      "checksum": "4b4fb714865cf5ff82f9dc945384ef66"
+    },
+    "www/GUST/2025-08-05_30.png": {
+      "checksum": "e36ac499257b0246420dae17d194d320"
+    },
+    "www/GUST/2025-08-05_31.png": {
+      "checksum": "b32854c867c815d48a223f7967c8d587"
+    },
+    "www/GUST/2025-08-05_32.png": {
+      "checksum": "62b9a1eddf6edd2b310b6e90c15a2802"
+    },
+    "www/GUST/2025-08-05_33.png": {
+      "checksum": "bc523dada55cdc0e2e730bd484358d75"
+    },
+    "www/GUST/2025-08-05_34.png": {
+      "checksum": "fdc32fc457c1251a2041ceb9c0453d39"
+    },
+    "www/GUST/2025-08-05_35.png": {
+      "checksum": "0fe8f897a0f41084251509b884963eae"
+    },
+    "www/GUST/2025-08-05_36.png": {
+      "checksum": "9cd791ebcf0731c4a45d8f83d788ac8d"
+    },
+    "www/GUST/2025-08-05_37.png": {
+      "checksum": "56da5873fe2a70d7aac090924c4563d1"
+    },
+    "www/GUST/2025-08-05_38.png": {
+      "checksum": "4d35d5bb11e0fbcaac91cf6d6c5da2c6"
+    },
+    "www/GUST/2025-08-05_39.png": {
+      "checksum": "b70d76119f9b1daa93d35e8002739c24"
+    },
+    "www/GUST/2025-08-05_40.png": {
+      "checksum": "c5bb24c5ca7f6355b4a15761d3db5e45"
+    },
+    "www/GUST/2025-08-05_41.png": {
+      "checksum": "a21f13e91a4c2704352cf126e0faf22a"
+    },
+    "www/GUST/2025-08-05_42.png": {
+      "checksum": "0bdb83e9e04ee97ca34e843a5f7a00b5"
+    },
+    "www/GUST/2025-08-05_43.png": {
+      "checksum": "47a3a849ea370b1c3dff92189ca9e490"
+    },
+    "www/GUST/2025-08-05_44.png": {
+      "checksum": "37d8ada49d0e87cee78cbf3e4d77edaf"
+    },
+    "www/GUST/2025-08-05_45.png": {
+      "checksum": "57e9f409bdaa8676feb9be3b5f59fb29"
+    },
+    "www/GUST/2025-08-05_46.png": {
+      "checksum": "8d1bb61acd609417b1cf921237d53e69"
+    },
+    "www/GUST/2025-08-05_47.png": {
+      "checksum": "45fcf45aa5c1a4d380f49129be01306f"
+    },
+    "www/GUST/2025-08-05_48.png": {
+      "checksum": "fd5ab466a3074b9b91867a21623e4ac0"
+    },
+    "www/HPBL/2025-08-05_01.png": {
+      "checksum": "784e173b18eb425607f534677c6f27de"
+    },
+    "www/HPBL/2025-08-05_02.png": {
+      "checksum": "068531c9221ac96f7c839828f1f8d512"
+    },
+    "www/HPBL/2025-08-05_03.png": {
+      "checksum": "7d3e22f1af9d8cd49f08743a047f9808"
+    },
+    "www/HPBL/2025-08-05_04.png": {
+      "checksum": "393a23ec87ca2138311d9ba123cec1d7"
+    },
+    "www/HPBL/2025-08-05_05.png": {
+      "checksum": "272662436f2de1224ac3daf0a33dbed3"
+    },
+    "www/HPBL/2025-08-05_06.png": {
+      "checksum": "739bcb258f57c63e65393929d8e9149d"
+    },
+    "www/HPBL/2025-08-05_07.png": {
+      "checksum": "84ebc1d46876e7d5c2417418e0758f83"
+    },
+    "www/HPBL/2025-08-05_08.png": {
+      "checksum": "c05e9b580336c52c623d27f5fbb5d16f"
+    },
+    "www/HPBL/2025-08-05_09.png": {
+      "checksum": "56c4014c703ba9dae5746d008f62efea"
+    },
+    "www/HPBL/2025-08-05_10.png": {
+      "checksum": "14cc3245b4c82c2009e9dcb8188c3873"
+    },
+    "www/HPBL/2025-08-05_11.png": {
+      "checksum": "ec837d8c3a3cd39dea9f94a62a3bda6b"
+    },
+    "www/HPBL/2025-08-05_12.png": {
+      "checksum": "8561106a0bbeef8c8ea72892fcd82543"
+    },
+    "www/HPBL/2025-08-05_13.png": {
+      "checksum": "cfbc17f8469a65641e6d548b2245559a"
+    },
+    "www/HPBL/2025-08-05_14.png": {
+      "checksum": "caf4c08b9e972fc512fd0fb1285f7c07"
+    },
+    "www/HPBL/2025-08-05_15.png": {
+      "checksum": "2e02742778b043c040dbb520078794f5"
+    },
+    "www/HPBL/2025-08-05_16.png": {
+      "checksum": "a3b1a59fcb65e8473e11e9ac31206c4e"
+    },
+    "www/HPBL/2025-08-05_17.png": {
+      "checksum": "ea5aa9a1172d73dde0118d7c28a1ec19"
+    },
+    "www/HPBL/2025-08-05_18.png": {
+      "checksum": "364ea975ba829f4041e43babab254b76"
+    },
+    "www/HPBL/2025-08-05_19.png": {
+      "checksum": "79fa285fa02fcbc767d9e107c2769cbd"
+    },
+    "www/HPBL/2025-08-05_20.png": {
+      "checksum": "0f3a5abe65f6be159795954b05853eff"
+    },
+    "www/HPBL/2025-08-05_21.png": {
+      "checksum": "4b0d7cef7e107a3f8c2b517371982bb4"
+    },
+    "www/HPBL/2025-08-05_22.png": {
+      "checksum": "6e7be346ac5b7dab902c2cad79319151"
+    },
+    "www/HPBL/2025-08-05_23.png": {
+      "checksum": "ad07fc963102d096161ad546921e8fb9"
+    },
+    "www/HPBL/2025-08-05_24.png": {
+      "checksum": "4e8f676e346add24fcbe1b2b3ee9e256"
+    },
+    "www/HPBL/2025-08-05_25.png": {
+      "checksum": "a8f61c877058966355825e9bd385ffaa"
+    },
+    "www/HPBL/2025-08-05_26.png": {
+      "checksum": "f70de35f4c9faa33ba2c8cd3172e8cf8"
+    },
+    "www/HPBL/2025-08-05_27.png": {
+      "checksum": "dc40f13b883b2bbddee019241e23f2e7"
+    },
+    "www/HPBL/2025-08-05_28.png": {
+      "checksum": "8c2a81ee52eed688b25d8234ad9cd695"
+    },
+    "www/HPBL/2025-08-05_29.png": {
+      "checksum": "87d6b8fd8859544cb70b16ba8a0fec0d"
+    },
+    "www/HPBL/2025-08-05_30.png": {
+      "checksum": "2560871457743a0c7ae2458ddb460a71"
+    },
+    "www/HPBL/2025-08-05_31.png": {
+      "checksum": "127cff8e2900f787187e1eb22b2a8dd0"
+    },
+    "www/HPBL/2025-08-05_32.png": {
+      "checksum": "d31610ab4c3774fc56fb515eace96bc1"
+    },
+    "www/HPBL/2025-08-05_33.png": {
+      "checksum": "17d4d3ebee006c3deba7d349ae42404f"
+    },
+    "www/HPBL/2025-08-05_34.png": {
+      "checksum": "161027caa58ab7db30ec49b2e23441f3"
+    },
+    "www/HPBL/2025-08-05_35.png": {
+      "checksum": "4bd1af696fcc8d48d34709008abbebc6"
+    },
+    "www/HPBL/2025-08-05_36.png": {
+      "checksum": "93dffb1164fcaf863ae4501d72db5722"
+    },
+    "www/HPBL/2025-08-05_37.png": {
+      "checksum": "253f218e72fa0862ce69b52529307739"
+    },
+    "www/HPBL/2025-08-05_38.png": {
+      "checksum": "cf3ffcdb3ebb338425064474b9d2def7"
+    },
+    "www/HPBL/2025-08-05_39.png": {
+      "checksum": "23178806b3374fa6e93850861d24bc62"
+    },
+    "www/HPBL/2025-08-05_40.png": {
+      "checksum": "8ac8b6e9ff8d21356f8376919b30c910"
+    },
+    "www/HPBL/2025-08-05_41.png": {
+      "checksum": "1ccdf48fa7249ffee05bff84c75e9159"
+    },
+    "www/HPBL/2025-08-05_42.png": {
+      "checksum": "d305fd8be6a66743f964a8dc7dcec141"
+    },
+    "www/HPBL/2025-08-05_43.png": {
+      "checksum": "2a4bd98b7864ea2fc00d7e8d87cb3a6e"
+    },
+    "www/HPBL/2025-08-05_44.png": {
+      "checksum": "56d995d5df5a490e75989e0bda8af6af"
+    },
+    "www/HPBL/2025-08-05_45.png": {
+      "checksum": "12005d2a596031bf030a94d1a3cd82b8"
+    },
+    "www/HPBL/2025-08-05_46.png": {
+      "checksum": "2d42cab3ce1efcef48379d556939aacf"
+    },
+    "www/HPBL/2025-08-05_47.png": {
+      "checksum": "eb8e43eded0d30f4197f77b5099c645c"
+    },
+    "www/HPBL/2025-08-05_48.png": {
+      "checksum": "9d3e1f1213b36e881bc6b3f50474aabe"
+    },
     "www/logo_blue.png": {
       "checksum": "67b07982ae51c49c6eb006f7d36f74bb"
+    },
+    "www/MASSDEN/2025-08-05_01.png": {
+      "checksum": "05ecd0fcd1aeb2c8c2e1bbc0428c1d69"
+    },
+    "www/MASSDEN/2025-08-05_02.png": {
+      "checksum": "438dd8d6ad4dec053794d5ecd1d5290f"
+    },
+    "www/MASSDEN/2025-08-05_03.png": {
+      "checksum": "0ab33134d5b4b2cdeb0a9a6567491275"
+    },
+    "www/MASSDEN/2025-08-05_04.png": {
+      "checksum": "3650f5a94480a21d34562a52e05bc2a5"
+    },
+    "www/MASSDEN/2025-08-05_05.png": {
+      "checksum": "e65fb6c270f8bc0ae865a7109590cf37"
+    },
+    "www/MASSDEN/2025-08-05_06.png": {
+      "checksum": "01dd0943da0ab16d357ebb94d06f53a1"
+    },
+    "www/MASSDEN/2025-08-05_07.png": {
+      "checksum": "43bb8a90601aa35f338e37b36533d2a2"
+    },
+    "www/MASSDEN/2025-08-05_08.png": {
+      "checksum": "3f21f8246a7692ce8d75a2b4351d7ad6"
+    },
+    "www/MASSDEN/2025-08-05_09.png": {
+      "checksum": "c21448ac0dca3b3e7dedaec54a609c8f"
+    },
+    "www/MASSDEN/2025-08-05_10.png": {
+      "checksum": "def3cb48073091ba779e64021fcaa94b"
+    },
+    "www/MASSDEN/2025-08-05_11.png": {
+      "checksum": "c8c92fb26d27ff0f3ace38d8512b3afa"
+    },
+    "www/MASSDEN/2025-08-05_12.png": {
+      "checksum": "6f8c078f0672dedc277693eb8aec4034"
+    },
+    "www/MASSDEN/2025-08-05_13.png": {
+      "checksum": "76c0339189685379da1e02873b57b59c"
+    },
+    "www/MASSDEN/2025-08-05_14.png": {
+      "checksum": "3c48e97f94d8a40ed1046f056e20dfe9"
+    },
+    "www/MASSDEN/2025-08-05_15.png": {
+      "checksum": "e35ca42889d52d771e0bfb2d8584925c"
+    },
+    "www/MASSDEN/2025-08-05_16.png": {
+      "checksum": "152e9c641017edb99654b7a8778a53fd"
+    },
+    "www/MASSDEN/2025-08-05_17.png": {
+      "checksum": "96177580e930b75053dc5eddd608060e"
+    },
+    "www/MASSDEN/2025-08-05_18.png": {
+      "checksum": "c6d8a43d2acf67f8e59f6dbfc4d3316c"
+    },
+    "www/MASSDEN/2025-08-05_19.png": {
+      "checksum": "dafdfcebde5d13a379ac91d07de2f72c"
+    },
+    "www/MASSDEN/2025-08-05_20.png": {
+      "checksum": "55262ebe8cab30a31767e81b4dcdcb63"
+    },
+    "www/MASSDEN/2025-08-05_21.png": {
+      "checksum": "817592e8c264732330fd7f4ec629a6a8"
+    },
+    "www/MASSDEN/2025-08-05_22.png": {
+      "checksum": "207a10d7a27fe76090b249348e633d71"
+    },
+    "www/MASSDEN/2025-08-05_23.png": {
+      "checksum": "6c1d5f45506e694594b9dfd451c67fd8"
+    },
+    "www/MASSDEN/2025-08-05_24.png": {
+      "checksum": "d6938a9a22c2ac0a77fe7a3cec4cd2b4"
+    },
+    "www/MASSDEN/2025-08-05_25.png": {
+      "checksum": "6262239367ebe3c972351420a43e7338"
+    },
+    "www/MASSDEN/2025-08-05_26.png": {
+      "checksum": "7d993c2245accac68919c5b4f006979f"
+    },
+    "www/MASSDEN/2025-08-05_27.png": {
+      "checksum": "128e95b2c02bad722cae3db4c6bc9a64"
+    },
+    "www/MASSDEN/2025-08-05_28.png": {
+      "checksum": "b64d4594a3f5a442c5c9ae8c015a43d9"
+    },
+    "www/MASSDEN/2025-08-05_29.png": {
+      "checksum": "e1587e4291454488652f1679cce3a5ec"
+    },
+    "www/MASSDEN/2025-08-05_30.png": {
+      "checksum": "481991493e8e9bc966593ca8d1ede0eb"
+    },
+    "www/MASSDEN/2025-08-05_31.png": {
+      "checksum": "10b6ffe8795af9e5c8a4effed1f85f7a"
+    },
+    "www/MASSDEN/2025-08-05_32.png": {
+      "checksum": "5601a5f30789f3f9c4f059dc700202ce"
+    },
+    "www/MASSDEN/2025-08-05_33.png": {
+      "checksum": "90f3aeda526ee2c803c589e9304acfa3"
+    },
+    "www/MASSDEN/2025-08-05_34.png": {
+      "checksum": "ebb5e8fcd08af8a897902416e4638127"
+    },
+    "www/MASSDEN/2025-08-05_35.png": {
+      "checksum": "9cd3e18df5e0aff57b8036c164abaab2"
+    },
+    "www/MASSDEN/2025-08-05_36.png": {
+      "checksum": "982c1b7b83a02322ede78545c24fb19d"
+    },
+    "www/MASSDEN/2025-08-05_37.png": {
+      "checksum": "98ae8f6902d5d4a17389a9160ad85202"
+    },
+    "www/MASSDEN/2025-08-05_38.png": {
+      "checksum": "5028ffa44c07c6a4d0fd1ca110d4e0b7"
+    },
+    "www/MASSDEN/2025-08-05_39.png": {
+      "checksum": "5cb58fb68a21a59082d87dc109205b0c"
+    },
+    "www/MASSDEN/2025-08-05_40.png": {
+      "checksum": "78e56c071d96a983fc659c931209eae7"
+    },
+    "www/MASSDEN/2025-08-05_41.png": {
+      "checksum": "17a11f7c7bf45ecc5197cb0e30293759"
+    },
+    "www/MASSDEN/2025-08-05_42.png": {
+      "checksum": "75c99c53fd073d3db64eee812f8518b1"
+    },
+    "www/MASSDEN/2025-08-05_43.png": {
+      "checksum": "9f194cd29416181023391ac527e081e7"
+    },
+    "www/MASSDEN/2025-08-05_44.png": {
+      "checksum": "6eadc275807d0612560d9a1f5e9c2e51"
+    },
+    "www/MASSDEN/2025-08-05_45.png": {
+      "checksum": "07ea141ec690f4c6ba6076dc982169a2"
+    },
+    "www/MASSDEN/2025-08-05_46.png": {
+      "checksum": "b26448997bd8949c631de58cf49d6966"
+    },
+    "www/MASSDEN/2025-08-05_47.png": {
+      "checksum": "bfc1c871dc262590ac6bcd450da7ec28"
+    },
+    "www/MASSDEN/2025-08-05_48.png": {
+      "checksum": "f3d0c350c747b11ba765acff5629b796"
+    },
+    "www/png_layers/layer_01.png": {
+      "checksum": "34696c18ec5a4245f31f03a54431d76e"
+    },
+    "www/png_layers/layer_02.png": {
+      "checksum": "056e36f22b1728e811bf02fbd0210661"
+    },
+    "www/png_layers/layer_03.png": {
+      "checksum": "65c4ab952237f6c226be2924ffa1b917"
+    },
+    "www/png_layers/layer_04.png": {
+      "checksum": "2e6f94bd601a4f062d3aa8ff6e87994b"
+    },
+    "www/png_layers/layer_05.png": {
+      "checksum": "b0521fddcfcd2cb37f5dabe1fd0d4636"
+    },
+    "www/png_layers/layer_06.png": {
+      "checksum": "fb12ab32cc929cb598e42cfc977465ad"
+    },
+    "www/png_layers/layer_07.png": {
+      "checksum": "30454f0ebf444a01eff07676d1a4232e"
+    },
+    "www/png_layers/layer_08.png": {
+      "checksum": "35d1b429d87694b8ad69080f3f6f8d04"
+    },
+    "www/png_layers/layer_09.png": {
+      "checksum": "5cd635185db096e7e65d6358e29b9060"
+    },
+    "www/png_layers/layer_10.png": {
+      "checksum": "1ae014b063688a4e929a4d436bc7bcca"
+    },
+    "www/png_layers/layer_11.png": {
+      "checksum": "1a67b819be336030a2fbb064b2df633b"
+    },
+    "www/png_layers/layer_12.png": {
+      "checksum": "b56b0c615e9efa95d7124bad1fa222dd"
+    },
+    "www/png_layers/layer_13.png": {
+      "checksum": "2c3c81e4d9bdbf0e3f283bd553176965"
+    },
+    "www/png_layers/layer_14.png": {
+      "checksum": "66e3bca963a2242c484587717d91c648"
+    },
+    "www/png_layers/layer_15.png": {
+      "checksum": "887ed1acf738c64be8bf9356f5b6f6c4"
+    },
+    "www/png_layers/layer_16.png": {
+      "checksum": "cd8b2663021988b8c53dc15431fc8352"
+    },
+    "www/png_layers/layer_17.png": {
+      "checksum": "933a742e4eec88966edb6ac96ed976a8"
+    },
+    "www/png_layers/layer_18.png": {
+      "checksum": "e87306aa5a4617c0addf4f2e18997f48"
+    },
+    "www/png_layers/layer_19.png": {
+      "checksum": "fb2b38709ee45cf0967b49577c6ca5ba"
+    },
+    "www/png_layers/layer_20.png": {
+      "checksum": "ddaddd7e1384487e07eccd168fb681ba"
+    },
+    "www/png_layers/layer_21.png": {
+      "checksum": "1562fdb0c234f59a2fd2a34cfb157915"
+    },
+    "www/png_layers/layer_22.png": {
+      "checksum": "8a308ae81cc732f5121b8b3195391cba"
+    },
+    "www/png_layers/layer_23.png": {
+      "checksum": "785f64c384858a38c569f097650c4012"
+    },
+    "www/png_layers/layer_24.png": {
+      "checksum": "b6d0063d4358cd880367e0b92a6f87ad"
+    },
+    "www/png_layers/layer_25.png": {
+      "checksum": "dd0232f347313a3fd44267dd8a3f823b"
+    },
+    "www/png_layers/layer_26.png": {
+      "checksum": "9ca6f35270f6c3bf47bf30c9e655613e"
+    },
+    "www/png_layers/layer_27.png": {
+      "checksum": "c2c779c0fd7f20e1a9b5e537e1a4d7fb"
+    },
+    "www/png_layers/layer_28.png": {
+      "checksum": "618558adc4f61b0bdbaee9f4664ef798"
+    },
+    "www/png_layers/layer_29.png": {
+      "checksum": "6974755a17ad71f5cfdfd27531f7363b"
+    },
+    "www/png_layers/layer_30.png": {
+      "checksum": "263d37505b373fd8ea3be3a89ba0285c"
+    },
+    "www/png_layers/layer_31.png": {
+      "checksum": "96bc9597098ac3a46461ffe3cb7c57ba"
+    },
+    "www/png_layers/layer_32.png": {
+      "checksum": "a0a30eb66f470cbb485a130263a88bd5"
+    },
+    "www/png_layers/layer_33.png": {
+      "checksum": "24167509947cd0e6a9e0ff0a8d0184eb"
+    },
+    "www/png_layers/layer_34.png": {
+      "checksum": "26c458e36e7c09fde3ef91042fd87aa3"
+    },
+    "www/png_layers/layer_35.png": {
+      "checksum": "4bf5bb77f34e236d5f81e2c38bd90d8e"
+    },
+    "www/png_layers/layer_36.png": {
+      "checksum": "815cfd5f5157d5518db2cb1539d5f673"
+    },
+    "www/png_layers/layer_37.png": {
+      "checksum": "27fa39ebb8b1c685c742eb15efdedec4"
+    },
+    "www/png_layers/layer_38.png": {
+      "checksum": "e1ae6b1f6da29d7f9de9b2abf4ca8b05"
+    },
+    "www/png_layers/layer_39.png": {
+      "checksum": "8aaf30235bef2415c9883316470a4ac6"
+    },
+    "www/png_layers/layer_40.png": {
+      "checksum": "02a02bf74951dc8d788a2fe60e1ce105"
+    },
+    "www/png_layers/layer_41.png": {
+      "checksum": "5ece1a76fcf0d6124aae10fbd61fa3b5"
+    },
+    "www/png_layers/layer_42.png": {
+      "checksum": "57bebe533c4d43dae4a817858f2b0172"
+    },
+    "www/png_layers/layer_43.png": {
+      "checksum": "57efe132153bb204a481f4f657aedbd6"
+    },
+    "www/png_layers/layer_44.png": {
+      "checksum": "81b5cde62b8529053e16714af6343a50"
+    },
+    "www/png_layers/layer_45.png": {
+      "checksum": "12b857dac4777e158f6905b467d44720"
+    },
+    "www/png_layers/layer_46.png": {
+      "checksum": "5d0d3a8db25f84fd73a2cfd8026462ab"
+    },
+    "www/png_layers/layer_47.png": {
+      "checksum": "2c7071f397ef1baee7da9c5441329119"
+    },
+    "www/png_layers/layer_48.png": {
+      "checksum": "f12550f5e4ee76a10476279ec0eac6fd"
+    },
+    "www/PRATE/2025-08-05_01.png": {
+      "checksum": "ab8eb3c418030979a0bf9624ffadca3d"
+    },
+    "www/PRATE/2025-08-05_02.png": {
+      "checksum": "9911a10c65b496ffc807ae088f9c83d0"
+    },
+    "www/PRATE/2025-08-05_03.png": {
+      "checksum": "ac0b7a3c5cfbe42ff6a0a1f19726d07f"
+    },
+    "www/PRATE/2025-08-05_04.png": {
+      "checksum": "972e956c9c05e2c3247a352f4f122052"
+    },
+    "www/PRATE/2025-08-05_05.png": {
+      "checksum": "b5bd6decca7e0dc92424a2d523845b86"
+    },
+    "www/PRATE/2025-08-05_06.png": {
+      "checksum": "a59f8c84c7017b89f7c618a0b28253f5"
+    },
+    "www/PRATE/2025-08-05_07.png": {
+      "checksum": "d9e2acf83d78aef0245f8abd18f581c4"
+    },
+    "www/PRATE/2025-08-05_08.png": {
+      "checksum": "cd59b45defad9ca391cf8571cf152a1f"
+    },
+    "www/PRATE/2025-08-05_09.png": {
+      "checksum": "845e4b31fb6df7c9cbed9062f12c293a"
+    },
+    "www/PRATE/2025-08-05_10.png": {
+      "checksum": "e9698dbf0fd811d6e855ffdc5ed64961"
+    },
+    "www/PRATE/2025-08-05_11.png": {
+      "checksum": "3a39c7840f6816b43a202c5c76766156"
+    },
+    "www/PRATE/2025-08-05_12.png": {
+      "checksum": "a0eaa7f59cd028d7781efcc65d1fa759"
+    },
+    "www/PRATE/2025-08-05_13.png": {
+      "checksum": "e6d0a6b55e2f2c63d9b202654bf5e1fc"
+    },
+    "www/PRATE/2025-08-05_14.png": {
+      "checksum": "1c42fdec91aee925457540fdc58cda35"
+    },
+    "www/PRATE/2025-08-05_15.png": {
+      "checksum": "2bb7862fc10eedcdadcb2002f1f201b8"
+    },
+    "www/PRATE/2025-08-05_16.png": {
+      "checksum": "4dd6d232c61d1b8d4a283a9928bcd25e"
+    },
+    "www/PRATE/2025-08-05_17.png": {
+      "checksum": "275cbce9433fbef8f7629b63016c3db3"
+    },
+    "www/PRATE/2025-08-05_18.png": {
+      "checksum": "76e2b2cd8d7e27eb4b14f38f51341d0f"
+    },
+    "www/PRATE/2025-08-05_19.png": {
+      "checksum": "8a485ec59bec210934aad080685c422c"
+    },
+    "www/PRATE/2025-08-05_20.png": {
+      "checksum": "05a54b4e53d9e802c42f8da1f29db762"
+    },
+    "www/PRATE/2025-08-05_21.png": {
+      "checksum": "f205144960297014606440de8df90fb5"
+    },
+    "www/PRATE/2025-08-05_22.png": {
+      "checksum": "1c8d08ee8ee41489112e7cf35a3cbc81"
+    },
+    "www/PRATE/2025-08-05_23.png": {
+      "checksum": "5724984692e1e1a5fad58de79161856e"
+    },
+    "www/PRATE/2025-08-05_24.png": {
+      "checksum": "980c7e8c512b03ed1095613d172467f5"
+    },
+    "www/PRATE/2025-08-05_25.png": {
+      "checksum": "4e3e5685c567edfb35fd6b24e0a71c7a"
+    },
+    "www/PRATE/2025-08-05_26.png": {
+      "checksum": "e392ece17155496532c452a726334846"
+    },
+    "www/PRATE/2025-08-05_27.png": {
+      "checksum": "bf5fc0799c316370e8b771e495ebf990"
+    },
+    "www/PRATE/2025-08-05_28.png": {
+      "checksum": "7133ed2dc2f003ab24e0deb798a220a2"
+    },
+    "www/PRATE/2025-08-05_29.png": {
+      "checksum": "4726066d6f0f4648415434ff684edbfa"
+    },
+    "www/PRATE/2025-08-05_30.png": {
+      "checksum": "49b08d4bbf5bdaddb7c034ce2f960e45"
+    },
+    "www/PRATE/2025-08-05_31.png": {
+      "checksum": "3862f4ddea59da328edc51acd441b911"
+    },
+    "www/PRATE/2025-08-05_32.png": {
+      "checksum": "7cfcd10c24e454d631f758d9c3f7c234"
+    },
+    "www/PRATE/2025-08-05_33.png": {
+      "checksum": "4393cc30e04c2c8cf34f88002e7d8767"
+    },
+    "www/PRATE/2025-08-05_34.png": {
+      "checksum": "c05ef31f5a44fff309b26735125e98fe"
+    },
+    "www/PRATE/2025-08-05_35.png": {
+      "checksum": "c4e2e7eb572ef03be447c09c42c6febc"
+    },
+    "www/PRATE/2025-08-05_36.png": {
+      "checksum": "ba802bccb2f88e0c5cca7a4d209956c4"
+    },
+    "www/PRATE/2025-08-05_37.png": {
+      "checksum": "4a18b55a1791db24f8731c45f6f3e138"
+    },
+    "www/PRATE/2025-08-05_38.png": {
+      "checksum": "75f693fa299e32ead7df9795fb128d71"
+    },
+    "www/PRATE/2025-08-05_39.png": {
+      "checksum": "3f595df9d792261a15573c12f3536e91"
+    },
+    "www/PRATE/2025-08-05_40.png": {
+      "checksum": "4ab87d24c8ba7d0d545cf8696669d34a"
+    },
+    "www/PRATE/2025-08-05_41.png": {
+      "checksum": "06626a966ed25ac0a5d6f08f44963054"
+    },
+    "www/PRATE/2025-08-05_42.png": {
+      "checksum": "94ff7ee9a822d3c79b5dafae64c0df1e"
+    },
+    "www/PRATE/2025-08-05_43.png": {
+      "checksum": "1c114b8b4beed01a13781d5f93b3d6cc"
+    },
+    "www/PRATE/2025-08-05_44.png": {
+      "checksum": "792646c4e6cca7f1556fff2a525dcc1b"
+    },
+    "www/PRATE/2025-08-05_45.png": {
+      "checksum": "5e54fca6e576a28749071ed98a2ba8b1"
+    },
+    "www/PRATE/2025-08-05_46.png": {
+      "checksum": "f2d91a39533dec02db823984d441cfa8"
+    },
+    "www/PRATE/2025-08-05_47.png": {
+      "checksum": "21cf55ac4aac5ec42debbb7eafef791f"
+    },
+    "www/PRATE/2025-08-05_48.png": {
+      "checksum": "f516fec113b9886ed8bd202941d500b4"
+    },
+    "www/RH/2025-08-05_01.png": {
+      "checksum": "ea2b9b523d017cbb459c509a717ad7bd"
+    },
+    "www/RH/2025-08-05_02.png": {
+      "checksum": "1de6050e440232b3f14175ea8ae11446"
+    },
+    "www/RH/2025-08-05_03.png": {
+      "checksum": "302d2c9a941a281252437b58c5609c1a"
+    },
+    "www/RH/2025-08-05_04.png": {
+      "checksum": "61312c7edd0eae81806cbda7149c026c"
+    },
+    "www/RH/2025-08-05_05.png": {
+      "checksum": "f23beeb635c7af78b6f093dd8dc0d363"
+    },
+    "www/RH/2025-08-05_06.png": {
+      "checksum": "100e70cea7874f38e992616520b8111d"
+    },
+    "www/RH/2025-08-05_07.png": {
+      "checksum": "00accdc6161e09fb19eddd238a75753e"
+    },
+    "www/RH/2025-08-05_08.png": {
+      "checksum": "ceaf94ae531917b238e61cc40b138079"
+    },
+    "www/RH/2025-08-05_09.png": {
+      "checksum": "4d5ee166e2c68935ad7b88c0c9559a78"
+    },
+    "www/RH/2025-08-05_10.png": {
+      "checksum": "57030142142a5e25db3edd3abcfac3bb"
+    },
+    "www/RH/2025-08-05_11.png": {
+      "checksum": "0bd8672b028a8bc7f4eef1444c638c93"
+    },
+    "www/RH/2025-08-05_12.png": {
+      "checksum": "66ee41f15f25c9ae492e825b4f86704b"
+    },
+    "www/RH/2025-08-05_13.png": {
+      "checksum": "76e83e2bb8af9c370ca633ff9350922b"
+    },
+    "www/RH/2025-08-05_14.png": {
+      "checksum": "3b92ae84bbc0052437bfc92e7fba202d"
+    },
+    "www/RH/2025-08-05_15.png": {
+      "checksum": "52ef1e4b36964c718117259228ff84fb"
+    },
+    "www/RH/2025-08-05_16.png": {
+      "checksum": "c3c18148c17ef8071197ea6d58aa4bb2"
+    },
+    "www/RH/2025-08-05_17.png": {
+      "checksum": "c44872e26050944d2436fd02750865a1"
+    },
+    "www/RH/2025-08-05_18.png": {
+      "checksum": "31215196f6c924bac696f7e9e61254b6"
+    },
+    "www/RH/2025-08-05_19.png": {
+      "checksum": "f7c7009b8cf0da7c694a2246bc78e69a"
+    },
+    "www/RH/2025-08-05_20.png": {
+      "checksum": "70204e72352cd4f32036e4bff4a6ea9f"
+    },
+    "www/RH/2025-08-05_21.png": {
+      "checksum": "9eebfccd484c93390a9a65669787b6d9"
+    },
+    "www/RH/2025-08-05_22.png": {
+      "checksum": "7983eece6b4635d5e1df829607ff2731"
+    },
+    "www/RH/2025-08-05_23.png": {
+      "checksum": "f6ce0fa1c7d61ccd56db4f0c25c0cb04"
+    },
+    "www/RH/2025-08-05_24.png": {
+      "checksum": "b2249f5b5307584db80483a26b43ca90"
+    },
+    "www/RH/2025-08-05_25.png": {
+      "checksum": "3f28d4d41b727452b59c3eb51bebdf00"
+    },
+    "www/RH/2025-08-05_26.png": {
+      "checksum": "27716e784670b480989103e07642e557"
+    },
+    "www/RH/2025-08-05_27.png": {
+      "checksum": "23f34d53f925d8831af523857e4f7ddf"
+    },
+    "www/RH/2025-08-05_28.png": {
+      "checksum": "8099801296f34854b5abbd9834dec87e"
+    },
+    "www/RH/2025-08-05_29.png": {
+      "checksum": "eed9469c24868deaaa91fa3f42d0138a"
+    },
+    "www/RH/2025-08-05_30.png": {
+      "checksum": "4b55c30968d9ec0348c9a225ca03f7b5"
+    },
+    "www/RH/2025-08-05_31.png": {
+      "checksum": "849d342eddd4a75331003e178da01fad"
+    },
+    "www/RH/2025-08-05_32.png": {
+      "checksum": "68062f0846eb386145228bd120a94a13"
+    },
+    "www/RH/2025-08-05_33.png": {
+      "checksum": "c686c05e53d3c4adf4143bb982980a6a"
+    },
+    "www/RH/2025-08-05_34.png": {
+      "checksum": "5d4061254cc4f7bb05241d5f31c96775"
+    },
+    "www/RH/2025-08-05_35.png": {
+      "checksum": "8927c9856d57398692234aa83d1c8f06"
+    },
+    "www/RH/2025-08-05_36.png": {
+      "checksum": "8ac952bc2cc4a79e3d0532f09e726847"
+    },
+    "www/RH/2025-08-05_37.png": {
+      "checksum": "963bc2ab8fcdc6c0a0e55a7c932e56a8"
+    },
+    "www/RH/2025-08-05_38.png": {
+      "checksum": "173bfd6cbcc6a34e4eea8ef09274bdc3"
+    },
+    "www/RH/2025-08-05_39.png": {
+      "checksum": "948a67aa18da7ad0dc70e26b77b43414"
+    },
+    "www/RH/2025-08-05_40.png": {
+      "checksum": "069f33cdfdf49aec0bd8611341b00697"
+    },
+    "www/RH/2025-08-05_41.png": {
+      "checksum": "b101959bcce4235aca7d9a938e61a8dd"
+    },
+    "www/RH/2025-08-05_42.png": {
+      "checksum": "be42d5d771ea77e435d49b000770c013"
+    },
+    "www/RH/2025-08-05_43.png": {
+      "checksum": "3392311a862cdf4af57b52915866d1e4"
+    },
+    "www/RH/2025-08-05_44.png": {
+      "checksum": "d6e30fa2ab811376bc35b73ba76faf16"
+    },
+    "www/RH/2025-08-05_45.png": {
+      "checksum": "6f7565b28b28a71a3354741d84044363"
+    },
+    "www/RH/2025-08-05_46.png": {
+      "checksum": "c879218b3474bad62b3fd16492b9135e"
+    },
+    "www/RH/2025-08-05_47.png": {
+      "checksum": "d0f8ad00a47c7e22fd0b48dc0a51ae0c"
+    },
+    "www/RH/2025-08-05_48.png": {
+      "checksum": "abfabc4c546c4abd82afc05eaa6deed0"
+    },
+    "www/TMP/2025-08-05_01.png": {
+      "checksum": "bc94afa0aa0e335c981a9f9e7918ecc6"
+    },
+    "www/TMP/2025-08-05_02.png": {
+      "checksum": "7d1d4cbfcdba077ed88389c20e05e892"
+    },
+    "www/TMP/2025-08-05_03.png": {
+      "checksum": "722b48a2a532e56a1fdd50015f1054f6"
+    },
+    "www/TMP/2025-08-05_04.png": {
+      "checksum": "c68601a106921f45c17e58a55ccc05b1"
+    },
+    "www/TMP/2025-08-05_05.png": {
+      "checksum": "132a68f11e8be60fa7061539fadc1837"
+    },
+    "www/TMP/2025-08-05_06.png": {
+      "checksum": "4d11aafe851fd5a5318951e3b87b832d"
+    },
+    "www/TMP/2025-08-05_07.png": {
+      "checksum": "b9cfb22ba5b02f628961e3a7bb095542"
+    },
+    "www/TMP/2025-08-05_08.png": {
+      "checksum": "32a99f5100dcdb98f37c2bcffea97e02"
+    },
+    "www/TMP/2025-08-05_09.png": {
+      "checksum": "68e47dcea25dc0b26e0e6816127573ab"
+    },
+    "www/TMP/2025-08-05_10.png": {
+      "checksum": "c5cde37e4e885e2c87e036313b0f1b30"
+    },
+    "www/TMP/2025-08-05_11.png": {
+      "checksum": "9b70c35e41d253a031cbe0612f74e019"
+    },
+    "www/TMP/2025-08-05_12.png": {
+      "checksum": "0080e5c83fea33db8fe42f4281ff0324"
+    },
+    "www/TMP/2025-08-05_13.png": {
+      "checksum": "bab0c373537b53977ca5384ae200783e"
+    },
+    "www/TMP/2025-08-05_14.png": {
+      "checksum": "1073f4d71eb65db7398e0d42ab144490"
+    },
+    "www/TMP/2025-08-05_15.png": {
+      "checksum": "4a0a60d1b0168f75b77a9beb62d0613b"
+    },
+    "www/TMP/2025-08-05_16.png": {
+      "checksum": "baa77013912ec074707c1a1c5137bc64"
+    },
+    "www/TMP/2025-08-05_17.png": {
+      "checksum": "673d3c0e2e433be5b4f6e780c91ece17"
+    },
+    "www/TMP/2025-08-05_18.png": {
+      "checksum": "7122f5072792602f907e74f02aa25790"
+    },
+    "www/TMP/2025-08-05_19.png": {
+      "checksum": "c6dba792dd29c3d2e754819fb1a6fee3"
+    },
+    "www/TMP/2025-08-05_20.png": {
+      "checksum": "548993c9ac7d0b53e4203a02e439d41c"
+    },
+    "www/TMP/2025-08-05_21.png": {
+      "checksum": "4b3dd9398788c622b041ef955bce6036"
+    },
+    "www/TMP/2025-08-05_22.png": {
+      "checksum": "168b361d17494a6aa37a64a33c7e8255"
+    },
+    "www/TMP/2025-08-05_23.png": {
+      "checksum": "662fa7c98999845121eaab76b816f71a"
+    },
+    "www/TMP/2025-08-05_24.png": {
+      "checksum": "24b9f84dce5fd7219f197526eddc12fe"
+    },
+    "www/TMP/2025-08-05_25.png": {
+      "checksum": "5513b62087dd085aba3be87aefc11871"
+    },
+    "www/TMP/2025-08-05_26.png": {
+      "checksum": "ba5c998bb7d52cf5981527f28d60ce92"
+    },
+    "www/TMP/2025-08-05_27.png": {
+      "checksum": "b76a19cec4d2b48a4eef223af6db21fe"
+    },
+    "www/TMP/2025-08-05_28.png": {
+      "checksum": "3cfb1c924b682c8d58f29f8e70fb6c35"
+    },
+    "www/TMP/2025-08-05_29.png": {
+      "checksum": "0432a35fb3066f6a40c7bc8fd5d65356"
+    },
+    "www/TMP/2025-08-05_30.png": {
+      "checksum": "029655eecbb73bf78c44fc03a4c07dc0"
+    },
+    "www/TMP/2025-08-05_31.png": {
+      "checksum": "da96e6c418100528e349d831b066ddc6"
+    },
+    "www/TMP/2025-08-05_32.png": {
+      "checksum": "d1a4d6abf1dc4b8eedae58fd8b850c4f"
+    },
+    "www/TMP/2025-08-05_33.png": {
+      "checksum": "d47b230b5c30dabab5633640c4f85468"
+    },
+    "www/TMP/2025-08-05_34.png": {
+      "checksum": "1d8bd2f19e239fe76e3dd922bd073afc"
+    },
+    "www/TMP/2025-08-05_35.png": {
+      "checksum": "98ae1b072adfbc3a4f6252395b18a911"
+    },
+    "www/TMP/2025-08-05_36.png": {
+      "checksum": "5d5080c91bcf2ec61c2d152baf5470c2"
+    },
+    "www/TMP/2025-08-05_37.png": {
+      "checksum": "75981d4e814e2d609857dc993c7d6cca"
+    },
+    "www/TMP/2025-08-05_38.png": {
+      "checksum": "ddb081d140fcab12ac0141c26d7750f7"
+    },
+    "www/TMP/2025-08-05_39.png": {
+      "checksum": "95659be280ed89e74a9fa86c624c97da"
+    },
+    "www/TMP/2025-08-05_40.png": {
+      "checksum": "8ad36d1db8782d69ef0885f7188883c8"
+    },
+    "www/TMP/2025-08-05_41.png": {
+      "checksum": "e2e8af4cb409d5fdb1c50b1f5d622229"
+    },
+    "www/TMP/2025-08-05_42.png": {
+      "checksum": "eb83a3177969641c672230cf8e0ae038"
+    },
+    "www/TMP/2025-08-05_43.png": {
+      "checksum": "a9438763ff5bae1c28f3ebb35304c684"
+    },
+    "www/TMP/2025-08-05_44.png": {
+      "checksum": "d143972144f2f12e7cd381af1891165f"
+    },
+    "www/TMP/2025-08-05_45.png": {
+      "checksum": "3a24a3a36ecb221aecc4b2d1a606c487"
+    },
+    "www/TMP/2025-08-05_46.png": {
+      "checksum": "8591b9f3ae3d5b1a1f87a8e7b7d6019e"
+    },
+    "www/TMP/2025-08-05_47.png": {
+      "checksum": "755ca001b525780e8031b911bda48433"
+    },
+    "www/TMP/2025-08-05_48.png": {
+      "checksum": "16fe580fa2f367a0af3d1321f8e2a950"
+    },
+    "www/VENT_RATE/2025-08-05_01.png": {
+      "checksum": "5c27157c13882f6906e739494240a8f5"
+    },
+    "www/VENT_RATE/2025-08-05_02.png": {
+      "checksum": "a1fa901c8fa62f394c6b570c5cab8e42"
+    },
+    "www/VENT_RATE/2025-08-05_03.png": {
+      "checksum": "354ca564c299dcc1aa38652e7d6c2e8d"
+    },
+    "www/VENT_RATE/2025-08-05_04.png": {
+      "checksum": "d10a05e3920c93c92e2ca6938145271d"
+    },
+    "www/VENT_RATE/2025-08-05_05.png": {
+      "checksum": "804a09bfbac4006d075be8f1e30a17e5"
+    },
+    "www/VENT_RATE/2025-08-05_06.png": {
+      "checksum": "96218e02acfbcbf78f3d1ea0c9817bab"
+    },
+    "www/VENT_RATE/2025-08-05_07.png": {
+      "checksum": "c1baaf11848dfbb94e8c5bbb967a0a05"
+    },
+    "www/VENT_RATE/2025-08-05_08.png": {
+      "checksum": "c5bda5100704c3b783018e31a2e0c319"
+    },
+    "www/VENT_RATE/2025-08-05_09.png": {
+      "checksum": "c862eacfbff4600b4ebb245a61e9e8dc"
+    },
+    "www/VENT_RATE/2025-08-05_10.png": {
+      "checksum": "11b3ec3dbb0fc8dfd369ec94321b1af2"
+    },
+    "www/VENT_RATE/2025-08-05_11.png": {
+      "checksum": "3d9fa7fb893accc42b68f1e9cb4b985c"
+    },
+    "www/VENT_RATE/2025-08-05_12.png": {
+      "checksum": "75032a66f3a80cef1256f34ffece1668"
+    },
+    "www/VENT_RATE/2025-08-05_13.png": {
+      "checksum": "c2b6e613b43d7143dc1f07717a443cb4"
+    },
+    "www/VENT_RATE/2025-08-05_14.png": {
+      "checksum": "f04d7c8347bdaa0b42b3295435fce6f5"
+    },
+    "www/VENT_RATE/2025-08-05_15.png": {
+      "checksum": "7939d0952025e0b5b8d8aacc2e4736b0"
+    },
+    "www/VENT_RATE/2025-08-05_16.png": {
+      "checksum": "3418e4f409d545abc2d927e525731aaf"
+    },
+    "www/VENT_RATE/2025-08-05_17.png": {
+      "checksum": "bbf1b8b2482fc570c923d60dac2d7748"
+    },
+    "www/VENT_RATE/2025-08-05_18.png": {
+      "checksum": "8be3fd2c7c5f83bfe4e544197ebb9fd6"
+    },
+    "www/VENT_RATE/2025-08-05_19.png": {
+      "checksum": "9eeb11abe65dc195d0f48c1ff8004f41"
+    },
+    "www/VENT_RATE/2025-08-05_20.png": {
+      "checksum": "a78dfb0a44cc55379f4b0c153ee965d8"
+    },
+    "www/VENT_RATE/2025-08-05_21.png": {
+      "checksum": "f822381eacfc4015053b72566f219a54"
+    },
+    "www/VENT_RATE/2025-08-05_22.png": {
+      "checksum": "83718b3d0e506da51e28bc5b44a2e867"
+    },
+    "www/VENT_RATE/2025-08-05_23.png": {
+      "checksum": "8a19fbede6199228f020b03dac54648f"
+    },
+    "www/VENT_RATE/2025-08-05_24.png": {
+      "checksum": "068a7d3009a71e87f71d91d0029da16a"
+    },
+    "www/VENT_RATE/2025-08-05_25.png": {
+      "checksum": "74d67a6c883e1e7258b0d88e63cd097d"
+    },
+    "www/VENT_RATE/2025-08-05_26.png": {
+      "checksum": "1f2a3773fc9dad7ec49beaad319e035f"
+    },
+    "www/VENT_RATE/2025-08-05_27.png": {
+      "checksum": "b550495acd13a8e8aacf16c75b1e8deb"
+    },
+    "www/VENT_RATE/2025-08-05_28.png": {
+      "checksum": "2b838bde771d0ee09b93c0ecc4338125"
+    },
+    "www/VENT_RATE/2025-08-05_29.png": {
+      "checksum": "98df91bec6ec4d5f3ce7edd22d7d8392"
+    },
+    "www/VENT_RATE/2025-08-05_30.png": {
+      "checksum": "4f30aae5c13235160836ddc4f99cfd97"
+    },
+    "www/VENT_RATE/2025-08-05_31.png": {
+      "checksum": "0364591b5d64212e07c66b7f344cc03a"
+    },
+    "www/VENT_RATE/2025-08-05_32.png": {
+      "checksum": "237c207b3bc5d5eaaeef431dc9898e2b"
+    },
+    "www/VENT_RATE/2025-08-05_33.png": {
+      "checksum": "c5413af89e5856b490d0710f96339532"
+    },
+    "www/VENT_RATE/2025-08-05_34.png": {
+      "checksum": "22d9b548afd8edca78601132d506f75c"
+    },
+    "www/VENT_RATE/2025-08-05_35.png": {
+      "checksum": "20eb0b37ef569371138e617d753d35e4"
+    },
+    "www/VENT_RATE/2025-08-05_36.png": {
+      "checksum": "6e90d95c93253cbaa2c681296759d5be"
+    },
+    "www/VENT_RATE/2025-08-05_37.png": {
+      "checksum": "6c01cd6f9cc40d5fcbccbf02fa1828af"
+    },
+    "www/VENT_RATE/2025-08-05_38.png": {
+      "checksum": "3c87fe6f634a4e07032f442f084a44fa"
+    },
+    "www/VENT_RATE/2025-08-05_39.png": {
+      "checksum": "1342264e07c8dfb7ce600bb87cad8b95"
+    },
+    "www/VENT_RATE/2025-08-05_40.png": {
+      "checksum": "4b71c9d38e0ec7be640634aa2d1340eb"
+    },
+    "www/VENT_RATE/2025-08-05_41.png": {
+      "checksum": "43d01dd26068b0d9a81efaef421cf585"
+    },
+    "www/VENT_RATE/2025-08-05_42.png": {
+      "checksum": "535a77ca50af38b66a2fff583720d608"
+    },
+    "www/VENT_RATE/2025-08-05_43.png": {
+      "checksum": "cd993044b6908f0a6e1374ff1332c1b2"
+    },
+    "www/VENT_RATE/2025-08-05_44.png": {
+      "checksum": "d3c824b83fc0ac3ed0b72f54f033b8ca"
+    },
+    "www/VENT_RATE/2025-08-05_45.png": {
+      "checksum": "2fd5d06c9794d63177ac9e5debd8ef24"
+    },
+    "www/VENT_RATE/2025-08-05_46.png": {
+      "checksum": "d8dccf1a0f2b2257241f7d6c1342c02b"
+    },
+    "www/VENT_RATE/2025-08-05_47.png": {
+      "checksum": "0bc0392be8baab008206ae21c834bbc9"
+    },
+    "www/VENT_RATE/2025-08-05_48.png": {
+      "checksum": "3393c13ab471288d6624da61f1d6df64"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_01.png": {
+      "checksum": "7360a98925cdabb92d203b4d38ec719c"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_02.png": {
+      "checksum": "391714d672af43c7b50f44d102a52320"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_03.png": {
+      "checksum": "64a7e74f4b2ded4ab844a3a9bfdf38c5"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_04.png": {
+      "checksum": "3d9371cecadcf16cf5ef34e5e2f0e069"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_05.png": {
+      "checksum": "f97876385667090fbea2e3f9106759d8"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_06.png": {
+      "checksum": "2b2fd5a09cc762236b3c43a50b92303c"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_07.png": {
+      "checksum": "efbc235dad4389e2c2c642177a36b277"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_08.png": {
+      "checksum": "0323bab937900e301048101ab2162643"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_09.png": {
+      "checksum": "bbcbf63e6626c46037cfe74c080b26d6"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_10.png": {
+      "checksum": "958a9c97b5d763a4cc12616ec337f3bf"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_11.png": {
+      "checksum": "691b1f7949d8f3efe282213e582de067"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_12.png": {
+      "checksum": "17af6189bcff8209f449fb18c3573a95"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_13.png": {
+      "checksum": "1da26557837464ec37971c005a64bd87"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_14.png": {
+      "checksum": "33540cde2a16d4bd486fd7e94ca99319"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_15.png": {
+      "checksum": "28548d2bb450f4e803d5c20626c4965d"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_16.png": {
+      "checksum": "a48fa3009e642118f4e4ff3f65e3e96e"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_17.png": {
+      "checksum": "aec3ba6400ad8412b564a6ce05f2fc7c"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_18.png": {
+      "checksum": "a809b4abb0934c05ef0507db2ef8010b"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_19.png": {
+      "checksum": "7993086b667539d13f010051f4132d21"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_20.png": {
+      "checksum": "fe0adbe4da8e797be3544cf534524d66"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_21.png": {
+      "checksum": "ba53172797979e201c5dba3647a8a0a2"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_22.png": {
+      "checksum": "6108c2dfe5ce4bb7b5696a3266a614b5"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_23.png": {
+      "checksum": "1a997645a81c2bbf9a084d7af28b9c7c"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_24.png": {
+      "checksum": "d8e076d2812dc3c5b1364b33f5253bdb"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_25.png": {
+      "checksum": "dd0d785f7c3d93fa77d96c0dd0c57633"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_26.png": {
+      "checksum": "ec11aa6e4d00387028bd26e8e28f6226"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_27.png": {
+      "checksum": "08e98a7838822e3e4b32666c876e50f8"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_28.png": {
+      "checksum": "0705136136a37d5e359c339a7d99fcbf"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_29.png": {
+      "checksum": "4d5afa49a14cd7b165b46119ec741b70"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_30.png": {
+      "checksum": "5105ae76ce8277632e32fd16462007b0"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_31.png": {
+      "checksum": "1f4a221334739d3bc25f703daa1dd9d6"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_32.png": {
+      "checksum": "1a62fc05061018927d91e14ccd057322"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_33.png": {
+      "checksum": "cf8f661ee326017e770d276f07b098be"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_34.png": {
+      "checksum": "bf6b3669684125dd258c98ca891a5113"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_35.png": {
+      "checksum": "282476c73869699a4d281eed0d5bf510"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_36.png": {
+      "checksum": "f642936f863a9a805b536d0bcd6efa7a"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_37.png": {
+      "checksum": "45294e3c20e0bc84b3d50cf42503a2fb"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_38.png": {
+      "checksum": "e87f9e637d5531cb0542b9e57c3efeba"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_39.png": {
+      "checksum": "0a30d2221f258de09d38255eba8de9de"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_40.png": {
+      "checksum": "b0b8f164ec9174c0e5fd2d7c710cfbce"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_41.png": {
+      "checksum": "74ab690813a2d72ca198de116024a267"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_42.png": {
+      "checksum": "1ac003e1117912cd5232aea9ad0b3407"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_43.png": {
+      "checksum": "36054c468db20b22a79866e7c3840e19"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_44.png": {
+      "checksum": "628c133b1c44b9914045544ae8e6f2ae"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_45.png": {
+      "checksum": "529035646e5b45d05f435bcc8819fd13"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_46.png": {
+      "checksum": "d85f7680210a585939b7bcb6f47da83b"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_47.png": {
+      "checksum": "c052f1d1f4cb9125b43d1def97ba5da9"
+    },
+    "www/WIND_1hr_max_fcst/2025-08-05_48.png": {
+      "checksum": "13c8e1b205852c9c1526a6d550cf4e29"
     }
   },
   "users": null
