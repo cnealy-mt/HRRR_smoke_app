@@ -2,7 +2,7 @@ name: Run UPDATE_HRRR_APP.R
 
 on:
   schedule:
-    - cron: "26 * * * *"  # every hour at 26 min
+    - cron: "40 * * * *"  # every hour at 26 min
   workflow_dispatch:
 
 jobs:
